@@ -1,0 +1,23 @@
+# Editor and OS
+.DS_Store
+.idea/
+.vscode/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Local mise overrides. The pinned toolchain lives in .mise.toml, which is committed:
+# the README tells people to run `mise install`, and that reads it.
+.mise.local.toml
+mise.local.toml
+
+# Go build and test artifacts
+*.test
+*.out
+coverage.*
+
+# Personal opencode config. Anything meant to be shared with the repo belongs in
+# .opencode/ instead, which is deliberately not ignored.
+/opencode.json

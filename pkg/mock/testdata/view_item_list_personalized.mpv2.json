@@ -1,0 +1,121 @@
+{
+  "client_id": "584335997.1746564151",
+  "user_id": "U-1000",
+  "timestamp_micros": 1789031899000000,
+  "consent": {
+    "ad_storage": "GRANTED",
+    "ad_user_data": "GRANTED",
+    "ad_personalization": "GRANTED",
+    "analytics_storage": "GRANTED",
+    "functionality_storage": "GRANTED",
+    "personalization_storage": "GRANTED",
+    "security_storage": "GRANTED"
+  },
+  "events": [
+    {
+      "name": "view_item_list",
+      "params": {
+        "item_list_id": "dresses",
+        "item_list_name": "Dresses",
+        "items": [
+          {
+            "affiliation": "Foomo Dress Shop",
+            "item_brand": "Foomo Studio",
+            "item_category": "Dresses",
+            "item_category2": "Business",
+            "item_category3": "Midi",
+            "item_id": "DRESS_01",
+            "item_list_id": "dresses",
+            "item_list_name": "Dresses",
+            "item_name": "Tailored Sheath Dress",
+            "item_variant": "navy",
+            "price": 189,
+            "quantity": 1,
+            "attractor": {
+              "business": 0.9,
+              "classic": 0.8,
+              "feminine": 0.2,
+              "minimalistic": 0.5,
+              "retro": 0.3,
+              "structured": 0.9
+            }
+          },
+          {
+            "affiliation": "Foomo Dress Shop",
+            "item_brand": "Foomo Studio",
+            "item_category": "Dresses",
+            "item_category2": "Business",
+            "item_category3": "Midi",
+            "item_id": "DRESS_02",
+            "item_list_id": "dresses",
+            "item_list_name": "Dresses",
+            "item_name": "Wool Blend Shift Dress",
+            "item_variant": "charcoal",
+            "price": 159,
+            "quantity": 1,
+            "attractor": {
+              "business": 0.85,
+              "classic": 0.7,
+              "minimalistic": 0.6,
+              "retro": 0.5,
+              "structured": 0.6
+            }
+          },
+          {
+            "affiliation": "Foomo Dress Shop",
+            "item_brand": "Foomo Studio",
+            "item_category": "Dresses",
+            "item_category2": "Business",
+            "item_category3": "Midi",
+            "item_id": "DRESS_04",
+            "item_list_id": "dresses",
+            "item_list_name": "Dresses",
+            "item_name": "Crepe Wrap Dress",
+            "item_variant": "burgundy",
+            "price": 139,
+            "quantity": 1,
+            "attractor": {
+              "bold": 0.4,
+              "business": 0.6,
+              "classic": 0.5,
+              "feminine": 0.6,
+              "retro": 0.8,
+              "romantic": 0.4,
+              "structured": 0.2
+            }
+          },
+          {
+            "affiliation": "Foomo Dress Shop",
+            "item_brand": "Foomo Atelier",
+            "item_category": "Dresses",
+            "item_category2": "Business",
+            "item_category3": "Maxi",
+            "item_id": "DRESS_03",
+            "item_list_id": "dresses",
+            "item_list_name": "Dresses",
+            "item_name": "Architectural Column Dress",
+            "item_variant": "black",
+            "price": 229,
+            "quantity": 1,
+            "attractor": {
+              "bold": 0.5,
+              "business": 0.7,
+              "edgy": 0.8,
+              "minimalistic": 0.8,
+              "modern": 0.9,
+              "structured": 0.9
+            }
+          }
+        ],
+        "filter_category": "Dresses",
+        "filter_occasion": "business",
+        "sort_by": "affinity",
+        "personalized": true,
+        "persona": "Kate",
+        "result_count": 4
+      }
+    }
+  ],
+  "session_id": "1749196701",
+  "engagement_time_msec": 10086
+}
