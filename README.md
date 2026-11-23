@@ -69,6 +69,17 @@ Nothing is hardcoded per persona: the occasion comes from the persona's stronges
 occasion dimension and the dress from its highest affinity score. Change a persona's
 vector and its journey follows.
 
+A returning shopper is a history: one payload per visit, oldest first, each stamped with
+its session's start time and a session id derived from it, the way GA4 does:
+
+```go
+mock.History(mock.Month(mock.PersonaBusinessKate))  // []mpv2.Payload[any], 7 visits
+```
+
+`Month` spans the four weeks up to `mock.BaseTime`, mostly browsing, converting twice.
+The persona is set per `Visit`, so taste can drift within one history — overwrite the
+persona of the early visits and the shopper starts the month as someone else.
+
 ### Filtering and ranking
 
 ```go

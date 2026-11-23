@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/foomo/gostandards/iso4217"
 	"github.com/foomo/schaumamoi/pkg/mock"
@@ -451,5 +452,66 @@ func TestBrowseJourneyDoesNotConvert(t *testing.T) {
 
 	for _, e := range mock.BrowseJourney(mock.PersonaBusinessKate).Events {
 		assert.NotEqual(t, sesamy.EventNameAddToCart, e.Name)
+	}
+}
+
+// TestMonthIsAMonth pins the shape of a history: one session per visit, oldest first,
+// inside the thirty days up to BaseTime, each with a session id of its own.
+func TestMonthIsAMonth(t *testing.T) {
+	t.Parallel()
+
+	visits := mock.Month(mock.PersonaBusinessKate)
+	history := mock.History(visits, mock.WithUserID("U-KATE"))
+
+	require.Len(t, history, len(visits))
+
+	sessions := map[string]bool{}
+	conversions := 0
+
+	for i, payload := range history {
+		at := time.UnixMicro(payload.TimestampMicros)
+
+		assert.False(t, at.After(mock.BaseTime), "visit %d is after BaseTime", i)
+		assert.False(t, at.Before(mock.BaseTime.Add(-30*mock.Day)), "visit %d is more than a month old", i)
+		if i > 0 {
+			assert.Greater(t, payload.TimestampMicros, history[i-1].TimestampMicros, "visit %d is out of order", i)
+		}
+
+		assert.Equal(t, "U-KATE", payload.UserID, "options reach every visit")
+		assert.NotContains(t, sessions, payload.SessionID, "visit %d reuses a session", i)
+		sessions[payload.SessionID] = true
+
+		for _, e := range payload.Events {
+			if e.Name == sesamy.EventNameAddToCart {
+				conversions++
+			}
+		}
+	}
+
+	assert.Equal(t, mock.BaseTime.UnixMicro(), history[len(history)-1].TimestampMicros, "the month ends now")
+	assert.Equal(t, 2, conversions)
+}
+
+// TestHistoryOrdersVisits keeps History safe to hand a hand-written schedule: whatever
+// order the visits are listed in, the sessions come out oldest first, and each visit's
+// persona drives its own session.
+func TestHistoryOrdersVisits(t *testing.T) {
+	t.Parallel()
+
+	history := mock.History([]mock.Visit{
+		{Persona: mock.PersonaBusinessKate, Ago: 0, Convert: true},
+		{Persona: mock.PersonaFestiveSofia, Ago: 10 * mock.Day, Convert: true},
+	})
+
+	require.Len(t, history, 2)
+	assert.Less(t, history[0].TimestampMicros, history[1].TimestampMicros)
+
+	for i, want := range []mock.Persona{mock.PersonaFestiveSofia, mock.PersonaBusinessKate} {
+		var ap params.AddToCart[mock.Item]
+		last := history[i].Events[len(history[i].Events)-1]
+
+		require.Equal(t, sesamy.EventNameAddToCart, last.Name)
+		require.NoError(t, last.DecodeParams(&ap))
+		assert.Equal(t, want.TopMatch(mock.Catalog()).ItemID, ap.Items[0].ItemID, "visit %d", i)
 	}
 }

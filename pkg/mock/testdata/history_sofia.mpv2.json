@@ -1,0 +1,3369 @@
+[
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1786699099000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1786699099",
+    "engagement_time_msec": 10086
+  },
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1787303899000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1787303899",
+    "engagement_time_msec": 10086
+  },
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1787822299000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "select_item",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "add_to_cart",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1787822299",
+    "engagement_time_msec": 10086
+  },
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1788254299000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1788254299",
+    "engagement_time_msec": 10086
+  },
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1788599899000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1788599899",
+    "engagement_time_msec": 10086
+  },
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1788859099000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1788859099",
+    "engagement_time_msec": 10086
+  },
+  {
+    "client_id": "584335997.1746564151",
+    "user_id": "U-SOFIA",
+    "timestamp_micros": 1789031899000000,
+    "consent": {
+      "ad_storage": "GRANTED",
+      "ad_user_data": "GRANTED",
+      "ad_personalization": "GRANTED",
+      "analytics_storage": "GRANTED",
+      "functionality_storage": "GRANTED",
+      "personalization_storage": "GRANTED",
+      "security_storage": "GRANTED"
+    },
+    "events": [
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_01",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tailored Sheath Dress",
+              "item_variant": "navy",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.9,
+                "classic": 0.8,
+                "feminine": 0.2,
+                "minimalistic": 0.5,
+                "retro": 0.3,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_02",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Wool Blend Shift Dress",
+              "item_variant": "charcoal",
+              "price": 159,
+              "quantity": 1,
+              "attractor": {
+                "business": 0.85,
+                "classic": 0.7,
+                "minimalistic": 0.6,
+                "retro": 0.5,
+                "structured": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_03",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Architectural Column Dress",
+              "item_variant": "black",
+              "price": 229,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "business": 0.7,
+                "edgy": 0.8,
+                "minimalistic": 0.8,
+                "modern": 0.9,
+                "structured": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Business",
+              "item_category3": "Midi",
+              "item_id": "DRESS_04",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Crepe Wrap Dress",
+              "item_variant": "burgundy",
+              "price": 139,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.4,
+                "business": 0.6,
+                "classic": 0.5,
+                "feminine": 0.6,
+                "retro": 0.8,
+                "romantic": 0.4,
+                "structured": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_09",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Cotton Shirt Dress",
+              "item_variant": "sky",
+              "price": 79,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.9,
+                "classic": 0.3,
+                "colourful": 0.3,
+                "minimalistic": 0.6,
+                "structured": 0.4
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Mini",
+              "item_id": "DRESS_10",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Jersey T-Shirt Dress",
+              "item_variant": "grey",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_11",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Linen Smock Dress",
+              "item_variant": "sand",
+              "price": 99,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.8,
+                "casual": 0.85,
+                "feminine": 0.4,
+                "minimalistic": 0.5,
+                "romantic": 0.2
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Studio",
+              "item_category": "Dresses",
+              "item_category2": "Casual",
+              "item_category3": "Midi",
+              "item_id": "DRESS_12",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Floral Tea Dress",
+              "item_variant": "rose",
+              "price": 89,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "bold": 0.4,
+                "casual": 0.6,
+                "classic": 0.6,
+                "colourful": 0.6,
+                "feminine": 0.8,
+                "retro": 0.9,
+                "romantic": 0.7
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "result_count": 12
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "view_item_list",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Mini",
+              "item_id": "DRESS_05",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Sequin Cocktail Dress",
+              "item_variant": "gold",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.9,
+                "colourful": 0.8,
+                "feminine": 0.7,
+                "festive": 0.95,
+                "minimalistic": -0.8,
+                "opulent": 0.9
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_06",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Velvet Gown",
+              "item_variant": "emerald",
+              "price": 329,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.8,
+                "classic": 0.5,
+                "colourful": 0.8,
+                "feminine": 0.6,
+                "festive": 0.9,
+                "opulent": 0.85,
+                "romantic": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Midi",
+              "item_id": "DRESS_07",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Silk Slip Dress",
+              "item_variant": "champagne",
+              "price": 199,
+              "quantity": 1,
+              "attractor": {
+                "colourful": 0.3,
+                "edgy": 0.3,
+                "feminine": 0.5,
+                "festive": 0.7,
+                "minimalistic": 0.6,
+                "modern": 0.7,
+                "romantic": 0.5
+              }
+            }
+          ],
+          "filter_category": "Dresses",
+          "filter_occasion": "festive",
+          "sort_by": "affinity",
+          "personalized": true,
+          "persona": "Sofia",
+          "result_count": 4
+        }
+      },
+      {
+        "name": "select_item",
+        "params": {
+          "item_list_id": "dresses",
+          "item_list_name": "Dresses",
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_list_id": "dresses",
+              "item_list_name": "Dresses",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "view_item",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "add_to_cart",
+        "params": {
+          "currency": "EUR",
+          "value": 389,
+          "items": [
+            {
+              "affiliation": "Foomo Dress Shop",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Dresses",
+              "item_category2": "Festive",
+              "item_category3": "Maxi",
+              "item_id": "DRESS_08",
+              "item_name": "Tulle Ballgown",
+              "item_variant": "blush",
+              "price": 389,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.6,
+                "colourful": 0.3,
+                "feminine": 0.95,
+                "festive": 0.95,
+                "minimalistic": -0.9,
+                "opulent": 0.95,
+                "romantic": 0.9
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session_id": "1789031899",
+    "engagement_time_msec": 10086
+  }
+]
