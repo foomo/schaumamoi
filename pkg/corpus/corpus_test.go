@@ -56,11 +56,10 @@ type itemsParams struct {
 	Items []mock.Item `json:"items"`
 }
 
-// intentWeight is how much an event says about taste: selecting and viewing a product
-// are deliberate choices, putting it in the cart the strongest one. A listing weighs
-// nothing — categories and their listings are where products are offered, and what the
-// shop chose to show says nothing about the shopper. The weights are the shop's own, so
-// a flat affinity is exactly the profile the shop ranks its listings by.
+// intentWeight is how much an event the affinity corpus admits says about taste:
+// selecting and viewing a product are deliberate choices, putting it in the cart the
+// strongest one. Listings never get this far — see choices. The weights are the shop's
+// own, so a flat affinity is exactly the profile the shop ranks its listings by.
 var intentWeight = map[sesamy.EventName]personalization.Value{
 	sesamy.EventNameSelectItem: mock.LearnSelect,
 	sesamy.EventNameViewItem:   mock.LearnView,
@@ -102,8 +101,8 @@ func addAttractors(_ envelope, e testEvent, d decoration) decoration {
 	return d
 }
 
-// weighByIntent scales the decoration by the intentWeight of the event. Listings and
-// unknown events weigh nothing.
+// weighByIntent scales the decoration by the intentWeight of the event. The affinity
+// corpus only admits events that have one; anything else would weigh nothing.
 func weighByIntent(_ envelope, e testEvent, d decoration) decoration {
 	w := intentWeight[e.Name]
 
@@ -130,9 +129,23 @@ func clone(m personalization.Map) personalization.Map {
 // corpus report draws its pipeline from this slice, so the picture cannot drift from it.
 var affinityDecorators = []testDecorator{stampTime, stampSession, addAttractors, weighByIntent}
 
+// choices is the affinity corpus's own filter: it admits what the shopper did — selected,
+// viewed, put in the cart — and nothing else. It filters positively, for the events it
+// learns from, rather than dropping the ones it does not: listings are where products
+// are offered, what the shop chose to show says nothing about the shopper, and any new
+// kind of event stays out until the corpus has a use for it.
+var choices = only(sesamy.EventNameSelectItem, sesamy.EventNameViewItem, sesamy.EventNameAddToCart)
+
+// newAffinityCorpus is a corpus that admits choices, narrowed further by filter if one
+// is given — the consent filter, say.
 func newAffinityCorpus(filter testFilter) *testCorpus {
+	admit := choices
+	if filter != nil {
+		admit = func(env envelope, e testEvent) bool { return choices(env, e) && filter(env, e) }
+	}
+
 	return corpus.New(testConfig{
-		Filter:     filter,
+		Filter:     admit,
 		Decorators: affinityDecorators,
 	})
 }
@@ -195,9 +208,9 @@ func decayWeight(now time.Time, halfLife time.Duration, at time.Time) personaliz
 
 // nearestIn is the product of one category that ranks first for a taste: how that
 // category's listing would open for it. It ranks with the shop's own scorer, mock.Score —
-// the taste weighed by the category's weights — through Persona.TopMatch. With listings weighing nothing and choices weighed as the
-// shop weighs them, a flat affinity is the shop's profile, so this is exactly the listing
-// the shop would show. Cosine stays for comparing a taste with a persona, where the
+// the taste weighed by the category's weights — through Persona.TopMatch. With listings
+// filtered out and choices weighed as the shop weighs them, a flat affinity is the shop's
+// profile, so this is exactly the listing the shop would show. Cosine stays for comparing a taste with a persona, where the
 // magnitude must not count; for ranking it disagrees with the shop on near ties — the
 // sequin flares and the velvet palazzo, for Sofia.
 func nearestIn(aff personalization.Map, category string) mock.Item {
@@ -398,12 +411,13 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 	}
 }
 
-// TestAddAppliesFilter narrows the corpus to deliberate interactions. The listings
-// are gone, and the choices alone still say who the shopper is.
+// TestAddAppliesFilter pins the affinity corpus's positive filter: of a whole journey it
+// admits only the choices — no listing gets in — and those alone say who the shopper is.
+// A filter handed to newAffinityCorpus narrows that further, never widens it.
 func TestAddAppliesFilter(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(only(sesamy.EventNameSelectItem, sesamy.EventNameViewItem, sesamy.EventNameAddToCart))
+	p := newAffinityCorpus(nil)
 	p.Add(envelope{}, kateJourney()...)
 
 	assert.Equal(t, 10, p.Len())
@@ -413,6 +427,23 @@ func TestAddAppliesFilter(t *testing.T) {
 		sesamy.EventNameAddToCart:  1,
 	}, p.Derive(funnel))
 	assert.Equal(t, mock.PersonaBusinessKate.Name, nearestPersona(p.Derive(affinity), mock.Personas()).Name)
+
+	carts := newAffinityCorpus(only(sesamy.EventNameAddToCart, sesamy.EventNameViewItemList))
+	carts.Add(envelope{}, kateJourney()...)
+	assert.Equal(t, map[sesamy.EventName]int{sesamy.EventNameAddToCart: 1}, carts.Derive(funnel), "an extra filter cannot let listings back in")
+}
+
+// choicesIn is what the affinity corpus admits of events: the choices, in order.
+func choicesIn(events []testEvent) []testEvent {
+	var out []testEvent
+
+	for _, e := range events {
+		if choices(envelope{}, e) {
+			out = append(out, e)
+		}
+	}
+
+	return out
 }
 
 // TestAddWithoutFilterAdmitsEverything pins the zero-value config: a corpus that
@@ -505,7 +536,7 @@ func TestAddAfterDeriveDoesNotRedecorate(t *testing.T) {
 
 	// Stated per event against a corpus that saw only that event, so a doubled first
 	// batch cannot hide behind anything in the second.
-	all := append(append([]testEvent{}, first...), second...)
+	all := choicesIn(append(append([]testEvent{}, first...), second...))
 	require.Len(t, got, len(all))
 	for i, e := range all {
 		fresh := newAffinityCorpus(nil)
@@ -524,10 +555,9 @@ func TestOneCorpusManyQuestions(t *testing.T) {
 	p.Add(envelope{}, kateJourney()...)
 
 	assert.Equal(t, map[sesamy.EventName]int{
-		sesamy.EventNameViewItemList: 8,
-		sesamy.EventNameSelectItem:   7,
-		sesamy.EventNameViewItem:     2,
-		sesamy.EventNameAddToCart:    1,
+		sesamy.EventNameSelectItem: 7,
+		sesamy.EventNameViewItem:   2,
+		sesamy.EventNameAddToCart:  1,
 	}, p.Derive(funnel))
 
 	assert.Equal(t, mock.PersonaBusinessKate.Name, p.Derive(func(events []testDecorated) mock.Persona {
@@ -579,8 +609,8 @@ func TestStampTimeReadsEnvelope(t *testing.T) {
 	})
 
 	want := append(append(
-		slices.Repeat([]time.Time{earlier}, len(mock.Journey(mock.PersonaFestiveSofia).Events)),
-		slices.Repeat([]time.Time{later}, len(mock.BrowseJourney(mock.PersonaBusinessKate).Events))...),
+		slices.Repeat([]time.Time{earlier}, len(choicesIn(mock.Journey(mock.PersonaFestiveSofia).Events))),
+		slices.Repeat([]time.Time{later}, len(choicesIn(mock.BrowseJourney(mock.PersonaBusinessKate).Events)))...),
 		time.Time{})
 	assert.Equal(t, want, stamps)
 }
@@ -705,7 +735,7 @@ func TestDecayFollowsRecentTaste(t *testing.T) {
 //
 // Flat sums used to have a third failure: Lena then Kate read as Mira, an average of two
 // tastes that was neither. That came from listings outweighing choices, and went once
-// listings stopped counting (see intentWeight); across all twelve drifts, a flat sum now
+// listings stopped counting (see choices); across all twelve drifts, a flat sum now
 // reads one of the two real tastes, just too often the old one — four times in twelve.
 func TestUndecayedMisreadsDrift(t *testing.T) {
 	t.Parallel()
@@ -993,7 +1023,7 @@ func TestFilterSeesEnvelope(t *testing.T) {
 	admitted := 0
 	for i, payload := range history {
 		if i != 2 && i != 3 {
-			admitted += len(payload.Events)
+			admitted += len(choicesIn(payload.Events))
 		}
 	}
 

@@ -28,7 +28,7 @@ var decoratorDocs = map[string]string{
 	"stampTime":     "copies the batch's time off the envelope, so a deriver can decay by age",
 	"stampSession":  "copies the session id off the envelope, so a deriver can window by visit",
 	"addAttractors": "sums the attractors of the items the event carries into one Map, whatever their category",
-	"weighByIntent": "scales that by how deliberate the event is — select and view 1, the cart 3, a listing 0: a listing is what the shop offered, not what the shopper chose",
+	"weighByIntent": "scales that by how deliberate the choice is — select and view 1, the cart 3",
 }
 
 // derivers are the questions the tests ask of one corpus, in the order the report uses them.
@@ -47,12 +47,13 @@ type traceStep struct {
 
 // traceRow is one event of the traced batch on its way through the chain.
 type traceRow struct {
-	N       int
-	Event   string
-	Subject string
-	Items   int
-	Consent bool
-	Steps   []traceStep
+	N        int
+	Event    string
+	Subject  string
+	Items    int
+	Admitted bool
+	Consent  bool
+	Steps    []traceStep
 }
 
 // pipelineSection is the data behind the section: the chain, the derivers, and a batch
@@ -93,7 +94,7 @@ func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) 
 		var p mock.ItemListParams // every event here carries its items under "items"
 		_ = e.DecodeParams(&p)
 
-		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Consent: consented(s.Envelope, e)}
+		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Admitted: choices(s.Envelope, e), Consent: consented(s.Envelope, e)}
 
 		switch {
 		case p.ItemListID != "" && len(p.Items) != 1:
@@ -102,8 +103,13 @@ func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) 
 			row.Subject = p.Items[0].ItemID + " " + p.Items[0].ItemName
 		}
 
+		// a dropped event never reaches the decorators
 		var d decoration
 		for _, decorate := range affinityDecorators {
+			if !row.Admitted {
+				break
+			}
+
 			before := d
 			d = decorate(s.Envelope, e, d)
 			row.Steps = append(row.Steps, traceStep{Summary: summarize(funcName(decorate), e, before, d)})
@@ -177,7 +183,7 @@ below are read off the chain the tests use, in order.</p>
     <h4>2 · Filter</h4>
     <p><code>Config.Filter</code> admits or drops each event. It sees the envelope, so it can drop by where an event came from as
     well as by what it is.</p>
-    <p class="meta">affinity corpus: admits everything · consent corpus: drops batches without personalization consent</p>
+    <p class="meta">affinity corpus: admits selections, views and carts — nothing else, no listings · consent corpus: those, and only from batches with personalization consent</p>
   </div>
   <div class="arrow">→</div>
   <div class="stage wide">
@@ -202,19 +208,21 @@ below are read off the chain the tests use, in order.</p>
 <h3 style="margin-top:20px">One batch, event by event</h3>
 <p class="note">{{.Batch}}, run through the chain above one decorator at a time. Each column is what that decorator made
 of the event: the envelope stamped on, the taste its items carry — one Map, dresses, trousers and lamps alike — and
-finally the weight it is scaled by: a listing counts for nothing, a selection in full, the cart three times over.</p>
+finally the weight it is scaled by: a selection in full, the cart three times over. Listings never get that far: the
+affinity corpus filters for the choices it learns from, and drops everything else at the door.</p>
 <p class="meta">envelope: At {{date .Envelope.At}} · Session <code>{{.Envelope.Session}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
 <div class="scroll">
 <table class="data trace">
-  <tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>consent filter</th>{{range .Decorators}}<th><code>{{.Name}}</code></th>{{end}}</tr>
+  <tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity filter</th><th>consent filter</th>{{range .Decorators}}<th><code>{{.Name}}</code></th>{{end}}</tr>
   {{range .Trace}}
   <tr>
     <td>{{.N}}</td>
     <td><code>{{.Event}}</code></td>
     <td>{{.Subject}}</td>
     <td>{{.Items}}</td>
+    <td>{{if .Admitted}}admit{{else}}<span class="muted">drop</span>{{end}}</td>
     <td>{{if .Consent}}admit{{else}}drop{{end}}</td>
-    {{range .Steps}}<td>{{.Summary}}</td>{{end}}
+    {{if .Admitted}}{{range .Steps}}<td>{{.Summary}}</td>{{end}}{{else}}<td colspan="{{len $.Decorators}}" class="muted">not admitted — never decorated, never stored</td>{{end}}
   </tr>
   {{end}}
 </table>
