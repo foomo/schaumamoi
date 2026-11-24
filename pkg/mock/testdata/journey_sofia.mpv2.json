@@ -4116,28 +4116,6 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Festive",
-            "item_category4": "Ankle",
-            "item_id": "TROUSERS_16",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Gala Cigarette Trousers",
-            "item_variant": "champagne",
-            "price": 179,
-            "quantity": 1,
-            "attractor": {
-              "edgy": 0.3,
-              "feminine": 0.4,
-              "festive": 0.7,
-              "minimalistic": 0.6,
-              "modern": 0.7
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Business",
             "item_category4": "Midi",
@@ -4154,6 +4132,28 @@
               "classic": 0.8,
               "retro": 0.3,
               "structured": 0.8
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Festive",
+            "item_category4": "Ankle",
+            "item_id": "TROUSERS_16",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Gala Cigarette Trousers",
+            "item_variant": "champagne",
+            "price": 179,
+            "quantity": 1,
+            "attractor": {
+              "edgy": 0.3,
+              "feminine": 0.4,
+              "festive": 0.7,
+              "minimalistic": 0.6,
+              "modern": 0.7
             }
           },
           {
@@ -4664,26 +4664,6 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Lamps",
-            "item_id": "HOME_06",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Halden Concrete Pendant",
-            "item_variant": "grey",
-            "price": 159,
-            "quantity": 1,
-            "attractor": {
-              "classic": -0.4,
-              "edgy": 0.6,
-              "industrial": 0.9,
-              "minimalistic": 0.75,
-              "modern": 0.85
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Casual",
@@ -4700,6 +4680,26 @@
               "edgy": 0.4,
               "minimalistic": 0.85,
               "modern": 0.5
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Lamps",
+            "item_id": "HOME_06",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Halden Concrete Pendant",
+            "item_variant": "grey",
+            "price": 159,
+            "quantity": 1,
+            "attractor": {
+              "classic": -0.4,
+              "edgy": 0.6,
+              "industrial": 0.9,
+              "minimalistic": 0.75,
+              "modern": 0.85
             }
           },
           {

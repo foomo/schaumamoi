@@ -1,0 +1,110 @@
+package affinity_test
+
+import (
+	"testing"
+
+	"github.com/foomo/schaumamoi/pkg/affinity"
+	"github.com/foomo/schaumamoi/pkg/personalization"
+	"github.com/stretchr/testify/assert"
+)
+
+const (
+	classic personalization.Dimension = "classic"
+	modern  personalization.Dimension = "modern"
+	cozy    personalization.Dimension = "cozy"
+)
+
+// events builds decorated events from their contributions, in order.
+func events(contributions ...personalization.Map) []affinity.Decorated {
+	out := make([]affinity.Decorated, 0, len(contributions))
+	for _, c := range contributions {
+		out = append(out, affinity.Decorated{Decoration: affinity.Decoration{Affinity: c}})
+	}
+
+	return out
+}
+
+func repeat(m personalization.Map, n int) []personalization.Map {
+	out := make([]personalization.Map, n)
+	for i := range out {
+		out[i] = m
+	}
+
+	return out
+}
+
+// noShift is a fade without change detection: a cosine never falls below -2.
+var noShift = affinity.Fade{PerEvent: 0.5, Window: 100, Recent: 2, Shift: -2, Collapse: 0}
+
+func TestFadePerEvent(t *testing.T) {
+	t.Parallel()
+
+	got := noShift.Vector(events(personalization.Map{classic: 1}, personalization.Map{classic: 1}, personalization.Map{classic: 1}))
+
+	// 1·0.25 + 1·0.5 + 1: every event halves everything before it
+	assert.InDelta(t, 1.75, float64(got[classic]), 1e-6)
+}
+
+func TestFadeWindow(t *testing.T) {
+	t.Parallel()
+
+	f := noShift
+	f.PerEvent, f.Window = 1, 2
+
+	got := f.Vector(events(personalization.Map{classic: 1}, personalization.Map{classic: 1}, personalization.Map{classic: 1}))
+	assert.InDelta(t, 2, float64(got[classic]), 1e-6, "only the last two events count")
+}
+
+// TestFadeCollapsesOnAStrongChange: after a long run of one taste, recent picks pointing
+// the opposite way collapse the old vector, so the new taste leads at once.
+func TestFadeCollapsesOnAStrongChange(t *testing.T) {
+	t.Parallel()
+
+	old, recent := personalization.Map{classic: 1, modern: -1}, personalization.Map{classic: -1, modern: 1}
+	history := events(append(repeat(old, 10), repeat(recent, 3)...)...)
+
+	f := affinity.Fade{PerEvent: 0.95, Window: 100, Recent: 3, Shift: 0.5, Collapse: 0.2}
+	assert.Greater(t, f.Vector(history)[modern], personalization.Value(0), "with change detection the new taste leads")
+
+	f.Shift = -2
+	assert.Less(t, f.Vector(history)[modern], personalization.Value(0), "by fading alone the old taste still leads")
+}
+
+// TestFadeKeepsTasteOnAGentleChange: recent picks that agree with the vector, only less
+// strongly, are no change of intent — nothing collapses.
+func TestFadeKeepsTasteOnAGentleChange(t *testing.T) {
+	t.Parallel()
+
+	old, recent := personalization.Map{classic: 1, modern: 0.2}, personalization.Map{classic: 0.6, modern: 0.4}
+	history := events(append(repeat(old, 10), repeat(recent, 3)...)...)
+
+	with := affinity.Fade{PerEvent: 0.95, Window: 100, Recent: 3, Shift: 0.5, Collapse: 0.2}
+	without := with
+	without.Shift = -2
+
+	assert.Equal(t, without.Vector(history), with.Vector(history))
+}
+
+// TestFadeKeepsTasteInANewCategory: moving into dimensions the vector never had — from
+// clothes to cushions — is a new category, not a new intent; the taste the two share
+// must survive.
+func TestFadeKeepsTasteInANewCategory(t *testing.T) {
+	t.Parallel()
+
+	clothes, cushions := personalization.Map{classic: 1}, personalization.Map{cozy: 1}
+	history := events(append(repeat(clothes, 10), repeat(cushions, 3)...)...)
+
+	f := affinity.Fade{PerEvent: 1, Window: 100, Recent: 3, Shift: 0.5, Collapse: 0}
+	assert.InDelta(t, 10, float64(f.Vector(history)[classic]), 1e-6)
+}
+
+func TestFadeIsRepeatable(t *testing.T) {
+	t.Parallel()
+
+	history := events(append(repeat(personalization.Map{classic: 1, modern: -1}, 7), repeat(personalization.Map{classic: -1, modern: 1, cozy: 0.3}, 4)...)...)
+
+	want := affinity.DefaultFade.Vector(history)
+	for range 10 {
+		assert.Equal(t, want, affinity.DefaultFade.Vector(history))
+	}
+}

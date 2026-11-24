@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/report"
 	"github.com/foomo/schaumamoi/pkg/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
@@ -109,7 +110,7 @@ func TestReport(t *testing.T) {
 			Journey:    steps(t, mock.Journey(p).Events),
 			Month:      month(t, p),
 			Final: []finalRanking{
-				final(t, p, "after one journey", mock.Journey(p).Events, mock.Profile{}),
+				final(t, p, "after one journey", mock.Journey(p).Events, affinity.New(nil)),
 				finalOfMonth(t, p),
 			},
 		})
@@ -139,9 +140,9 @@ func TestReport(t *testing.T) {
 }
 
 // final reads the listing of all products that events end on. The scores come from
-// replaying the events into a profile, as TestListingsAreSortedByWhatWasLearned does,
-// starting from what the shop knew before them.
-func final(t *testing.T, p mock.Persona, label string, events []sesamy.Event[any], before mock.Profile) finalRanking {
+// replaying the events into the shopper's corpus, as TestListingsAreSortedByWhatWasLearned
+// does, on top of whatever the corpus already holds.
+func final(t *testing.T, p mock.Persona, label string, events []sesamy.Event[any], c *affinity.Corpus) finalRanking {
 	t.Helper()
 
 	var (
@@ -149,7 +150,7 @@ func final(t *testing.T, p mock.Persona, label string, events []sesamy.Event[any
 		prof mock.Profile
 	)
 
-	replayListings(t, before, events, func(list mock.ItemListParams, at mock.Profile) {
+	replayListings(t, c, events, func(list mock.ItemListParams, at mock.Profile) {
 		last, prof = list, at
 	})
 	require.Equal(t, mock.AllProductsListID, last.ItemListID)
@@ -168,18 +169,18 @@ func final(t *testing.T, p mock.Persona, label string, events []sesamy.Event[any
 }
 
 // finalOfMonth is the final ranking of the last visit of the persona's month, with the
-// profile carried through every visit before it.
+// shopper's corpus carried through every visit before it.
 func finalOfMonth(t *testing.T, p mock.Persona) finalRanking {
 	t.Helper()
 
 	history := mock.History(mock.Month(p))
-	prof := mock.Profile{}
+	c := affinity.New(nil)
 
 	for _, payload := range history[:len(history)-1] {
-		prof = replayListings(t, prof, payload.Events, func(mock.ItemListParams, mock.Profile) {})
+		replayListings(t, c, payload.Events, func(mock.ItemListParams, mock.Profile) {})
 	}
 
-	return final(t, p, "after a month", history[len(history)-1].Events, prof)
+	return final(t, p, "after a month", history[len(history)-1].Events, c)
 }
 
 // favourites is the persona's first choice in every category: the per-category view the

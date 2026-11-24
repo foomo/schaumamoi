@@ -25,16 +25,17 @@ type stage struct {
 
 // decoratorDocs says what each decorator in the affinity chain contributes.
 var decoratorDocs = map[string]string{
-	"stampTime":     "copies the batch's time off the envelope, so a deriver can decay by age",
-	"stampSession":  "copies the session id off the envelope, so a deriver can window by visit",
-	"addAttractors": "sums the attractors of the items the event carries into one Map, whatever their category",
-	"weighByIntent": "scales that by how deliberate the choice is — select and view 1, the cart 3",
+	"StampTime":     "copies the batch's time off the envelope, so a deriver can decay by age",
+	"StampSession":  "copies the session id off the envelope, so a deriver can window by visit",
+	"AddAttractors": "sums the attractors of the items the event carries into one Map, whatever their category",
+	"WeighByIntent": "scales that by how deliberate the choice is — select and view 1, the cart 3",
 }
 
 // derivers are the questions the tests ask of one corpus, in the order the report uses them.
 var derivers = []stage{
-	{"affinity", "taste, summed flat — with the shop's weights, exactly the profile the shop ranks by"},
-	{"decayed", "taste, every event halved per half-life of age — who the shopper is now"},
+	{"Fade.Vector", "the personalization vector the shop ranks every listing with: faded per event, collapsing its past on a strong change of intent"},
+	{"Flat", "taste, summed in full"},
+	{"Decayed", "taste, every event halved per half-life of age"},
 	{"nearestIn", "a taste read in one category: the product the shop's score ranks first there"},
 	{"phases", "the history cut into windows of steady taste, a session at a time"},
 	{"funnel", "events counted by name — a question that ignores taste altogether"},
@@ -124,13 +125,13 @@ func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) 
 // summarize says what one decorator changed, in the terms of that decorator.
 func summarize(name string, e testEvent, before, after decoration) string {
 	switch name {
-	case "stampTime":
+	case "StampTime":
 		return after.At.UTC().Format("Mon 2 Jan 15:04")
-	case "stampSession":
+	case "StampSession":
 		return after.Session
-	case "addAttractors":
+	case "AddAttractors":
 		return fmt.Sprintf("%d dimensions · %s", len(after.Affinity), strongest(after.Affinity, 2))
-	case "weighByIntent":
+	case "WeighByIntent":
 		w := intentWeight[e.Name]
 		if w == 0 {
 			return "× 0 — offered, not chosen"

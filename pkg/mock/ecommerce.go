@@ -121,7 +121,7 @@ func FilteredItemListPayload(opts ...Option) mpv2.Payload[ItemListParams] {
 // PersonalizedItemListPayload is the persona's section as its first visit reaches it:
 // ranked by what the shop learned from the three listings before.
 func PersonalizedItemListPayload(p Persona, opts ...Option) mpv2.Payload[ItemListParams] {
-	stops, _ := route(p, Profile{})
+	stops := route(p, newShopper())
 
 	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(stops[len(stops)-1].Filter)}, opts...)
 }

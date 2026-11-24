@@ -89,7 +89,7 @@ func TestReport(t *testing.T) {
 		events := mock.Journey(p).Events
 		c := newAffinityCorpus(nil)
 		c.Add(envelope{}, events...)
-		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Derive(affinity), p, events)})
+		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Derive(flat), p, events)})
 
 		month := mock.History(mock.Month(p))
 		c = newAffinityCorpus(nil)
@@ -109,7 +109,7 @@ func TestReport(t *testing.T) {
 			drifts = append(drifts, driftRow{
 				Old:     old,
 				Recent:  recent,
-				Flat:    read(t, c.Derive(affinity), recent, eventsOf(history[3:])),
+				Flat:    read(t, c.Derive(flat), recent, eventsOf(history[3:])),
 				Decayed: read(t, c.Derive(decayed(mock.BaseTime, week)), recent, eventsOf(history[3:])),
 				Phases:  chips(c.Derive(phases(phaseThreshold))),
 			})
@@ -133,7 +133,7 @@ func TestReport(t *testing.T) {
 	addHistory(consentedOnly, history)
 
 	third := mock.History(mock.Month(mock.PersonaBusinessKate))[2]
-	pipe, err := pipeline("Kate's third visit of her month, two weeks before BaseTime: the shop has learned from two visits by then, and this one ends in the cart", third)
+	pipe, err := pipeline("Kate's third visit of her month, two weeks before BaseTime: the shop knows two visits of hers by then, and this one ends in the cart", third)
 	require.NoError(t, err)
 
 	require.NoError(t, report.Write(reportPath, "schaumamoi · corpus report", pipelineReport+corpusReport, map[string]any{

@@ -2839,6 +2839,29 @@
           },
           {
             "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Atelier",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
+            "item_category3": "Festive",
+            "item_category4": "Midi",
+            "item_id": "DRESS_15",
+            "item_list_id": "womens-fashion",
+            "item_list_name": "Women's Fashion",
+            "item_name": "Juniper Satin Dress",
+            "item_variant": "emerald",
+            "price": 229,
+            "quantity": 1,
+            "attractor": {
+              "classic": 0.4,
+              "colourful": 0.5,
+              "feminine": 0.7,
+              "festive": 0.8,
+              "opulent": 0.5,
+              "romantic": 0.6
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
@@ -2860,29 +2883,6 @@
               "feminine": 0.8,
               "retro": 0.9,
               "romantic": 0.7
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Atelier",
-            "item_category": "Women's Fashion",
-            "item_category2": "Dresses",
-            "item_category3": "Festive",
-            "item_category4": "Midi",
-            "item_id": "DRESS_15",
-            "item_list_id": "womens-fashion",
-            "item_list_name": "Women's Fashion",
-            "item_name": "Juniper Satin Dress",
-            "item_variant": "emerald",
-            "price": 229,
-            "quantity": 1,
-            "attractor": {
-              "classic": 0.4,
-              "colourful": 0.5,
-              "feminine": 0.7,
-              "festive": 0.8,
-              "opulent": 0.5,
-              "romantic": 0.6
             }
           },
           {
@@ -3697,24 +3697,21 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Festive",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_07",
+            "item_category": "Home Decoration",
+            "item_category2": "Lamps",
+            "item_id": "HOME_15",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Soirée Tuxedo Trousers",
+            "item_name": "Meridian Arc Floor Lamp",
             "item_variant": "black",
-            "price": 199,
+            "price": 229,
             "quantity": 1,
             "attractor": {
-              "classic": 0.3,
-              "edgy": 0.5,
-              "festive": 0.7,
-              "minimalistic": 0.5,
-              "modern": 0.7,
-              "structured": 0.7
+              "bold": 0.3,
+              "edgy": 0.4,
+              "industrial": 0.6,
+              "minimalistic": 0.6,
+              "modern": 0.85
             }
           },
           {
@@ -3739,21 +3736,24 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Home Decoration",
-            "item_category2": "Lamps",
-            "item_id": "HOME_15",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Festive",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_07",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Meridian Arc Floor Lamp",
+            "item_name": "Soirée Tuxedo Trousers",
             "item_variant": "black",
-            "price": 229,
+            "price": 199,
             "quantity": 1,
             "attractor": {
-              "bold": 0.3,
-              "edgy": 0.4,
-              "industrial": 0.6,
-              "minimalistic": 0.6,
-              "modern": 0.85
+              "classic": 0.3,
+              "edgy": 0.5,
+              "festive": 0.7,
+              "minimalistic": 0.5,
+              "modern": 0.7,
+              "structured": 0.7
             }
           },
           {
@@ -3803,28 +3803,6 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Business",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_01",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Temple Pleated Trousers",
-            "item_variant": "navy",
-            "price": 169,
-            "quantity": 1,
-            "attractor": {
-              "business": 0.9,
-              "classic": 0.8,
-              "minimalistic": 0.4,
-              "retro": 0.4,
-              "structured": 0.8
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Casual",
             "item_category4": "Mini",
@@ -3847,6 +3825,28 @@
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Trousers",
+            "item_category3": "Business",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_01",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Temple Pleated Trousers",
+            "item_variant": "navy",
+            "price": 169,
+            "quantity": 1,
+            "attractor": {
+              "business": 0.9,
+              "classic": 0.8,
+              "minimalistic": 0.4,
+              "retro": 0.4,
+              "structured": 0.8
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
             "item_category3": "Festive",
             "item_category4": "Ankle",
             "item_id": "TROUSERS_16",
@@ -3862,29 +3862,6 @@
               "festive": 0.7,
               "minimalistic": 0.6,
               "modern": 0.7
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Dresses",
-            "item_category3": "Business",
-            "item_category4": "Midi",
-            "item_id": "DRESS_01",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Whitehall Sheath Dress",
-            "item_variant": "navy",
-            "price": 189,
-            "quantity": 1,
-            "attractor": {
-              "business": 0.9,
-              "classic": 0.8,
-              "feminine": 0.2,
-              "minimalistic": 0.5,
-              "retro": 0.3,
-              "structured": 0.9
             }
           },
           {
@@ -3931,6 +3908,29 @@
               "edgy": 0.6,
               "modern": 0.4,
               "structured": 0.5
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
+            "item_category3": "Business",
+            "item_category4": "Midi",
+            "item_id": "DRESS_01",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Whitehall Sheath Dress",
+            "item_variant": "navy",
+            "price": 189,
+            "quantity": 1,
+            "attractor": {
+              "business": 0.9,
+              "classic": 0.8,
+              "feminine": 0.2,
+              "minimalistic": 0.5,
+              "retro": 0.3,
+              "structured": 0.9
             }
           },
           {
@@ -4026,6 +4026,27 @@
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
+            "item_category3": "Casual",
+            "item_category4": "Mini",
+            "item_id": "DRESS_17",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Fenna Knit Dress",
+            "item_variant": "grey",
+            "price": 69,
+            "quantity": 1,
+            "attractor": {
+              "casual": 0.9,
+              "classic": 0.2,
+              "minimalistic": 0.7,
+              "modern": 0.4
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
             "item_category3": "Business",
             "item_category4": "Midi",
             "item_id": "DRESS_14",
@@ -4041,27 +4062,6 @@
               "classic": 0.8,
               "retro": 0.3,
               "structured": 0.8
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Dresses",
-            "item_category3": "Casual",
-            "item_category4": "Mini",
-            "item_id": "DRESS_17",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Fenna Knit Dress",
-            "item_variant": "grey",
-            "price": 69,
-            "quantity": 1,
-            "attractor": {
-              "casual": 0.9,
-              "classic": 0.2,
-              "minimalistic": 0.7,
-              "modern": 0.4
             }
           },
           {
@@ -4124,6 +4124,26 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Cushions",
+            "item_id": "HOME_04",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Zigzag Print Cushion",
+            "item_variant": "mustard",
+            "price": 45,
+            "quantity": 1,
+            "attractor": {
+              "bold": 0.8,
+              "colourful": 0.7,
+              "edgy": 0.3,
+              "modern": 0.6,
+              "retro": 0.6
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Casual",
@@ -4167,21 +4187,23 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Cushions",
-            "item_id": "HOME_04",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
+            "item_category3": "Casual",
+            "item_category4": "Midi",
+            "item_id": "DRESS_18",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Zigzag Print Cushion",
-            "item_variant": "mustard",
-            "price": 45,
+            "item_name": "Rowan Pinafore Dress",
+            "item_variant": "indigo",
+            "price": 79,
             "quantity": 1,
             "attractor": {
-              "bold": 0.8,
-              "colourful": 0.7,
-              "edgy": 0.3,
-              "modern": 0.6,
-              "retro": 0.6
+              "bold": 0.2,
+              "casual": 0.85,
+              "edgy": 0.4,
+              "retro": 0.4,
+              "structured": 0.3
             }
           },
           {
@@ -4214,20 +4236,20 @@
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Casual",
-            "item_category4": "Midi",
-            "item_id": "DRESS_18",
+            "item_category4": "Maxi",
+            "item_id": "DRESS_11",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Rowan Pinafore Dress",
-            "item_variant": "indigo",
-            "price": 79,
+            "item_name": "Meadow Smock Dress",
+            "item_variant": "sand",
+            "price": 99,
             "quantity": 1,
             "attractor": {
-              "bold": 0.2,
+              "bohemian": 0.8,
               "casual": 0.85,
-              "edgy": 0.4,
-              "retro": 0.4,
-              "structured": 0.3
+              "feminine": 0.4,
+              "minimalistic": 0.5,
+              "romantic": 0.2
             }
           },
           {
@@ -4252,28 +4274,6 @@
               "opulent": 0.7,
               "retro": 0.3,
               "structured": 0.5
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Dresses",
-            "item_category3": "Casual",
-            "item_category4": "Maxi",
-            "item_id": "DRESS_11",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Meadow Smock Dress",
-            "item_variant": "sand",
-            "price": 99,
-            "quantity": 1,
-            "attractor": {
-              "bohemian": 0.8,
-              "casual": 0.85,
-              "feminine": 0.4,
-              "minimalistic": 0.5,
-              "romantic": 0.2
             }
           },
           {

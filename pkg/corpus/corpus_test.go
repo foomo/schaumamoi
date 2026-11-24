@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/corpus"
 	"github.com/foomo/schaumamoi/pkg/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
@@ -15,139 +16,39 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// envelope is what the test corpora ingest with: the fields of an mpv2 envelope
-// that differ between the batches of one shopper.
-type envelope struct {
-	At      time.Time
-	Session string
-	// Personalization is whether the shopper consented to personalization storage.
-	Personalization bool
-}
-
-// decoration is what the test corpora fold out of each event: the event's contribution
-// to the shopper's taste — the attractors of the items it carries, weighted by how
-// deliberate the event is — and, copied off the envelope, when and in which session it
-// happened, which is what lets a deriver decay by time and cut a history into windows.
-// The envelope is gone once an event is admitted; this is what remains of it.
-//
-// The taste is one personalization.Map for everything the shopper touches, whatever the
-// category. Categories need no handling of their own: an item only carries the
-// dimensions that describe it, so a dress and a pair of trousers add to the dimensions
-// they share, and a lamp adds to the few it shares with clothes and to its own.
-type decoration struct {
-	At       time.Time
-	Session  string
-	Affinity personalization.Map
-}
-
+// The corpus under test is the affinity corpus the shop ranks with (pkg/affinity). The
+// short names below are the tests' own for its parts, so the tests read as they always
+// did: what is admitted, how it is decorated, and what is derived.
 type (
+	envelope   = affinity.Envelope
+	decoration = affinity.Decoration
+
 	testEvent     = sesamy.Event[any]
-	testDecorated = corpus.DecoratedEvent[any, decoration]
-	testDecorator = corpus.EventDecorator[envelope, any, decoration]
-	testFilter    = corpus.EventFilter[envelope, any]
+	testDecorated = affinity.Decorated
+	testDecorator = affinity.Decorator
+	testFilter    = affinity.Filter
 	testConfig    = corpus.Config[envelope, any, decoration]
-	testCorpus    = corpus.Corpus[envelope, any, decoration]
+	testCorpus    = affinity.Corpus
+)
+
+var (
+	stampTime          = affinity.StampTime
+	stampSession       = affinity.StampSession
+	addAttractors      = affinity.AddAttractors
+	weighByIntent      = affinity.WeighByIntent
+	affinityDecorators = affinity.Decorators
+	intentWeight       = affinity.Weights
+	choices            = affinity.Choices
+	newAffinityCorpus  = affinity.New
+	flat               = affinity.Flat
+	decayed            = affinity.Decayed
 )
 
 // itemsParams is the one thing every ecommerce event has in common. Decoding into
-// mock.Item keeps the attractor, which is all the affinity needs — see TestItemDecode
-// for why the GA4 fields come back zeroed.
+// mock.Item keeps the attractor and, in memory, the category — see TestItemDecode for why
+// the GA4 fields come back zeroed off the wire.
 type itemsParams struct {
 	Items []mock.Item `json:"items"`
-}
-
-// intentWeight is how much an event the affinity corpus admits says about taste:
-// selecting and viewing a product are deliberate choices, putting it in the cart the
-// strongest one. Listings never get this far — see choices. The weights are the shop's
-// own, so a flat affinity is exactly the profile the shop ranks its listings by.
-var intentWeight = map[sesamy.EventName]personalization.Value{
-	sesamy.EventNameSelectItem: mock.LearnSelect,
-	sesamy.EventNameViewItem:   mock.LearnView,
-	sesamy.EventNameAddToCart:  mock.LearnCart,
-}
-
-// stampTime and stampSession copy the envelope's time and session onto the event. They read
-// the envelope rather than the event, because the event itself carries neither; and
-// they have to, because the corpus keeps the decoration and not the envelope.
-func stampTime(env envelope, _ testEvent, d decoration) decoration {
-	d.At = env.At
-
-	return d
-}
-
-func stampSession(env envelope, _ testEvent, d decoration) decoration {
-	d.Session = env.Session
-
-	return d
-}
-
-// addAttractors adds the attractor of every item the event carries to the decoration. An event
-// without decodable items leaves the decoration as it was.
-func addAttractors(_ envelope, e testEvent, d decoration) decoration {
-	var p itemsParams
-	if err := e.DecodeParams(&p); err != nil {
-		return d
-	}
-
-	out := clone(d.Affinity)
-	for _, item := range p.Items {
-		for dimension, v := range item.Attractor {
-			out[dimension] += v
-		}
-	}
-
-	d.Affinity = out
-
-	return d
-}
-
-// weighByIntent scales the decoration by the intentWeight of the event. The affinity
-// corpus only admits events that have one; anything else would weigh nothing.
-func weighByIntent(_ envelope, e testEvent, d decoration) decoration {
-	w := intentWeight[e.Name]
-
-	out := make(personalization.Map, len(d.Affinity))
-	for dimension, v := range d.Affinity {
-		out[dimension] = v * w
-	}
-
-	d.Affinity = out
-
-	return d
-}
-
-func clone(m personalization.Map) personalization.Map {
-	out := make(personalization.Map, len(m))
-	for dimension, v := range m {
-		out[dimension] = v
-	}
-
-	return out
-}
-
-// affinityDecorators is the chain every affinity corpus decorates with, in order. The
-// corpus report draws its pipeline from this slice, so the picture cannot drift from it.
-var affinityDecorators = []testDecorator{stampTime, stampSession, addAttractors, weighByIntent}
-
-// choices is the affinity corpus's own filter: it admits what the shopper did — selected,
-// viewed, put in the cart — and nothing else. It filters positively, for the events it
-// learns from, rather than dropping the ones it does not: listings are where products
-// are offered, what the shop chose to show says nothing about the shopper, and any new
-// kind of event stays out until the corpus has a use for it.
-var choices = only(sesamy.EventNameSelectItem, sesamy.EventNameViewItem, sesamy.EventNameAddToCart)
-
-// newAffinityCorpus is a corpus that admits choices, narrowed further by filter if one
-// is given — the consent filter, say.
-func newAffinityCorpus(filter testFilter) *testCorpus {
-	admit := choices
-	if filter != nil {
-		admit = func(env envelope, e testEvent) bool { return choices(env, e) && filter(env, e) }
-	}
-
-	return corpus.New(testConfig{
-		Filter:     admit,
-		Decorators: affinityDecorators,
-	})
 }
 
 func only(names ...sesamy.EventName) testFilter {
@@ -166,44 +67,6 @@ func only(names ...sesamy.EventName) testFilter {
 // type-erased to sesamy.Event[any], as sesamy-go hands them downstream.
 func kateJourney() []testEvent {
 	return mock.Journey(mock.PersonaBusinessKate).Events
-}
-
-// affinity is the domain state: the shopper's affinity to the attractors of the items
-// they interacted with. It sums into a fresh map in slice order — events arrive in order
-// and Add appends, so the float sums are stable, for the reason Map.Score documents — and
-// never writes into a decoration, which the corpus hands out by reference.
-func affinity(events []testDecorated) personalization.Map {
-	out := personalization.Map{}
-	for _, e := range events {
-		for dimension, v := range e.Decoration.Affinity {
-			out[dimension] += v
-		}
-	}
-
-	return out
-}
-
-// decayed is affinity with recency: an event's contribution halves every halfLife it is
-// older than now. Now is handed in rather than read off the clock, so deriving stays a
-// pure read and a test can move time by hand. An event from after now counts in full
-// rather than growing.
-func decayed(now time.Time, halfLife time.Duration) corpus.StateDeriver[any, decoration, personalization.Map] {
-	return func(events []testDecorated) personalization.Map {
-		out := personalization.Map{}
-		for _, e := range events {
-			w := decayWeight(now, halfLife, e.Decoration.At)
-			for dimension, v := range e.Decoration.Affinity {
-				out[dimension] += v * w
-			}
-		}
-
-		return out
-	}
-}
-
-// decayWeight is what an event recorded at 'at' still counts for at now.
-func decayWeight(now time.Time, halfLife time.Duration, at time.Time) personalization.Value {
-	return personalization.Value(math.Exp2(-float64(max(now.Sub(at), 0)) / float64(halfLife)))
 }
 
 // nearestIn is the product of one category that ranks first for a taste: how that
@@ -374,7 +237,7 @@ func TestAffinityRecoversPersona(t *testing.T) {
 			p := newAffinityCorpus(nil)
 			p.Add(envelope{}, mock.Journey(persona).Events...)
 
-			aff := p.Derive(affinity)
+			aff := p.Derive(flat)
 			assert.Equal(t, persona.Name, nearestPersona(aff, mock.Personas()).Name)
 
 			own := cosine(aff, persona.Affinity)
@@ -404,7 +267,7 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 			p := newAffinityCorpus(nil)
 			p.Add(envelope{}, events...)
 
-			got := p.Derive(affinity)
+			got := p.Derive(flat)
 			assertPerCategory(t, got, persona, events)
 
 		})
@@ -426,7 +289,7 @@ func TestAddAppliesFilter(t *testing.T) {
 		sesamy.EventNameViewItem:   2,
 		sesamy.EventNameAddToCart:  1,
 	}, p.Derive(funnel))
-	assert.Equal(t, mock.PersonaBusinessKate.Name, nearestPersona(p.Derive(affinity), mock.Personas()).Name)
+	assert.Equal(t, mock.PersonaBusinessKate.Name, nearestPersona(p.Derive(flat), mock.Personas()).Name)
 
 	carts := newAffinityCorpus(only(sesamy.EventNameAddToCart, sesamy.EventNameViewItemList))
 	carts.Add(envelope{}, kateJourney()...)
@@ -457,7 +320,7 @@ func TestAddWithoutFilterAdmitsEverything(t *testing.T) {
 	require.NotPanics(t, func() { p.Add(envelope{}, events...) })
 
 	assert.Equal(t, len(events), p.Len())
-	assert.Empty(t, p.Derive(affinity), "no decorators, no decoration")
+	assert.Empty(t, p.Derive(flat), "no decorators, no decoration")
 }
 
 // TestDecoratorsFoldInOrder uses the fact that the affinity decorators do not commute:
@@ -472,7 +335,7 @@ func TestDecoratorsFoldInOrder(t *testing.T) {
 		p := corpus.New(testConfig{Decorators: decorators})
 		p.Add(envelope{}, cart...)
 
-		return p.Derive(affinity)
+		return p.Derive(flat)
 	}
 
 	inOrder, reversed := derive(addAttractors, weighByIntent), derive(weighByIntent, addAttractors)
@@ -503,11 +366,11 @@ func TestDeriveIsRepeatable(t *testing.T) {
 	}
 
 	before := p.Derive(decorations)
-	first := p.Derive(affinity)
+	first := p.Derive(flat)
 
 	require.NotEmpty(t, first)
 	for i := range 4 {
-		assert.Equal(t, first, p.Derive(affinity), "derive %d", i+2)
+		assert.Equal(t, first, p.Derive(flat), "derive %d", i+2)
 	}
 	assert.Equal(t, before, p.Derive(decorations), "deriving modified the corpus")
 }
@@ -522,7 +385,7 @@ func TestAddAfterDeriveDoesNotRedecorate(t *testing.T) {
 
 	p := newAffinityCorpus(nil)
 	p.Add(envelope{}, first...)
-	require.NotEmpty(t, p.Derive(affinity))
+	require.NotEmpty(t, p.Derive(flat))
 	p.Add(envelope{}, second...)
 
 	got := p.Derive(func(events []testDecorated) []personalization.Map {
@@ -542,7 +405,7 @@ func TestAddAfterDeriveDoesNotRedecorate(t *testing.T) {
 		fresh := newAffinityCorpus(nil)
 		fresh.Add(envelope{}, e)
 
-		assert.Equal(t, fresh.Derive(affinity), got[i], "event %d (%s)", i, e.Name)
+		assert.Equal(t, fresh.Derive(flat), got[i], "event %d (%s)", i, e.Name)
 	}
 }
 
@@ -561,7 +424,7 @@ func TestOneCorpusManyQuestions(t *testing.T) {
 	}, p.Derive(funnel))
 
 	assert.Equal(t, mock.PersonaBusinessKate.Name, p.Derive(func(events []testDecorated) mock.Persona {
-		return nearestPersona(affinity(events), mock.Personas())
+		return nearestPersona(flat(events), mock.Personas())
 	}).Name)
 }
 
@@ -574,13 +437,13 @@ func TestDeriveIsDeterministic(t *testing.T) {
 	p := newAffinityCorpus(nil)
 	p.Add(envelope{}, kateJourney()...)
 
-	want := p.Derive(affinity)
+	want := p.Derive(flat)
 	for range 8 {
-		assert.Equal(t, want, p.Derive(affinity))
+		assert.Equal(t, want, p.Derive(flat))
 
 		again := newAffinityCorpus(nil)
 		again.Add(envelope{}, kateJourney()...)
-		assert.Equal(t, want, again.Derive(affinity))
+		assert.Equal(t, want, again.Derive(flat))
 	}
 }
 
@@ -639,7 +502,7 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 			p := newAffinityCorpus(nil)
 			p.Add(envelope{At: mock.BaseTime.Add(-tt.age)}, cart)
 
-			full := p.Derive(affinity)
+			full := p.Derive(flat)
 			got := p.Derive(decayed(mock.BaseTime, week))
 
 			require.NotEmpty(t, full)
@@ -752,7 +615,7 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 			p := newAffinityCorpus(nil)
 			addHistory(p, drifted(tt.old, tt.recent))
 
-			assert.Equal(t, tt.flat.Name, nearestPersona(p.Derive(affinity), mock.Personas()).Name)
+			assert.Equal(t, tt.flat.Name, nearestPersona(p.Derive(flat), mock.Personas()).Name)
 		})
 	}
 }
@@ -786,7 +649,7 @@ func TestAddWithoutTimeDecaysAway(t *testing.T) {
 	p := newAffinityCorpus(nil)
 	p.Add(envelope{}, kateJourney()...)
 
-	require.NotEmpty(t, p.Derive(affinity))
+	require.NotEmpty(t, p.Derive(flat))
 	for dimension, v := range p.Derive(decayed(mock.BaseTime, week)) {
 		assert.Zero(t, v, dimension)
 	}
@@ -1030,4 +893,13 @@ func TestFilterSeesEnvelope(t *testing.T) {
 	assert.Equal(t, admitted, filtered.Len())
 	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(all.Derive(phases(phaseThreshold))))
 	assert.Equal(t, []string{"Kate"}, phasePersonas(filtered.Derive(phases(phaseThreshold))))
+}
+
+func clone(m personalization.Map) personalization.Map {
+	out := make(personalization.Map, len(m))
+	for dimension, v := range m {
+		out[dimension] = v
+	}
+
+	return out
 }

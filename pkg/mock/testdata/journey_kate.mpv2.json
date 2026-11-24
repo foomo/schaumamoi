@@ -3098,6 +3098,25 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Home Decoration",
+            "item_category2": "Lamps",
+            "item_id": "HOME_16",
+            "item_list_id": "home-decoration",
+            "item_list_name": "Home Decoration",
+            "item_name": "Grove Ceramic Table Lamp",
+            "item_variant": "olive",
+            "price": 139,
+            "quantity": 1,
+            "attractor": {
+              "classic": 0.3,
+              "cozy": 0.6,
+              "minimalistic": 0.3,
+              "natural": 0.7
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
             "item_category2": "Cushions",
             "item_id": "HOME_14",
             "item_list_id": "home-decoration",
@@ -3112,25 +3131,6 @@
               "cozy": 0.4,
               "retro": 0.6,
               "romantic": 0.7
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Lamps",
-            "item_id": "HOME_16",
-            "item_list_id": "home-decoration",
-            "item_list_name": "Home Decoration",
-            "item_name": "Grove Ceramic Table Lamp",
-            "item_variant": "olive",
-            "price": 139,
-            "quantity": 1,
-            "attractor": {
-              "classic": 0.3,
-              "cozy": 0.6,
-              "minimalistic": 0.3,
-              "natural": 0.7
             }
           },
           {
@@ -3750,28 +3750,6 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Business",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_13",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Atrium Wide-Leg Trousers",
-            "item_variant": "charcoal",
-            "price": 189,
-            "quantity": 1,
-            "attractor": {
-              "business": 0.8,
-              "edgy": 0.3,
-              "minimalistic": 0.6,
-              "modern": 0.7,
-              "structured": 0.7
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Business",
             "item_category4": "Midi",
@@ -3818,6 +3796,47 @@
             "item_category": "Women's Fashion",
             "item_category2": "Trousers",
             "item_category3": "Business",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_13",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Atrium Wide-Leg Trousers",
+            "item_variant": "charcoal",
+            "price": 189,
+            "quantity": 1,
+            "attractor": {
+              "business": 0.8,
+              "edgy": 0.3,
+              "minimalistic": 0.6,
+              "modern": 0.7,
+              "structured": 0.7
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Vases",
+            "item_id": "HOME_11",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Canton Ginger Jar",
+            "item_variant": "navy",
+            "price": 99,
+            "quantity": 1,
+            "attractor": {
+              "classic": 0.95,
+              "colourful": 0.3,
+              "modern": -0.6,
+              "retro": 0.5
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Business",
             "item_category4": "Ankle",
             "item_id": "TROUSERS_02",
             "item_list_id": "all-products",
@@ -3838,20 +3857,24 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Vases",
-            "item_id": "HOME_11",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Business",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_03",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Canton Ginger Jar",
-            "item_variant": "navy",
-            "price": 99,
+            "item_name": "Riviera Wide-Leg Trousers",
+            "item_variant": "camel",
+            "price": 159,
             "quantity": 1,
             "attractor": {
-              "classic": 0.95,
-              "colourful": 0.3,
-              "modern": -0.6,
-              "retro": 0.5
+              "bold": 0.3,
+              "business": 0.6,
+              "classic": 0.4,
+              "feminine": 0.5,
+              "retro": 0.75,
+              "romantic": 0.3
             }
           },
           {
@@ -3882,29 +3905,6 @@
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Trousers",
-            "item_category3": "Business",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_03",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Riviera Wide-Leg Trousers",
-            "item_variant": "camel",
-            "price": 159,
-            "quantity": 1,
-            "attractor": {
-              "bold": 0.3,
-              "business": 0.6,
-              "classic": 0.4,
-              "feminine": 0.5,
-              "retro": 0.75,
-              "romantic": 0.3
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
             "item_category3": "Casual",
             "item_category4": "Full",
             "item_id": "TROUSERS_09",
@@ -3919,29 +3919,6 @@
               "classic": 0.5,
               "minimalistic": 0.5,
               "structured": 0.4
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Atelier",
-            "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Festive",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_07",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Soirée Tuxedo Trousers",
-            "item_variant": "black",
-            "price": 199,
-            "quantity": 1,
-            "attractor": {
-              "classic": 0.3,
-              "edgy": 0.5,
-              "festive": 0.7,
-              "minimalistic": 0.5,
-              "modern": 0.7,
-              "structured": 0.7
             }
           },
           {
@@ -3967,6 +3944,29 @@
               "feminine": 0.8,
               "retro": 0.9,
               "romantic": 0.7
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Atelier",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Festive",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_07",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Soirée Tuxedo Trousers",
+            "item_variant": "black",
+            "price": 199,
+            "quantity": 1,
+            "attractor": {
+              "classic": 0.3,
+              "edgy": 0.5,
+              "festive": 0.7,
+              "minimalistic": 0.5,
+              "modern": 0.7,
+              "structured": 0.7
             }
           },
           {
@@ -4161,28 +4161,6 @@
           },
           {
             "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Casual",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_12",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Field Cargo Trousers",
-            "item_variant": "khaki",
-            "price": 95,
-            "quantity": 1,
-            "attractor": {
-              "bold": 0.3,
-              "casual": 0.8,
-              "edgy": 0.6,
-              "modern": 0.4,
-              "structured": 0.5
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
@@ -4234,6 +4212,28 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Casual",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_12",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Field Cargo Trousers",
+            "item_variant": "khaki",
+            "price": 95,
+            "quantity": 1,
+            "attractor": {
+              "bold": 0.3,
+              "casual": 0.8,
+              "edgy": 0.6,
+              "modern": 0.4,
+              "structured": 0.5
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Casual",
             "item_category4": "Mini",
@@ -4274,25 +4274,6 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Cushions",
-            "item_id": "HOME_03",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Driftwood Linen Cushion",
-            "item_variant": "sand",
-            "price": 39,
-            "quantity": 1,
-            "attractor": {
-              "bohemian": 0.4,
-              "cozy": 0.3,
-              "minimalistic": 0.75,
-              "natural": 0.85
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
             "item_category3": "Casual",
@@ -4310,6 +4291,25 @@
               "edgy": 0.4,
               "retro": 0.4,
               "structured": 0.3
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Cushions",
+            "item_id": "HOME_03",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Driftwood Linen Cushion",
+            "item_variant": "sand",
+            "price": 39,
+            "quantity": 1,
+            "attractor": {
+              "bohemian": 0.4,
+              "cozy": 0.3,
+              "minimalistic": 0.75,
+              "natural": 0.85
             }
           },
           {
@@ -4340,25 +4340,6 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Home Decoration",
-            "item_category2": "Vases",
-            "item_id": "HOME_09",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Kiln Stoneware Vase",
-            "item_variant": "sand",
-            "price": 59,
-            "quantity": 1,
-            "attractor": {
-              "cozy": 0.2,
-              "minimalistic": 0.7,
-              "modern": 0.2,
-              "natural": 0.85
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
             "item_category2": "Cushions",
             "item_id": "HOME_01",
             "item_list_id": "all-products",
@@ -4379,22 +4360,20 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Dresses",
-            "item_category3": "Casual",
-            "item_category4": "Mini",
-            "item_id": "DRESS_10",
+            "item_category": "Home Decoration",
+            "item_category2": "Vases",
+            "item_id": "HOME_09",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Sunday Tee Dress",
-            "item_variant": "grey",
-            "price": 49,
+            "item_name": "Kiln Stoneware Vase",
+            "item_variant": "sand",
+            "price": 59,
             "quantity": 1,
             "attractor": {
-              "casual": 0.95,
-              "edgy": 0.4,
-              "minimalistic": 0.85,
-              "modern": 0.5
+              "cozy": 0.2,
+              "minimalistic": 0.7,
+              "modern": 0.2,
+              "natural": 0.85
             }
           },
           {
@@ -4423,43 +4402,41 @@
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
+            "item_category2": "Dresses",
             "item_category3": "Casual",
-            "item_category4": "Ankle",
-            "item_id": "TROUSERS_10",
+            "item_category4": "Mini",
+            "item_id": "DRESS_10",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Haven Joggers",
+            "item_name": "Sunday Tee Dress",
             "item_variant": "grey",
-            "price": 59,
+            "price": 49,
             "quantity": 1,
             "attractor": {
               "casual": 0.95,
               "edgy": 0.4,
               "minimalistic": 0.85,
-              "modern": 0.6,
-              "opulent": -0.5
+              "modern": 0.5
             }
           },
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Casual",
-            "item_category4": "Ankle",
-            "item_id": "TROUSERS_18",
+            "item_category": "Home Decoration",
+            "item_category2": "Cushions",
+            "item_id": "HOME_04",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Sprint Track Pants",
-            "item_variant": "black",
-            "price": 65,
+            "item_name": "Zigzag Print Cushion",
+            "item_variant": "mustard",
+            "price": 45,
             "quantity": 1,
             "attractor": {
-              "casual": 0.9,
-              "edgy": 0.5,
-              "minimalistic": 0.8,
-              "modern": 0.6
+              "bold": 0.8,
+              "colourful": 0.7,
+              "edgy": 0.3,
+              "modern": 0.6,
+              "retro": 0.6
             }
           },
           {
@@ -4487,21 +4464,23 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Cushions",
-            "item_id": "HOME_04",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Casual",
+            "item_category4": "Ankle",
+            "item_id": "TROUSERS_10",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Zigzag Print Cushion",
-            "item_variant": "mustard",
-            "price": 45,
+            "item_name": "Haven Joggers",
+            "item_variant": "grey",
+            "price": 59,
             "quantity": 1,
             "attractor": {
-              "bold": 0.8,
-              "colourful": 0.7,
-              "edgy": 0.3,
+              "casual": 0.95,
+              "edgy": 0.4,
+              "minimalistic": 0.85,
               "modern": 0.6,
-              "retro": 0.6
+              "opulent": -0.5
             }
           },
           {
@@ -4521,6 +4500,27 @@
               "minimalistic": 0.5,
               "modern": 0.4,
               "natural": 0.3
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Casual",
+            "item_category4": "Ankle",
+            "item_id": "TROUSERS_18",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Sprint Track Pants",
+            "item_variant": "black",
+            "price": 65,
+            "quantity": 1,
+            "attractor": {
+              "casual": 0.9,
+              "edgy": 0.5,
+              "minimalistic": 0.8,
+              "modern": 0.6
             }
           },
           {
@@ -4552,6 +4552,26 @@
             "item_brand": "Foomo Studio",
             "item_category": "Home Decoration",
             "item_category2": "Vases",
+            "item_id": "HOME_12",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Carnevale Murano Vase",
+            "item_variant": "rose",
+            "price": 149,
+            "quantity": 1,
+            "attractor": {
+              "bold": 0.8,
+              "colourful": 0.9,
+              "minimalistic": -0.5,
+              "opulent": 0.6,
+              "retro": 0.4
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Vases",
             "item_id": "HOME_10",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
@@ -4564,6 +4584,25 @@
               "industrial": 0.4,
               "minimalistic": 0.8,
               "modern": 0.85
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Vases",
+            "item_id": "HOME_18",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Sienna Terracotta Vase",
+            "item_variant": "terracotta",
+            "price": 49,
+            "quantity": 1,
+            "attractor": {
+              "bohemian": 0.7,
+              "cozy": 0.4,
+              "natural": 0.8,
+              "retro": 0.2
             }
           },
           {
@@ -4590,61 +4629,26 @@
           },
           {
             "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Vases",
-            "item_id": "HOME_18",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Sienna Terracotta Vase",
-            "item_variant": "terracotta",
-            "price": 49,
-            "quantity": 1,
-            "attractor": {
-              "bohemian": 0.7,
-              "cozy": 0.4,
-              "natural": 0.8,
-              "retro": 0.2
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Vases",
-            "item_id": "HOME_12",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Carnevale Murano Vase",
-            "item_variant": "rose",
-            "price": 149,
-            "quantity": 1,
-            "attractor": {
-              "bold": 0.8,
-              "colourful": 0.9,
-              "minimalistic": -0.5,
-              "opulent": 0.6,
-              "retro": 0.4
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Home Decoration",
-            "item_category2": "Lamps",
-            "item_id": "HOME_15",
+            "item_category": "Women's Fashion",
+            "item_category2": "Trousers",
+            "item_category3": "Festive",
+            "item_category4": "Full",
+            "item_id": "TROUSERS_05",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Meridian Arc Floor Lamp",
-            "item_variant": "black",
-            "price": 229,
+            "item_name": "Glitterball Sequin Flares",
+            "item_variant": "silver",
+            "price": 239,
             "quantity": 1,
             "attractor": {
-              "bold": 0.3,
-              "edgy": 0.4,
-              "industrial": 0.6,
-              "minimalistic": 0.6,
-              "modern": 0.85
+              "bold": 0.9,
+              "colourful": 0.6,
+              "feminine": 0.4,
+              "festive": 0.9,
+              "minimalistic": -0.7,
+              "opulent": 0.85,
+              "retro": 0.6
             }
           },
           {
@@ -4668,25 +4672,21 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Women's Fashion",
-            "item_category2": "Trousers",
-            "item_category3": "Festive",
-            "item_category4": "Full",
-            "item_id": "TROUSERS_05",
+            "item_category": "Home Decoration",
+            "item_category2": "Lamps",
+            "item_id": "HOME_15",
             "item_list_id": "all-products",
             "item_list_name": "All Products",
-            "item_name": "Glitterball Sequin Flares",
-            "item_variant": "silver",
-            "price": 239,
+            "item_name": "Meridian Arc Floor Lamp",
+            "item_variant": "black",
+            "price": 229,
             "quantity": 1,
             "attractor": {
-              "bold": 0.9,
-              "colourful": 0.6,
-              "feminine": 0.4,
-              "festive": 0.9,
-              "minimalistic": -0.7,
-              "opulent": 0.85,
-              "retro": 0.6
+              "bold": 0.3,
+              "edgy": 0.4,
+              "industrial": 0.6,
+              "minimalistic": 0.6,
+              "modern": 0.85
             }
           },
           {

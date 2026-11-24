@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/foomo/gostandards/iso4217"
+	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
@@ -771,30 +772,22 @@ func TestHistoryLearns(t *testing.T) {
 	}
 }
 
-// replayListings walks events in order the way the shop learns — selects and views once,
-// carts three times, listings not at all — and calls check with every listing and the
-// profile it should have been ranked by. It returns the profile after the last event, so
-// a history can be replayed visit by visit.
-func replayListings(t *testing.T, prof mock.Profile, events []sesamy.Event[any], check func(mock.ItemListParams, mock.Profile)) mock.Profile {
+// replayListings feeds events in order into a shopper's affinity corpus, as the shop
+// does, and calls check with every listing and the vector it should have been ranked by:
+// what the corpus emitted just before it. Hand it the same corpus for every visit of a
+// history and the vector carries over, as it does in the shop.
+func replayListings(t *testing.T, c *affinity.Corpus, events []sesamy.Event[any], check func(mock.ItemListParams, mock.Profile)) {
 	t.Helper()
 
 	for _, e := range events {
-		var p mock.ItemListParams // every event here carries its items under "items"
-		require.NoError(t, e.DecodeParams(&p))
-
-		switch e.Name {
-		case sesamy.EventNameViewItemList:
-			check(p, prof)
-		case sesamy.EventNameSelectItem:
-			prof = prof.Learn(mock.LearnSelect, p.Items...)
-		case sesamy.EventNameViewItem:
-			prof = prof.Learn(mock.LearnView, p.Items...)
-		case sesamy.EventNameAddToCart:
-			prof = prof.Learn(mock.LearnCart, p.Items...)
+		if e.Name == sesamy.EventNameViewItemList {
+			var p mock.ItemListParams
+			require.NoError(t, e.DecodeParams(&p))
+			check(p, mock.Profile{Taste: c.Derive(affinity.DefaultFade.Vector), Signals: c.Len()})
 		}
-	}
 
-	return prof
+		c.Add(affinity.Envelope{}, e)
+	}
 }
 
 // assertSortedBy checks a listing against the profile replayed for it, without going
@@ -834,16 +827,16 @@ func TestListingsAreSortedByWhatWasLearned(t *testing.T) {
 
 			for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
 				n := 0
-				replayListings(t, mock.Profile{}, journey.Events, func(list mock.ItemListParams, prof mock.Profile) {
+				replayListings(t, affinity.New(nil), journey.Events, func(list mock.ItemListParams, prof mock.Profile) {
 					n++
 					assertSortedBy(t, list, prof, fmt.Sprintf("%s listing %d (%s)", name, n, list.ItemListID))
 				})
 			}
 
-			prof := mock.Profile{}
+			c := affinity.New(nil)
 			for i, payload := range mock.History(mock.Month(p)) {
 				n := 0
-				prof = replayListings(t, prof, payload.Events, func(list mock.ItemListParams, prof mock.Profile) {
+				replayListings(t, c, payload.Events, func(list mock.ItemListParams, prof mock.Profile) {
 					n++
 					assertSortedBy(t, list, prof, fmt.Sprintf("visit %d listing %d (%s)", i+1, n, list.ItemListID))
 				})

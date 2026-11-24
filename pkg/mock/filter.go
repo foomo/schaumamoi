@@ -15,9 +15,9 @@ const (
 	SortPriceAsc  = "price_asc"
 	SortPriceDesc = "price_desc"
 
-	// SortAffinity ranks by how well each item matches the taste the shop has learned,
-	// Filter.Profile. A neutral profile scores everything the same, which leaves the
-	// catalog order.
+	// SortAffinity ranks by how well each item matches the shopper's vector, as the
+	// affinity corpus emits it into Filter.Profile. A neutral one scores everything the
+	// same, which leaves the catalog order.
 	SortAffinity = "affinity"
 )
 

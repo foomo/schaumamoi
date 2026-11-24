@@ -3668,6 +3668,26 @@
           {
             "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
+            "item_category": "Home Decoration",
+            "item_category2": "Lamps",
+            "item_id": "HOME_06",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Halden Concrete Pendant",
+            "item_variant": "grey",
+            "price": 159,
+            "quantity": 1,
+            "attractor": {
+              "classic": -0.4,
+              "edgy": 0.6,
+              "industrial": 0.9,
+              "minimalistic": 0.75,
+              "modern": 0.85
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Trousers",
             "item_category3": "Business",
@@ -3686,26 +3706,6 @@
               "minimalistic": 0.85,
               "modern": 0.9,
               "structured": 0.8
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Studio",
-            "item_category": "Home Decoration",
-            "item_category2": "Lamps",
-            "item_id": "HOME_06",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Halden Concrete Pendant",
-            "item_variant": "grey",
-            "price": 159,
-            "quantity": 1,
-            "attractor": {
-              "classic": -0.4,
-              "edgy": 0.6,
-              "industrial": 0.9,
-              "minimalistic": 0.75,
-              "modern": 0.85
             }
           },
           {
@@ -3752,6 +3752,26 @@
           },
           {
             "affiliation": "Foomo Fashion",
+            "item_brand": "Foomo Atelier",
+            "item_category": "Home Decoration",
+            "item_category2": "Lamps",
+            "item_id": "HOME_15",
+            "item_list_id": "all-products",
+            "item_list_name": "All Products",
+            "item_name": "Meridian Arc Floor Lamp",
+            "item_variant": "black",
+            "price": 229,
+            "quantity": 1,
+            "attractor": {
+              "bold": 0.3,
+              "edgy": 0.4,
+              "industrial": 0.6,
+              "minimalistic": 0.6,
+              "modern": 0.85
+            }
+          },
+          {
+            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Studio",
             "item_category": "Women's Fashion",
             "item_category2": "Dresses",
@@ -3770,26 +3790,6 @@
               "colourful": 0.3,
               "minimalistic": 0.6,
               "structured": 0.4
-            }
-          },
-          {
-            "affiliation": "Foomo Fashion",
-            "item_brand": "Foomo Atelier",
-            "item_category": "Home Decoration",
-            "item_category2": "Lamps",
-            "item_id": "HOME_15",
-            "item_list_id": "all-products",
-            "item_list_name": "All Products",
-            "item_name": "Meridian Arc Floor Lamp",
-            "item_variant": "black",
-            "price": 229,
-            "quantity": 1,
-            "attractor": {
-              "bold": 0.3,
-              "edgy": 0.4,
-              "industrial": 0.6,
-              "minimalistic": 0.6,
-              "modern": 0.85
             }
           },
           {
