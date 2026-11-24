@@ -198,3 +198,16 @@ waist, flare, sleeves and neckline from its attractor, its colour from its varia
 its fabric finish (sequins, velvet, silk, tulle, print) from the material its description
 names. A persona's hairstyle and accessories come from its taste vector, and it wears the
 colour of its top-match dress. Change the data and the picture follows.
+
+### Reports
+
+The tests also write two HTML pages for checking the concept by eye. They show every
+dress and persona by its generated image:
+
+```bash
+go test ./pkg/mock ./pkg/corpus
+open pkg/mock/testdata/report.html    # personas, rankings, journeys, months, catalog
+open pkg/corpus/testdata/report.html  # what the corpus reads back: sessions, decay, drift, phases, consent
+```
+
+They are deterministic but git-ignored: they're test output, not fixtures.

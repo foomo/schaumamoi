@@ -21,3 +21,7 @@ coverage.*
 # Personal opencode config. Anything meant to be shared with the repo belongs in
 # .opencode/ instead, which is deliberately not ignored.
 /opencode.json
+
+# HTML reports the tests write for visual verification. Deterministic, but output, not
+# fixtures: run the tests to get them.
+**/testdata/report.html
