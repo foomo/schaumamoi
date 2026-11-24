@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Velvet Tassel Cushion, plum">
+<title>Velvet Tassel Cushion (HOME_01)</title>
+<rect width="300" height="400" fill="#f2f2f2"/>
+<ellipse cx="150" cy="322" rx="100" ry="8" fill="#000000" fill-opacity="0.08"/>
+<defs><linearGradient id="fabric-home_01-fabric" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#34152c"/><stop offset="0.38" stop-color="#5e2750"/><stop offset="0.5" stop-color="#7e5273"/><stop offset="0.62" stop-color="#5e2750"/><stop offset="1" stop-color="#34152c"/></linearGradient></defs>
+<defs><clipPath id="body-home_01"><path d="M60,120 Q150,104 240,120 Q256,210 240,300 Q150,316 60,300 Q44,210 60,120 Z"/></clipPath></defs>
+<path d="M60,120 Q150,104 240,120 Q256,210 240,300 Q150,316 60,300 Q44,210 60,120 Z" fill="url(#fabric-home_01-fabric)"/>
+<g clip-path="url(#body-home_01)">
+</g>
+<path d="M60,120 Q150,104 240,120 Q256,210 240,300 Q150,316 60,300 Q44,210 60,120 Z" fill="none" stroke="#3d1934" stroke-width="3" stroke-linejoin="round"/>
+<path d="M60,120 l-12.7,-12.7 m-4,0 l-12.7,-12.7 m8,0 l-12.7,-12.7" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/><circle cx="60" cy="120" r="4" fill="#d4af37"/><path d="M240,120 l12.7,-12.7 m-4,0 l12.7,-12.7 m8,0 l12.7,-12.7" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/><circle cx="240" cy="120" r="4" fill="#d4af37"/><path d="M240,300 l12.7,12.7 m-4,0 l12.7,12.7 m8,0 l12.7,12.7" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/><circle cx="240" cy="300" r="4" fill="#d4af37"/><path d="M60,300 l-12.7,12.7 m-4,0 l-12.7,12.7 m8,0 l-12.7,12.7" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/><circle cx="60" cy="300" r="4" fill="#d4af37"/>
+</svg>

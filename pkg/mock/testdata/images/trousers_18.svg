@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Jersey Track Pants, black">
+<title>Jersey Track Pants (TROUSERS_18)</title>
+<rect width="300" height="400" fill="#edf3ec"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L150,48 M84,48 L216,48" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linecap="round"/>
+<defs><clipPath id="body-trousers_18"><path d="M100,70 L94,140 L105.4,335 L134.6,335 L150,160 L165.4,335 L194.6,335 L206,140 L200,70 Z"/></clipPath></defs>
+<path d="M100,70 L94,140 L105.4,335 L134.6,335 L150,160 L165.4,335 L194.6,335 L206,140 L200,70 Z" fill="#1a1a1a"/>
+<g clip-path="url(#body-trousers_18)">
+<rect x="0" y="70" width="300" height="14" fill="#121212" fill-opacity="0.55"/>
+<path d="M102,84 L96,140 L107.4,339" fill="none" stroke="#5f5f5f" stroke-width="6"/><path d="M198,84 L204,140 L192.6,339" fill="none" stroke="#5f5f5f" stroke-width="6"/>
+<path d="M150,84 L150,134 Q150,146 138,148" fill="none" stroke="#111111" stroke-width="1.5"/>
+<rect x="105.4" y="321" width="29.1" height="14" fill="#151515"/><rect x="165.4" y="321" width="29.1" height="14" fill="#151515"/>
+</g>
+<path d="M100,70 L94,140 L105.4,335 L134.6,335 L150,160 L165.4,335 L194.6,335 L206,140 L200,70 Z" fill="none" stroke="#111111" stroke-width="2" stroke-linejoin="round"/>
+<rect x="106" y="44" width="10" height="34" rx="2" fill="#8a8f96"/><rect x="184" y="44" width="10" height="34" rx="2" fill="#8a8f96"/>
+</svg>

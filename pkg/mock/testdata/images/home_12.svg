@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Murano Glass Vase, rose">
+<title>Murano Glass Vase (HOME_12)</title>
+<rect width="300" height="400" fill="#f2f2f2"/>
+<ellipse cx="150" cy="346" rx="64" ry="8" fill="#000000" fill-opacity="0.08"/>
+<defs><clipPath id="body-home_12"><path d="M130,138 L170,138 Q160,170 186,200 Q232,282 176,342 L124,342 Q68,282 114,200 Q140,170 130,138 Z"/></clipPath></defs>
+<path d="M130,138 L170,138 Q160,170 186,200 Q232,282 176,342 L124,342 Q68,282 114,200 Q140,170 130,138 Z" fill="#d97a8a"/>
+<g clip-path="url(#body-home_12)">
+<path d="M104,150 C164,210 54,280 124,350" fill="none" stroke="#e0a030" stroke-width="9" stroke-opacity="0.75"/><path d="M134,150 C194,210 84,280 154,350" fill="none" stroke="#eab6bf" stroke-width="9" stroke-opacity="0.75"/><path d="M164,150 C224,210 114,280 184,350" fill="none" stroke="#e0a030" stroke-width="9" stroke-opacity="0.75"/>
+</g>
+<path d="M130,138 L170,138 Q160,170 186,200 Q232,282 176,342 L124,342 Q68,282 114,200 Q140,170 130,138 Z" fill="none" stroke="#8d4f5a" stroke-width="2" stroke-linejoin="round"/>
+</svg>

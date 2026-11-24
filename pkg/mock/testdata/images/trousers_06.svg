@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Velvet Palazzo Trousers, plum">
+<title>Velvet Palazzo Trousers (TROUSERS_06)</title>
+<rect width="300" height="400" fill="#f6efe4"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L150,48 M84,48 L216,48" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linecap="round"/>
+<defs><clipPath id="body-trousers_06"><path d="M100,70 L94,140 L74,372 L147,372 L150,160 L153,372 L226,372 L206,140 L200,70 Z"/></clipPath><linearGradient id="fabric-trousers_06" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#34152c"/><stop offset="0.38" stop-color="#5e2750"/><stop offset="0.5" stop-color="#7e5273"/><stop offset="0.62" stop-color="#5e2750"/><stop offset="1" stop-color="#34152c"/></linearGradient></defs>
+<path d="M100,70 L94,140 L74,372 L147,372 L150,160 L153,372 L226,372 L206,140 L200,70 Z" fill="url(#fabric-trousers_06)"/>
+<g clip-path="url(#body-trousers_06)">
+<rect x="0" y="70" width="300" height="14" fill="#421b38" fill-opacity="0.55"/>
+<path d="M150,84 L150,134 Q150,146 138,148" fill="none" stroke="#3d1934" stroke-width="1.5"/>
+
+</g>
+<path d="M100,70 L94,140 L74,372 L147,372 L150,160 L153,372 L226,372 L206,140 L200,70 Z" fill="none" stroke="#3d1934" stroke-width="2" stroke-linejoin="round"/>
+<rect x="106" y="44" width="10" height="34" rx="2" fill="#8a8f96"/><rect x="184" y="44" width="10" height="34" rx="2" fill="#8a8f96"/>
+</svg>

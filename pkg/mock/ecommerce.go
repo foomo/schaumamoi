@@ -6,23 +6,35 @@ import (
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 )
 
-// The listings the single event fixtures browse.
+// The listings the single event fixtures browse. Every listing the shop renders is
+// personalized; these are as a new shopper sees them, ranked by a neutral profile.
+// Journeys re-rank them with Personalize as the shop learns.
 var (
-	// CategoryFilter is the plain listing a shopper lands on.
-	CategoryFilter = Filter{Category: CategoryDresses}
+	// CategoryFilter is the listing a shopper lands on: the whole department.
+	CategoryFilter = Filter{Category: CategoryWomensFashion, Sort: SortAffinity}
 
-	// NarrowedFilter is the same listing after the shopper applies facets.
-	NarrowedFilter = Filter{Category: CategoryDresses, Occasion: OccasionFestive, Length: LengthMaxi}
+	// DressesFilter and TrousersFilter are the two categories below it.
+	DressesFilter  = Filter{Category: CategoryDresses, Sort: SortAffinity}
+	TrousersFilter = Filter{Category: CategoryTrousers, Sort: SortAffinity}
+
+	// NarrowedFilter is the dress listing after the shopper applies facets.
+	NarrowedFilter = Filter{Category: CategoryDresses, Occasion: OccasionFestive, Length: LengthMaxi, Sort: SortAffinity}
+
+	// AllProductsFilter is the top of the tree: every product, both departments.
+	AllProductsFilter = Filter{Sort: SortAffinity}
+
+	// HomeFilter is the home decoration department, and the three categories below it.
+	HomeFilter     = Filter{Category: CategoryHomeDecoration, Sort: SortAffinity}
+	CushionsFilter = Filter{Category: CategoryCushions, Sort: SortAffinity}
+	LampsFilter    = Filter{Category: CategoryLamps, Sort: SortAffinity}
+	VasesFilter    = Filter{Category: CategoryVases, Sort: SortAffinity}
 )
 
-// PersonalizedFilter is the persona's section of the shop, ranked by its taste.
-func PersonalizedFilter(p Persona) Filter {
-	return Filter{
-		Category: CategoryDresses,
-		Occasion: p.Occasion(),
-		Sort:     SortAffinity,
-		Persona:  &p,
-	}
+// SectionFilter is the persona's occasion across the whole department, dresses and
+// trousers together: the facet the shopper narrows to. How it is ranked is the shop's
+// business, set with Personalize.
+func SectionFilter(p Persona) Filter {
+	return Filter{Category: CategoryWomensFashion, Occasion: p.Occasion(), Sort: SortAffinity}
 }
 
 // --- events ---------------------------------------------------------------------
@@ -47,11 +59,8 @@ func ViewItemList(filter Filter) sesamy.Event[ItemListParams] {
 		FilterMaxPrice: filter.MaxPrice,
 		SortBy:         filter.Sort,
 		Personalized:   filter.Personalized(),
+		TasteSignals:   filter.Profile.Signals,
 		ResultCount:    len(items),
-	}
-
-	if filter.Personalized() {
-		p.Persona = filter.Persona.Name
 	}
 
 	return sesamy.NewEvent(sesamy.EventNameViewItemList, p)
@@ -75,7 +84,7 @@ func ViewItem(items ...Item) sesamy.Event[params.ViewItem[Item]] {
 	})
 }
 
-// AddToCart is the shopper putting a dress in the cart.
+// AddToCart is the shopper putting an item in the cart.
 func AddToCart(items ...Item) sesamy.Event[params.AddToCart[Item]] {
 	return sesamy.NewEvent(sesamy.EventNameAddToCart, params.AddToCart[Item]{
 		Currency: DefaultCurrency,
@@ -93,12 +102,28 @@ func ViewItemListPayload(opts ...Option) mpv2.Payload[ItemListParams] {
 	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(CategoryFilter)}, opts...)
 }
 
+func AllProductsItemListPayload(opts ...Option) mpv2.Payload[ItemListParams] {
+	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(AllProductsFilter)}, opts...)
+}
+
+func DressesItemListPayload(opts ...Option) mpv2.Payload[ItemListParams] {
+	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(DressesFilter)}, opts...)
+}
+
+func TrousersItemListPayload(opts ...Option) mpv2.Payload[ItemListParams] {
+	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(TrousersFilter)}, opts...)
+}
+
 func FilteredItemListPayload(opts ...Option) mpv2.Payload[ItemListParams] {
 	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(NarrowedFilter)}, opts...)
 }
 
+// PersonalizedItemListPayload is the persona's section as its first visit reaches it:
+// ranked by what the shop learned from the three listings before.
 func PersonalizedItemListPayload(p Persona, opts ...Option) mpv2.Payload[ItemListParams] {
-	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(PersonalizedFilter(p))}, opts...)
+	stops, _ := route(p, Profile{})
+
+	return Payload([]sesamy.Event[ItemListParams]{ViewItemList(stops[len(stops)-1].Filter)}, opts...)
 }
 
 func SelectItemPayload(opts ...Option) mpv2.Payload[params.SelectItem[Item]] {

@@ -15,19 +15,22 @@ const (
 	SortPriceAsc  = "price_asc"
 	SortPriceDesc = "price_desc"
 
-	// SortAffinity ranks by how well each item matches the filter's persona. It needs
-	// Filter.Persona set; without one it leaves the catalog order alone.
+	// SortAffinity ranks by how well each item matches the taste the shop has learned,
+	// Filter.Profile. A neutral profile scores everything the same, which leaves the
+	// catalog order.
 	SortAffinity = "affinity"
 )
 
-// The listing a shopper sees when no category has been chosen.
+// The top-level listing above both departments: every product the shop sells, which is
+// what a filter with no category selects.
 const (
-	AllProductsListID   = "all_products"
+	AllProductsListID   = "all-products"
 	AllProductsListName = "All Products"
 )
 
 // Filter is the facet selection behind a product listing: the category being browsed,
-// whatever the shopper narrowed it down by, and how the results are ranked.
+// whatever the shopper narrowed it down by, and how the results are ranked — for
+// SortAffinity, by the profile the shop has learned for this shopper.
 type Filter struct {
 	Category string
 	Occasion string
@@ -35,7 +38,7 @@ type Filter struct {
 	Colour   string
 	MaxPrice float64
 	Sort     string
-	Persona  *Persona
+	Profile  Profile
 }
 
 // Apply returns the subset of items the filter selects, in the filter's sort order.
@@ -55,7 +58,7 @@ func (f Filter) Apply(items []Item) []Item {
 		sort.SliceStable(out, func(i, j int) bool { return out[i].Price < out[j].Price })
 	case f.Sort == SortPriceDesc:
 		sort.SliceStable(out, func(i, j int) bool { return out[i].Price > out[j].Price })
-	case f.Sort == SortAffinity && f.Persona != nil:
+	case f.Sort == SortAffinity:
 		f.sortByAffinity(out)
 	}
 
@@ -63,12 +66,13 @@ func (f Filter) Apply(items []Item) []Item {
 }
 
 // sortByAffinity ranks best match first. Equal scores fall back to the item id: without
-// that tie-break the order of two equally good dresses would be arbitrary and the
-// generated fixtures would not be reproducible.
+// that tie-break the order of two equally good products would be arbitrary and the
+// generated fixtures would not be reproducible — and under a neutral profile, where every
+// score is equal, it is the whole order.
 func (f Filter) sortByAffinity(items []Item) {
 	scores := make(map[string]personalization.Value, len(items))
 	for _, item := range items {
-		scores[item.ItemID] = f.Persona.Affinity.Score(item.Attractor)
+		scores[item.ItemID] = Score(f.Profile.Taste, item)
 	}
 
 	sort.SliceStable(items, func(i, j int) bool {
@@ -97,8 +101,8 @@ func (f Filter) matches(item Item) bool {
 	}
 }
 
-// hasCategory matches against the whole category path, so browsing "Dresses" and
-// browsing "Festive" both work.
+// hasCategory matches against the whole category path, so browsing "Women's Fashion",
+// "Dresses" and "Festive" all work.
 func hasCategory(item Item, category string) bool {
 	for _, v := range []string{
 		item.ItemCategory,
@@ -120,20 +124,35 @@ func (f Filter) Narrowed() bool {
 	return f.Occasion != "" || f.Length != "" || f.Colour != "" || f.MaxPrice > 0
 }
 
-// Personalized reports whether the listing is ranked by a persona's taste.
+// Personalized reports whether the listing is ranked by the shopper's learned taste — even
+// a neutral one: the first listing a new shopper sees is personalized, the shop just has
+// nothing to go on yet.
 func (f Filter) Personalized() bool {
-	return f.Sort == SortAffinity && f.Persona != nil
+	return f.Sort == SortAffinity
 }
 
-// ListID is the identifier of the listing being browsed. Facets deliberately stay out of
-// it: they travel as their own fields, so a consumer can aggregate over them without
-// having to parse a string back apart.
+// Personalize is the filter ranked by what the shop has learned so far.
+func (f Filter) Personalize(p Profile) Filter {
+	f.Sort, f.Profile = SortAffinity, p
+
+	return f
+}
+
+// ListID is the identifier of the listing being browsed: the category's path through the
+// tree, e.g. womens-fashion/dresses. Facets deliberately stay out of it: they travel as
+// their own fields, so a consumer can aggregate over them without having to parse a
+// string back apart.
 func (f Filter) ListID() string {
 	if f.Category == "" {
 		return AllProductsListID
 	}
 
-	return slug(f.Category)
+	path := slug(f.Category)
+	for parent := categoryParent[f.Category]; parent != ""; parent = categoryParent[parent] {
+		path = slug(parent) + "/" + path
+	}
+
+	return path
 }
 
 // ListName is the human readable name of the listing.
@@ -170,15 +189,12 @@ func (f Filter) Query() string {
 		values.Set("sort", f.Sort)
 	}
 
-	if f.Personalized() {
-		values.Set("persona", f.Persona.Name)
-	}
-
 	return values.Encode()
 }
 
+// slug is a category name as a path segment: "Women's Fashion" becomes womens-fashion.
 func slug(v string) string {
-	return strings.ToLower(strings.ReplaceAll(v, " ", "_"))
+	return strings.ToLower(strings.NewReplacer(" ", "-", "'", "").Replace(v))
 }
 
 // ItemListParams are the params of a view_item_list event, extended with the filter the
@@ -208,6 +224,8 @@ type ItemListParams struct {
 	FilterMaxPrice float64 `json:"filter_max_price,omitempty"`
 	SortBy         string  `json:"sort_by,omitempty"`
 	Personalized   bool    `json:"personalized,omitempty"`
-	Persona        string  `json:"persona,omitempty"`
-	ResultCount    int     `json:"result_count,omitempty"`
+	// TasteSignals is how many interactions the ranking was learned from: zero is the
+	// neutral ranking a new shopper starts with. No omitempty, so the zero shows.
+	TasteSignals int `json:"taste_signals"`
+	ResultCount  int `json:"result_count,omitempty"`
 }

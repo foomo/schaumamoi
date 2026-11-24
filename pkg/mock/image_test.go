@@ -56,7 +56,7 @@ func TestImagesAreWellFormed(t *testing.T) {
 	}
 }
 
-// TestImagesAreDistinct is what drawing from the data has to deliver: no two dresses and
+// TestImagesAreDistinct is what drawing from the data has to deliver: no two products and
 // no two personas come out as the same picture.
 func TestImagesAreDistinct(t *testing.T) {
 	t.Parallel()

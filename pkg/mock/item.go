@@ -36,9 +36,11 @@ type Item struct {
 	Description string `json:"-" gtag:"-"`
 }
 
-// Occasion and Length read the facets back out of the GA4 category path, which is where
-// dress writes them: Dresses > <Occasion> > <Length>. They are accessors rather than
-// fields on purpose — item_category2 and item_category3 already carry this, and putting
-// it on the wire a second time would be two sources of truth that can drift.
-func (i Item) Occasion() string { return strings.ToLower(i.ItemCategory2) }
-func (i Item) Length() string   { return strings.ToLower(i.ItemCategory3) }
+// Category, Occasion and Length read the facets back out of the GA4 category path, which
+// is where product writes them: Women's Fashion > <Category> > <Occasion> > <Length>.
+// They are accessors rather than fields on purpose — item_category2 to item_category4
+// already carry this, and putting it on the wire a second time would be two sources of
+// truth that can drift.
+func (i Item) Category() string { return i.ItemCategory2 }
+func (i Item) Occasion() string { return strings.ToLower(i.ItemCategory3) }
+func (i Item) Length() string   { return strings.ToLower(i.ItemCategory4) }

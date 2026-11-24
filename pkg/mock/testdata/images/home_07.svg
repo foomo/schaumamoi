@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Rattan Floor Lamp, sand">
+<title>Rattan Floor Lamp (HOME_07)</title>
+<rect width="300" height="400" fill="#f2f2f2"/>
+<ellipse cx="150" cy="346" rx="56" ry="8" fill="#000000" fill-opacity="0.08"/>
+<path d="M150,214 V246" stroke="#8d7f68" stroke-width="4"/>
+<defs><clipPath id="body-home_07-base"><path d="M132,340 L168,340 L164,304 Q192,272 164,240 L136,240 Q108,272 136,304 Z"/></clipPath></defs>
+<path d="M132,340 L168,340 L164,304 Q192,272 164,240 L136,240 Q108,272 136,304 Z" fill="#d9c4a0"/>
+<g clip-path="url(#body-home_07-base)">
+<path d="M140,244 Q124,272 142,300" fill="none" stroke="#ffffff" stroke-width="4" stroke-opacity="0.45"/>
+</g>
+<path d="M132,340 L168,340 L164,304 Q192,272 164,240 L136,240 Q108,272 136,304 Z" fill="none" stroke="#8d7f68" stroke-width="2" stroke-linejoin="round"/>
+<defs><clipPath id="body-home_07"><path d="M98,118 L202,118 L234,214 L66,214 Z"/></clipPath></defs>
+<path d="M98,118 L202,118 L234,214 L66,214 Z" fill="#eee4d4"/>
+<g clip-path="url(#body-home_07)">
+</g>
+<path d="M98,118 L202,118 L234,214 L66,214 Z" fill="none" stroke="#9b948a" stroke-width="2" stroke-linejoin="round"/>
+</svg>

@@ -19,11 +19,12 @@
         "value": 389,
         "items": [
           {
-            "affiliation": "Foomo Dress Shop",
+            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Dresses",
-            "item_category2": "Festive",
-            "item_category3": "Maxi",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
+            "item_category3": "Festive",
+            "item_category4": "Maxi",
             "item_id": "DRESS_08",
             "item_name": "Tulle Ballgown",
             "item_variant": "blush",

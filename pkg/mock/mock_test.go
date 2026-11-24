@@ -1,15 +1,19 @@
 package mock_test
 
 import (
+	"cmp"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 	"time"
 
 	"github.com/foomo/gostandards/iso4217"
 	"github.com/foomo/schaumamoi/pkg/mock"
+	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/event/params"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
@@ -231,30 +235,116 @@ func TestCatalog(t *testing.T) {
 	t.Parallel()
 
 	catalog := mock.Catalog()
-	require.Len(t, catalog, 12)
+	require.Len(t, catalog, 54)
 
-	byOccasion := map[string]int{}
+	byRail := map[string]int{}
+	lengths := map[string][]string{
+		mock.CategoryDresses:  {mock.LengthMini, mock.LengthMidi, mock.LengthMaxi},
+		mock.CategoryTrousers: {mock.LengthCropped, mock.LengthAnkle, mock.LengthFull},
+		mock.CategoryCushions: {""},
+		mock.CategoryLamps:    {""},
+		mock.CategoryVases:    {""},
+	}
+	department := map[string]string{
+		mock.CategoryDresses: mock.CategoryWomensFashion, mock.CategoryTrousers: mock.CategoryWomensFashion,
+		mock.CategoryCushions: mock.CategoryHomeDecoration, mock.CategoryLamps: mock.CategoryHomeDecoration, mock.CategoryVases: mock.CategoryHomeDecoration,
+	}
 
 	for _, item := range catalog {
 		assert.NotEmpty(t, item.ItemID)
 		assert.NotEmpty(t, item.ItemName)
-		assert.NotEmpty(t, item.Attractor, "every dress needs a taste vector")
-		assert.NotEmpty(t, item.Description, "every dress needs a description")
-		assert.Equal(t, mock.CategoryDresses, item.ItemCategory)
+		assert.NotEmpty(t, item.Attractor, "every product needs a taste vector")
+		assert.NotEmpty(t, item.Description, "every product needs a description")
+		assert.Equal(t, department[item.Category()], item.ItemCategory, item.ItemID)
+		assert.Contains(t, lengths[item.Category()], item.Length(), "%s has a length its category does not cut", item.ItemID)
 		assert.NotZero(t, item.Price)
-		byOccasion[item.Occasion()]++
+		byRail[item.Category()+" "+item.Occasion()]++
 	}
 
+	// six of each occasion on each fashion rail, six of each home category
 	assert.Equal(t, map[string]int{
-		mock.OccasionBusiness: 4,
-		mock.OccasionFestive:  4,
-		mock.OccasionCasual:   4,
-	}, byOccasion)
+		"Dresses business": 6, "Dresses festive": 6, "Dresses casual": 6,
+		"Trousers business": 6, "Trousers festive": 6, "Trousers casual": 6,
+		"Cushions ": 6, "Lamps ": 6, "Vases ": 6,
+	}, byRail)
+}
+
+// TestHomeSpeaksItsOwnDimensions pins how the Map separates the departments: a home item
+// never carries a fashion-only dimension, so what the shop learns from clothes reaches
+// the home department only through the dimensions the two share — and every home item
+// shares some, or fashion taste could not rank it at all.
+func TestHomeSpeaksItsOwnDimensions(t *testing.T) {
+	t.Parallel()
+
+	fashionOnly := []personalization.Dimension{
+		mock.PersoDimensionBusiness, mock.PersoDimensionFestive, mock.PersoDimensionCasual,
+		mock.PersoDimensionFeminine, mock.PersoDimensionStructured,
+	}
+	homeOnly := []personalization.Dimension{mock.PersoDimensionCozy, mock.PersoDimensionNatural, mock.PersoDimensionIndustrial}
+
+	fashion := personalization.Map{}
+	for _, item := range mock.Fashion() {
+		for d := range item.Attractor {
+			fashion[d] = 1
+		}
+
+		for _, d := range homeOnly {
+			assert.NotContains(t, item.Attractor, d, "%s carries the home-only %s", item.ItemID, d)
+		}
+	}
+
+	for _, item := range mock.HomeDecoration() {
+		for _, d := range fashionOnly {
+			assert.NotContains(t, item.Attractor, d, "%s carries the fashion-only %s", item.ItemID, d)
+		}
+
+		shared := 0
+		for d := range item.Attractor {
+			if _, ok := fashion[d]; ok {
+				shared++
+			}
+		}
+
+		assert.NotZero(t, shared, "%s shares no dimension with fashion", item.ItemID)
+	}
+}
+
+// TestCategoryTree pins the listings the tree gives: the department lists everything,
+// each category its own rail, and each list id is the category's path through the tree.
+func TestCategoryTree(t *testing.T) {
+	t.Parallel()
+
+	for _, tt := range []struct {
+		filter mock.Filter
+		listID string
+		want   []mock.Item
+	}{
+		{mock.CategoryFilter, "womens-fashion", mock.Fashion()},
+		{mock.DressesFilter, "womens-fashion/dresses", mock.Dresses()},
+		{mock.TrousersFilter, "womens-fashion/trousers", mock.Trousers()},
+		{mock.HomeFilter, "home-decoration", mock.HomeDecoration()},
+		{mock.CushionsFilter, "home-decoration/cushions", inCategory(mock.HomeDecoration(), mock.CategoryCushions)},
+		{mock.LampsFilter, "home-decoration/lamps", inCategory(mock.HomeDecoration(), mock.CategoryLamps)},
+		{mock.VasesFilter, "home-decoration/vases", inCategory(mock.HomeDecoration(), mock.CategoryVases)},
+	} {
+		t.Run(tt.listID, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.listID, tt.filter.ListID())
+			assert.Equal(t, tt.filter.Category, tt.filter.ListName())
+			assert.Equal(t, itemIDs(tt.want), itemIDs(tt.filter.Apply(mock.Catalog())))
+		})
+	}
+
+	assert.Len(t, mock.Dresses(), 18)
+	assert.Len(t, mock.Trousers(), 18)
 }
 
 // TestPersonaTopMatch is what keeps the corpus worth generating: four different tastes
-// must reach four different dresses. Kate and Mira both dress for business, so occasion
-// alone must not decide the outcome.
+// must reach four different products. Kate and Mira both dress for business, so occasion
+// alone must not decide the outcome; and the categories compete, each scored with its own
+// weights, so three of the four end up in trousers — Kate because the trouser weights
+// count tailoring more than the dress weights do.
 func TestPersonaTopMatch(t *testing.T) {
 	t.Parallel()
 
@@ -265,10 +355,10 @@ func TestPersonaTopMatch(t *testing.T) {
 		occasion string
 		want     string
 	}{
-		{mock.PersonaBusinessKate, mock.OccasionBusiness, "DRESS_01"},
+		{mock.PersonaBusinessKate, mock.OccasionBusiness, "TROUSERS_01"},
 		{mock.PersonaFestiveSofia, mock.OccasionFestive, "DRESS_08"},
-		{mock.PersonaCasualLena, mock.OccasionCasual, "DRESS_10"},
-		{mock.PersonaModernMira, mock.OccasionBusiness, "DRESS_03"},
+		{mock.PersonaCasualLena, mock.OccasionCasual, "TROUSERS_10"},
+		{mock.PersonaModernMira, mock.OccasionBusiness, "TROUSERS_02"},
 	} {
 		t.Run(tt.persona.Name, func(t *testing.T) {
 			t.Parallel()
@@ -296,7 +386,8 @@ func TestPersonaTopMatch(t *testing.T) {
 func TestAffinitySort(t *testing.T) {
 	t.Parallel()
 
-	f := mock.PersonalizedFilter(mock.PersonaModernMira)
+	// a profile that has learned Mira's taste exactly
+	f := mock.SectionFilter(mock.PersonaModernMira).Personalize(mock.Profile{Taste: mock.PersonaModernMira.Affinity, Signals: 1})
 	got := f.Apply(mock.Catalog())
 
 	require.NotEmpty(t, got)
@@ -309,7 +400,7 @@ func TestAffinitySort(t *testing.T) {
 		t.Logf("  %d. %-26s %s", i+1, item.ItemName, item.Description)
 	}
 
-	assert.Equal(t, "DRESS_03", got[0].ItemID, "best match should rank first")
+	assert.Equal(t, "TROUSERS_02", got[0].ItemID, "best match should rank first")
 
 	for _, item := range got {
 		assert.Equal(t, mock.OccasionBusiness, item.Occasion())
@@ -321,12 +412,14 @@ func TestAffinitySort(t *testing.T) {
 	}
 }
 
-// TestAffinitySortWithoutPersona keeps SortAffinity harmless when no persona is set.
-func TestAffinitySortWithoutPersona(t *testing.T) {
+// TestNeutralProfileKeepsCatalogOrder is where every shopper starts: a profile that has
+// learned nothing scores every product the same, and the listing falls back to the
+// catalog order rather than to anything arbitrary.
+func TestNeutralProfileKeepsCatalogOrder(t *testing.T) {
 	t.Parallel()
 
-	got := mock.Filter{Category: mock.CategoryDresses, Sort: mock.SortAffinity}.Apply(mock.Catalog())
-	assert.Equal(t, itemIDs(mock.Catalog()), itemIDs(got))
+	got := mock.Filter{Category: mock.CategoryWomensFashion, Sort: mock.SortAffinity}.Apply(mock.Catalog())
+	assert.Equal(t, itemIDs(mock.Fashion()), itemIDs(got))
 }
 
 // TestFilterApply pins that a listing is genuinely the output of its filter, rather than
@@ -356,12 +449,9 @@ func TestFilterApply(t *testing.T) {
 func TestFilterQuery(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, "length=maxi&occasion=festive", mock.NarrowedFilter.Query())
-	assert.Empty(t, mock.CategoryFilter.Query())
-	assert.Equal(t,
-		"occasion=business&persona=Kate&sort=affinity",
-		mock.PersonalizedFilter(mock.PersonaBusinessKate).Query(),
-	)
+	assert.Equal(t, "length=maxi&occasion=festive&sort=affinity", mock.NarrowedFilter.Query())
+	assert.Equal(t, "sort=affinity", mock.CategoryFilter.Query())
+	assert.Equal(t, "occasion=business&sort=affinity", mock.SectionFilter(mock.PersonaBusinessKate).Query())
 }
 
 // TestItemListParamsDecode covers the custom param struct: it must survive DecodeParams
@@ -384,40 +474,105 @@ func TestItemListParamsDecode(t *testing.T) {
 
 	assert.Equal(t, mock.CategoryFilter.ListID(), p.ItemListID)
 	assert.NotEmpty(t, p.Items)
-	assert.Equal(t, mock.CategoryDresses, p.FilterCategory)
+	assert.Equal(t, mock.CategoryWomensFashion, p.FilterCategory)
 	assert.Equal(t, mock.OccasionBusiness, p.FilterOccasion)
 	assert.Equal(t, mock.SortAffinity, p.SortBy)
 	assert.True(t, p.Personalized)
-	assert.Equal(t, mock.PersonaBusinessKate.Name, p.Persona)
+	assert.Equal(t, 3, p.TasteSignals, "ranked by the three picks before it")
 	assert.Equal(t, len(p.Items), p.ResultCount)
 }
 
 // TestJourneyIsMixed pins the shape journeys are built in: one envelope carrying several
-// differently typed events, which is what sesamy-go hands downstream.
+// differently typed events, which is what sesamy-go hands downstream, along a route that
+// crosses both rails and comes back to the department.
 func TestJourneyIsMixed(t *testing.T) {
 	t.Parallel()
 
 	names := make([]sesamy.EventName, 0)
+	var lists []string
+
 	for _, e := range mock.Journey(mock.PersonaBusinessKate).Events {
 		names = append(names, e.Name)
+
+		if e.Name == sesamy.EventNameViewItemList {
+			var p mock.ItemListParams
+			require.NoError(t, e.DecodeParams(&p))
+			lists = append(lists, p.ItemListID)
+		}
 	}
 
+	assert.Equal(t, []string{
+		"womens-fashion", "womens-fashion/trousers", "womens-fashion/dresses", "womens-fashion", "womens-fashion",
+		"home-decoration", "home-decoration/vases", "all-products",
+	}, lists)
 	assert.Equal(t, []sesamy.EventName{
-		sesamy.EventNameViewItemList,
-		sesamy.EventNameViewItemList,
-		sesamy.EventNameViewItemList,
-		sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
 		sesamy.EventNameViewItem,
 		sesamy.EventNameAddToCart,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItemList, sesamy.EventNameSelectItem,
+		sesamy.EventNameViewItem,
+		sesamy.EventNameViewItemList,
 	}, names)
 }
 
-// TestJourneyIsPersonaDriven is the end to end version of TestPersonaTopMatch: the dress
-// that ends up in the cart must be the one the persona's vector picked.
-func TestJourneyIsPersonaDriven(t *testing.T) {
+// TestEveryListIsInteractedWith pins that no listing is passed by: in every journey,
+// converting or not, each view_item_list is followed by a select_item from that same
+// list — the same list id, and an item the listing actually showed. The one exception is
+// the last: a visit ends on the listing of all products, with nothing opened from it.
+func TestEveryListIsInteractedWith(t *testing.T) {
 	t.Parallel()
 
-	seen := map[string]string{}
+	for _, p := range mock.Personas() {
+		for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
+			t.Run(p.Name+" "+name, func(t *testing.T) {
+				t.Parallel()
+
+				events := journey.Events
+				lists := 0
+
+				for i, e := range events {
+					if e.Name != sesamy.EventNameViewItemList {
+						continue
+					}
+
+					lists++
+
+					var list mock.ItemListParams
+					require.NoError(t, e.DecodeParams(&list))
+
+					if list.ItemListID == mock.AllProductsListID {
+						assert.Equal(t, len(events)-1, i, "the visit ends on %s", list.ItemListID)
+
+						continue
+					}
+
+					require.Less(t, i+1, len(events), "%s is the last event", list.ItemListID)
+					require.Equal(t, sesamy.EventNameSelectItem, events[i+1].Name, "nothing selected from %s", list.ItemListID)
+
+					var selected params.SelectItem[mock.Item]
+					require.NoError(t, events[i+1].DecodeParams(&selected))
+					assert.Equal(t, list.ItemListID, selected.ItemListID)
+					require.Len(t, selected.Items, 1)
+					assert.Contains(t, itemIDs(list.Items), selected.Items[0].ItemID, "selected from %s but not shown there", list.ItemListID)
+				}
+
+				assert.Equal(t, 8, lists)
+			})
+		}
+	}
+}
+
+// TestJourneyIsPersonaDriven is the end to end version of TestPersonaTopMatch. A shopper
+// does not always take its favourite, so the product in the cart need not be the
+// persona's best match — but it is the one it opened from its section, and one it likes:
+// within GoodEnough of its favourite there.
+func TestJourneyIsPersonaDriven(t *testing.T) {
+	t.Parallel()
 
 	for _, p := range mock.Personas() {
 		var added []mock.Item
@@ -433,16 +588,11 @@ func TestJourneyIsPersonaDriven(t *testing.T) {
 			added = append(added, ap.Items...)
 		}
 
-		// The catalog item rather than the decoded one: descriptions are catalog-only,
-		// so the item that came back off the wire has none.
-		want := p.TopMatch(mock.Catalog())
-
 		require.Len(t, added, 1, p.Name)
-		assert.Equal(t, want.ItemID, added[0].ItemID,
-			"%s, %s, should have bought %q: %s", p.Name, p.Description, want.ItemName, want.Description)
-		assert.NotContains(t, seen, added[0].ItemID,
-			"%s and %s bought the same dress, %s", seen[added[0].ItemID], p.Name, added[0].ItemID)
-		seen[added[0].ItemID] = p.Name
+
+		section := mock.SectionFilter(p).Apply(mock.Catalog())
+		assert.Contains(t, itemIDs(section), added[0].ItemID, "%s bought outside its section", p.Name)
+		assert.True(t, p.Likes(added[0], section), "%s, %s, bought %s, which it does not like", p.Name, p.Description, added[0].ItemID)
 	}
 }
 
@@ -508,10 +658,296 @@ func TestHistoryOrdersVisits(t *testing.T) {
 
 	for i, want := range []mock.Persona{mock.PersonaFestiveSofia, mock.PersonaBusinessKate} {
 		var ap params.AddToCart[mock.Item]
-		last := history[i].Events[len(history[i].Events)-1]
+		cart := slices.IndexFunc(history[i].Events, func(e sesamy.Event[any]) bool { return e.Name == sesamy.EventNameAddToCart })
 
-		require.Equal(t, sesamy.EventNameAddToCart, last.Name)
-		require.NoError(t, last.DecodeParams(&ap))
-		assert.Equal(t, want.TopMatch(mock.Catalog()).ItemID, ap.Items[0].ItemID, "visit %d", i)
+		require.NotEqual(t, -1, cart, "visit %d did not convert", i)
+		require.NoError(t, history[i].Events[cart].DecodeParams(&ap))
+		section := mock.SectionFilter(want).Apply(mock.Catalog())
+		assert.Equal(t, want.Occasion(), ap.Items[0].Occasion(), "visit %d", i)
+		assert.True(t, want.Likes(ap.Items[0], section), "visit %d: %s does not like %s", i, want.Name, ap.Items[0].ItemID)
 	}
+}
+
+// listings returns the params of every view_item_list in events, in order.
+func listings(t *testing.T, events []sesamy.Event[any]) []mock.ItemListParams {
+	t.Helper()
+
+	var out []mock.ItemListParams
+
+	for _, e := range events {
+		if e.Name != sesamy.EventNameViewItemList {
+			continue
+		}
+
+		var p mock.ItemListParams
+		require.NoError(t, e.DecodeParams(&p))
+		out = append(out, p)
+	}
+
+	return out
+}
+
+// TestEveryListIsPersonalized pins that the shop never renders an unranked listing: in
+// every fixture, journey and history, each view_item_list is sorted by affinity.
+func TestEveryListIsPersonalized(t *testing.T) {
+	t.Parallel()
+
+	var events []sesamy.Event[any]
+	for _, p := range mock.Personas() {
+		events = append(events, mock.Journey(p).Events...)
+		events = append(events, mock.BrowseJourney(p).Events...)
+
+		for _, payload := range mock.History(mock.Month(p)) {
+			events = append(events, payload.Events...)
+		}
+	}
+
+	for _, e := range []sesamy.Event[mock.ItemListParams]{
+		mock.ViewItemList(mock.CategoryFilter), mock.ViewItemList(mock.DressesFilter),
+		mock.ViewItemList(mock.TrousersFilter), mock.ViewItemList(mock.NarrowedFilter),
+	} {
+		events = append(events, e.AnyEvent())
+	}
+
+	all := listings(t, events)
+	require.NotEmpty(t, all)
+
+	for _, p := range all {
+		assert.True(t, p.Personalized, p.ItemListID)
+		assert.Equal(t, mock.SortAffinity, p.SortBy, p.ItemListID)
+	}
+}
+
+// TestJourneyStartsNeutral is a first visit: the shop knows nothing, so the landing page
+// is ranked by a neutral profile — catalog order — and every listing after it by one more
+// pick than the last.
+func TestJourneyStartsNeutral(t *testing.T) {
+	t.Parallel()
+
+	for _, p := range mock.Personas() {
+		lists := listings(t, mock.Journey(p).Events)
+		require.Len(t, lists, 8)
+
+		assert.Equal(t, itemIDs(mock.Fashion()), itemIDs(lists[0].Items), "%s lands on the catalog order", p.Name)
+
+		for i, list := range lists[:4] {
+			assert.Equal(t, i, list.TasteSignals, "%s, listing %d (%s)", p.Name, i+1, list.ItemListID)
+		}
+
+		// four picks, the view and the cart
+		assert.Equal(t, 6, lists[4].TasteSignals, "%s, closing listing", p.Name)
+	}
+}
+
+// TestHistoryLearns is the shop getting to know a returning shopper. The profile carries
+// from visit to visit, so after the first visit the landing page is no longer neutral —
+// and the product it puts first is one the shopper likes, though the shop never saw the
+// persona, only what the shopper picked. Not necessarily its favourite: the shopper does
+// not always open its favourite, and the shop learns from what it does open.
+func TestHistoryLearns(t *testing.T) {
+	t.Parallel()
+
+	for _, p := range mock.Personas() {
+		t.Run(p.Name, func(t *testing.T) {
+			t.Parallel()
+
+			previous := -1
+
+			for i, payload := range mock.History(mock.Month(p)) {
+				landing := listings(t, payload.Events)[0]
+
+				assert.Greater(t, landing.TasteSignals, previous, "visit %d learned nothing", i+1)
+				previous = landing.TasteSignals
+
+				if i == 0 {
+					assert.Zero(t, landing.TasteSignals, "the first visit starts neutral")
+
+					continue
+				}
+
+				assert.True(t, p.Likes(landing.Items[0], landing.Items), "visit %d: the landing page opens on %s, which %s does not like", i+1, landing.Items[0].ItemName, p.Name)
+			}
+		})
+	}
+}
+
+// replayListings walks events in order the way the shop learns — selects and views once,
+// carts three times, listings not at all — and calls check with every listing and the
+// profile it should have been ranked by. It returns the profile after the last event, so
+// a history can be replayed visit by visit.
+func replayListings(t *testing.T, prof mock.Profile, events []sesamy.Event[any], check func(mock.ItemListParams, mock.Profile)) mock.Profile {
+	t.Helper()
+
+	for _, e := range events {
+		var p mock.ItemListParams // every event here carries its items under "items"
+		require.NoError(t, e.DecodeParams(&p))
+
+		switch e.Name {
+		case sesamy.EventNameViewItemList:
+			check(p, prof)
+		case sesamy.EventNameSelectItem:
+			prof = prof.Learn(mock.LearnSelect, p.Items...)
+		case sesamy.EventNameViewItem:
+			prof = prof.Learn(mock.LearnView, p.Items...)
+		case sesamy.EventNameAddToCart:
+			prof = prof.Learn(mock.LearnCart, p.Items...)
+		}
+	}
+
+	return prof
+}
+
+// assertSortedBy checks a listing against the profile replayed for it, without going
+// through Filter.Apply: the signal count must match, the scores must never rise down the
+// list, and the order must be the listing's products sorted by score, ties by item id.
+func assertSortedBy(t *testing.T, list mock.ItemListParams, prof mock.Profile, label string) {
+	t.Helper()
+
+	assert.Equal(t, prof.Signals, list.TasteSignals, "%s: signals", label)
+
+	for i := 1; i < len(list.Items); i++ {
+		prev, cur := mock.Score(prof.Taste, list.Items[i-1]), mock.Score(prof.Taste, list.Items[i])
+		assert.GreaterOrEqual(t, prev, cur, "%s: %s ranked above %s", label, list.Items[i-1].ItemID, list.Items[i].ItemID)
+	}
+
+	want := slices.Clone(mock.Filter{Category: list.FilterCategory, Occasion: list.FilterOccasion}.Apply(mock.Catalog()))
+	slices.SortStableFunc(want, func(a, b mock.Item) int {
+		if c := cmp.Compare(mock.Score(prof.Taste, b), mock.Score(prof.Taste, a)); c != 0 {
+			return c
+		}
+
+		return cmp.Compare(a.ItemID, b.ItemID)
+	})
+	assert.Equal(t, itemIDs(want), itemIDs(list.Items), "%s: order", label)
+}
+
+// TestListingsAreSortedByWhatWasLearned verifies the sorting of every listing — the
+// closing look at the department above all — against a profile rebuilt from the
+// journey's own events, for single journeys and for whole histories, where the profile
+// carries from visit to visit.
+func TestListingsAreSortedByWhatWasLearned(t *testing.T) {
+	t.Parallel()
+
+	for _, p := range mock.Personas() {
+		t.Run(p.Name, func(t *testing.T) {
+			t.Parallel()
+
+			for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
+				n := 0
+				replayListings(t, mock.Profile{}, journey.Events, func(list mock.ItemListParams, prof mock.Profile) {
+					n++
+					assertSortedBy(t, list, prof, fmt.Sprintf("%s listing %d (%s)", name, n, list.ItemListID))
+				})
+			}
+
+			prof := mock.Profile{}
+			for i, payload := range mock.History(mock.Month(p)) {
+				n := 0
+				prof = replayListings(t, prof, payload.Events, func(list mock.ItemListParams, prof mock.Profile) {
+					n++
+					assertSortedBy(t, list, prof, fmt.Sprintf("visit %d listing %d (%s)", i+1, n, list.ItemListID))
+				})
+			}
+		})
+	}
+}
+
+// TestJourneyClosesOnTheDepartment pins the end of every visit: back to the top-level
+// department, unnarrowed, ranked by everything the visit taught the shop — and what comes
+// first there is something the shopper likes.
+func TestJourneyClosesOnTheDepartment(t *testing.T) {
+	t.Parallel()
+
+	for _, p := range mock.Personas() {
+		for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
+			lists := listings(t, journey.Events)
+			closing := lists[4] // the fashion route, then the closing look
+
+			assert.Equal(t, mock.CategoryFilter.ListID(), closing.ItemListID, "%s %s", p.Name, name)
+			assert.Empty(t, closing.FilterOccasion, "%s %s: the closing look is unnarrowed", p.Name, name)
+			assert.Len(t, closing.Items, len(mock.Fashion()))
+
+			assert.True(t, p.Likes(closing.Items[0], closing.Items), "%s %s: the closing look opens on %s", p.Name, name, closing.Items[0].ItemName)
+		}
+	}
+}
+
+// chosenCategories are the categories of the products selected, viewed or put in the
+// cart in events — the categories the shopper chose from rather than was only shown.
+func chosenCategories(t *testing.T, events []sesamy.Event[any]) []string {
+	t.Helper()
+
+	var out []string
+
+	for _, e := range events {
+		if e.Name == sesamy.EventNameViewItemList {
+			continue
+		}
+
+		var p mock.ItemListParams
+		require.NoError(t, e.DecodeParams(&p))
+
+		for _, item := range p.Items {
+			if !slices.Contains(out, item.Category()) {
+				out = append(out, item.Category())
+			}
+		}
+	}
+
+	return out
+}
+
+// TestJourneyEndsOnAllProducts reads the shop's final ranking of a visit: every visit
+// ends on the top-level listing of all products, ranked by everything learned — its
+// order is checked against a replayed profile by TestListingsAreSortedByWhatWasLearned.
+// Read per category, it has to be right where the shopper chose: in every category it
+// selected, viewed or bought from, that category's first product in the final ranking is
+// one the persona likes. Not necessarily its favourite — the shop learns from what the
+// shopper opened, and the shopper does not always open its favourite. The visit ends
+// there: the listing is the last event.
+func TestJourneyEndsOnAllProducts(t *testing.T) {
+	t.Parallel()
+
+	for _, p := range mock.Personas() {
+		t.Run(p.Name, func(t *testing.T) {
+			t.Parallel()
+
+			visits := map[string][]sesamy.Event[any]{
+				"journey": mock.Journey(p).Events,
+				"browse":  mock.BrowseJourney(p).Events,
+			}
+			for i, payload := range mock.History(mock.Month(p)) {
+				visits[fmt.Sprintf("visit %d", i+1)] = payload.Events
+			}
+
+			for name, events := range visits {
+				lists := listings(t, events)
+				final := lists[len(lists)-1]
+
+				require.Equal(t, mock.AllProductsListID, final.ItemListID, name)
+				assert.Equal(t, sesamy.EventNameViewItemList, events[len(events)-1].Name, "%s ends on a listing", name)
+				assert.Equal(t, mock.AllProductsListName, final.ItemListName, name)
+				assert.Empty(t, final.FilterCategory, name)
+				require.Len(t, final.Items, len(mock.Catalog()), name)
+
+				for _, category := range chosenCategories(t, events) {
+					first := mock.Filter{Category: category}.Apply(final.Items)[0]
+					assert.True(t, p.Likes(first, inCategory(mock.Catalog(), category)), "%s, %s: %s comes first, which %s does not like", name, category, first.ItemName, p.Name)
+				}
+			}
+		})
+	}
+}
+
+// inCategory keeps the items of one category, in their order.
+func inCategory(items []mock.Item, category string) []mock.Item {
+	var out []mock.Item
+
+	for _, item := range items {
+		if item.Category() == category {
+			out = append(out, item)
+		}
+	}
+
+	return out
 }

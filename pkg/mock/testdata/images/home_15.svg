@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Arc Floor Lamp, black">
+<title>Arc Floor Lamp (HOME_15)</title>
+<rect width="300" height="400" fill="#f2f2f2"/>
+<ellipse cx="150" cy="372" rx="48" ry="8" fill="#000000" fill-opacity="0.08"/>
+<ellipse cx="150" cy="368" rx="40" ry="7" fill="#111111"/><path d="M150,368 V150" stroke="#111111" stroke-width="5"/>
+<ellipse cx="150" cy="152" rx="60" ry="10" fill="#fff3c4" fill-opacity="0.7"/>
+<defs><clipPath id="body-home_15"><path d="M102,56 L198,56 L226,150 L74,150 Z"/></clipPath></defs>
+<path d="M102,56 L198,56 L226,150 L74,150 Z" fill="#989898"/>
+<g clip-path="url(#body-home_15)">
+</g>
+<path d="M102,56 L198,56 L226,150 L74,150 Z" fill="none" stroke="#636363" stroke-width="2" stroke-linejoin="round"/>
+</svg>

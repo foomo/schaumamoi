@@ -15,17 +15,18 @@
     {
       "name": "view_item_list",
       "params": {
-        "item_list_id": "dresses",
+        "item_list_id": "womens-fashion/dresses",
         "item_list_name": "Dresses",
         "items": [
           {
-            "affiliation": "Foomo Dress Shop",
+            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Dresses",
-            "item_category2": "Festive",
-            "item_category3": "Maxi",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
+            "item_category3": "Festive",
+            "item_category4": "Maxi",
             "item_id": "DRESS_06",
-            "item_list_id": "dresses",
+            "item_list_id": "womens-fashion/dresses",
             "item_list_name": "Dresses",
             "item_name": "Velvet Gown",
             "item_variant": "emerald",
@@ -42,13 +43,14 @@
             }
           },
           {
-            "affiliation": "Foomo Dress Shop",
+            "affiliation": "Foomo Fashion",
             "item_brand": "Foomo Atelier",
-            "item_category": "Dresses",
-            "item_category2": "Festive",
-            "item_category3": "Maxi",
+            "item_category": "Women's Fashion",
+            "item_category2": "Dresses",
+            "item_category3": "Festive",
+            "item_category4": "Maxi",
             "item_id": "DRESS_08",
-            "item_list_id": "dresses",
+            "item_list_id": "womens-fashion/dresses",
             "item_list_name": "Dresses",
             "item_name": "Tulle Ballgown",
             "item_variant": "blush",
@@ -69,6 +71,9 @@
         "filter_category": "Dresses",
         "filter_occasion": "festive",
         "filter_length": "maxi",
+        "sort_by": "affinity",
+        "personalized": true,
+        "taste_signals": 0,
         "result_count": 2
       }
     }

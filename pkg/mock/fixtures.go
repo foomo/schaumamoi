@@ -16,6 +16,9 @@ func Fixtures() map[string]any {
 	out := map[string]any{
 		// single event, fully typed envelopes
 		"view_item_list.mpv2.json":              ViewItemListPayload(),
+		"view_item_list_all.mpv2.json":          AllProductsItemListPayload(),
+		"view_item_list_dresses.mpv2.json":      DressesItemListPayload(),
+		"view_item_list_trousers.mpv2.json":     TrousersItemListPayload(),
 		"view_item_list_filtered.mpv2.json":     FilteredItemListPayload(),
 		"view_item_list_personalized.mpv2.json": PersonalizedItemListPayload(PersonaBusinessKate),
 		"select_item.mpv2.json":                 SelectItemPayload(),

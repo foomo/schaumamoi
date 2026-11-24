@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Pleated Wool Trousers, navy">
+<title>Pleated Wool Trousers (TROUSERS_01)</title>
+<rect width="300" height="400" fill="#eceff3"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L150,48 M84,48 L216,48" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linecap="round"/>
+<defs><clipPath id="body-trousers_01"><path d="M100,70 L94,140 L101.4,372 L138.6,372 L150,160 L161.4,372 L198.6,372 L206,140 L200,70 Z"/></clipPath></defs>
+<path d="M100,70 L94,140 L101.4,372 L138.6,372 L150,160 L161.4,372 L198.6,372 L206,140 L200,70 Z" fill="#1f2a44"/>
+<g clip-path="url(#body-trousers_01)">
+<rect x="0" y="70" width="300" height="14" fill="#161d30" fill-opacity="0.55"/>
+<path d="M150,84 L150,134 Q150,146 138,148" fill="none" stroke="#141b2c" stroke-width="1.5"/>
+<path d="M128,84 L124,150" stroke="#141b2c" stroke-width="1.5"/><path d="M122,140 L120,372" stroke="#575f73" stroke-width="1.2" stroke-opacity="0.8"/><path d="M172,84 L176,150" stroke="#141b2c" stroke-width="1.5"/><path d="M178,140 L180,372" stroke="#575f73" stroke-width="1.2" stroke-opacity="0.8"/>
+</g>
+<path d="M100,70 L94,140 L101.4,372 L138.6,372 L150,160 L161.4,372 L198.6,372 L206,140 L200,70 Z" fill="none" stroke="#141b2c" stroke-width="2" stroke-linejoin="round"/>
+<rect x="106" y="44" width="10" height="34" rx="2" fill="#8a8f96"/><rect x="184" y="44" width="10" height="34" rx="2" fill="#8a8f96"/>
+</svg>

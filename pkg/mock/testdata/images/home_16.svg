@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Ceramic Table Lamp, olive">
+<title>Ceramic Table Lamp (HOME_16)</title>
+<rect width="300" height="400" fill="#f2f2f2"/>
+<ellipse cx="150" cy="346" rx="56" ry="8" fill="#000000" fill-opacity="0.08"/>
+<path d="M150,214 V246" stroke="#464626" stroke-width="4"/>
+<defs><clipPath id="body-home_16-base"><path d="M132,340 L168,340 L164,304 Q192,272 164,240 L136,240 Q108,272 136,304 Z"/></clipPath></defs>
+<path d="M132,340 L168,340 L164,304 Q192,272 164,240 L136,240 Q108,272 136,304 Z" fill="#6b6b3a"/>
+<g clip-path="url(#body-home_16-base)">
+<path d="M140,244 Q124,272 142,300" fill="none" stroke="#ffffff" stroke-width="4" stroke-opacity="0.45"/>
+</g>
+<path d="M132,340 L168,340 L164,304 Q192,272 164,240 L136,240 Q108,272 136,304 Z" fill="none" stroke="#464626" stroke-width="2" stroke-linejoin="round"/>
+<defs><clipPath id="body-home_16"><path d="M98,118 L202,118 L234,214 L66,214 Z"/></clipPath></defs>
+<path d="M98,118 L202,118 L234,214 L66,214 Z" fill="#bcbca6"/>
+<g clip-path="url(#body-home_16)">
+</g>
+<path d="M98,118 L202,118 L234,214 L66,214 Z" fill="none" stroke="#7a7a6c" stroke-width="2" stroke-linejoin="round"/>
+</svg>

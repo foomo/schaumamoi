@@ -2,6 +2,7 @@ package corpus_test
 
 import (
 	"math"
+	"slices"
 	"testing"
 	"time"
 
@@ -24,10 +25,15 @@ type envelope struct {
 }
 
 // decoration is what the test corpora fold out of each event: the event's contribution
-// to the shopper's affinity, i.e. the attractors of the items it touched, weighted by how
-// strong a signal of taste the event is — and, copied off the envelope, when and in which
-// session it happened, which is what lets a deriver decay by time and cut a history into
-// windows. The envelope is gone once an event is admitted; this is what remains of it.
+// to the shopper's taste — the attractors of the items it carries, weighted by how
+// deliberate the event is — and, copied off the envelope, when and in which session it
+// happened, which is what lets a deriver decay by time and cut a history into windows.
+// The envelope is gone once an event is admitted; this is what remains of it.
+//
+// The taste is one personalization.Map for everything the shopper touches, whatever the
+// category. Categories need no handling of their own: an item only carries the
+// dimensions that describe it, so a dress and a pair of trousers add to the dimensions
+// they share, and a lamp adds to the few it shares with clothes and to its own.
 type decoration struct {
 	At       time.Time
 	Session  string
@@ -50,14 +56,15 @@ type itemsParams struct {
 	Items []mock.Item `json:"items"`
 }
 
-// intentWeight is how much an event says about taste. A listing shows everything in a
-// section, so each listed dress counts for little; opening, viewing and above all buying
-// a dress is a deliberate choice.
+// intentWeight is how much an event says about taste: selecting and viewing a product
+// are deliberate choices, putting it in the cart the strongest one. A listing weighs
+// nothing — categories and their listings are where products are offered, and what the
+// shop chose to show says nothing about the shopper. The weights are the shop's own, so
+// a flat affinity is exactly the profile the shop ranks its listings by.
 var intentWeight = map[sesamy.EventName]personalization.Value{
-	sesamy.EventNameViewItemList: 0.1,
-	sesamy.EventNameSelectItem:   1,
-	sesamy.EventNameViewItem:     1,
-	sesamy.EventNameAddToCart:    3,
+	sesamy.EventNameSelectItem: mock.LearnSelect,
+	sesamy.EventNameViewItem:   mock.LearnView,
+	sesamy.EventNameAddToCart:  mock.LearnCart,
 }
 
 // stampTime and stampSession copy the envelope's time and session onto the event. They read
@@ -95,7 +102,8 @@ func addAttractors(_ envelope, e testEvent, d decoration) decoration {
 	return d
 }
 
-// weighByIntent scales the decoration by the weight of the event. Unknown events weigh nothing.
+// weighByIntent scales the decoration by the intentWeight of the event. Listings and
+// unknown events weigh nothing.
 func weighByIntent(_ envelope, e testEvent, d decoration) decoration {
 	w := intentWeight[e.Name]
 
@@ -118,10 +126,14 @@ func clone(m personalization.Map) personalization.Map {
 	return out
 }
 
+// affinityDecorators is the chain every affinity corpus decorates with, in order. The
+// corpus report draws its pipeline from this slice, so the picture cannot drift from it.
+var affinityDecorators = []testDecorator{stampTime, stampSession, addAttractors, weighByIntent}
+
 func newAffinityCorpus(filter testFilter) *testCorpus {
 	return corpus.New(testConfig{
 		Filter:     filter,
-		Decorators: []testDecorator{stampTime, stampSession, addAttractors, weighByIntent},
+		Decorators: affinityDecorators,
 	})
 }
 
@@ -137,7 +149,7 @@ func only(names ...sesamy.EventName) testFilter {
 	}
 }
 
-// kateJourney is the stream the corpus will actually see: six heterogeneous GA4 events
+// kateJourney is the stream the corpus will actually see: heterogeneous GA4 events
 // type-erased to sesamy.Event[any], as sesamy-go hands them downstream.
 func kateJourney() []testEvent {
 	return mock.Journey(mock.PersonaBusinessKate).Events
@@ -166,7 +178,7 @@ func decayed(now time.Time, halfLife time.Duration) corpus.StateDeriver[any, dec
 	return func(events []testDecorated) personalization.Map {
 		out := personalization.Map{}
 		for _, e := range events {
-			w := personalization.Value(math.Exp2(-float64(max(now.Sub(e.Decoration.At), 0)) / float64(halfLife)))
+			w := decayWeight(now, halfLife, e.Decoration.At)
 			for dimension, v := range e.Decoration.Affinity {
 				out[dimension] += v * w
 			}
@@ -176,14 +188,81 @@ func decayed(now time.Time, halfLife time.Duration) corpus.StateDeriver[any, dec
 	}
 }
 
+// decayWeight is what an event recorded at 'at' still counts for at now.
+func decayWeight(now time.Time, halfLife time.Duration, at time.Time) personalization.Value {
+	return personalization.Value(math.Exp2(-float64(max(now.Sub(at), 0)) / float64(halfLife)))
+}
+
+// nearestIn is the product of one category that ranks first for a taste: how that
+// category's listing would open for it. It ranks with the shop's own scorer, mock.Score —
+// the taste weighed by the category's weights — through Persona.TopMatch. With listings weighing nothing and choices weighed as the
+// shop weighs them, a flat affinity is the shop's profile, so this is exactly the listing
+// the shop would show. Cosine stays for comparing a taste with a persona, where the
+// magnitude must not count; for ranking it disagrees with the shop on near ties — the
+// sequin flares and the velvet palazzo, for Sofia.
+func nearestIn(aff personalization.Map, category string) mock.Item {
+	return mock.Persona{Affinity: aff}.TopMatch(mock.Filter{Category: category}.Apply(mock.Catalog()))
+}
+
+// touchedCategories are the categories of the products a shopper selected, viewed or put
+// in the cart, in the order first touched. Listings do not count: a category the shopper
+// only scrolled through is one it was offered, not one it chose from.
+func touchedCategories(t *testing.T, events []testEvent) []string {
+	t.Helper()
+
+	var out []string
+
+	for _, e := range events {
+		if _, ok := intentWeight[e.Name]; !ok {
+			continue
+		}
+
+		var p itemsParams
+		require.NoError(t, e.DecodeParams(&p))
+
+		for _, item := range p.Items {
+			if !slices.Contains(out, item.Category()) {
+				out = append(out, item.Category())
+			}
+		}
+	}
+
+	return out
+}
+
+// assertPerCategory reads a derived taste against the persona that produced the events,
+// one category at a time, in every category the shopper chose from: there, the product
+// the taste ranks first must be one the persona likes — within mock.GoodEnough of its
+// favourite in that category. Not the favourite itself: the shopper does not always open
+// its favourite, and the corpus can only know what it did open. Categories the shopper
+// was only offered are not asserted — the corpus has nothing of theirs to go on.
+func assertPerCategory(t *testing.T, aff personalization.Map, want mock.Persona, events []testEvent) {
+	t.Helper()
+
+	touched := touchedCategories(t, events)
+	require.NotEmpty(t, touched)
+
+	for _, category := range touched {
+		items := mock.Filter{Category: category}.Apply(mock.Catalog())
+		got := nearestIn(aff, category)
+
+		assert.True(t, want.Likes(got, items), "%s for %s: %s ranks first, which %s does not like", category, want.Name, got.ItemName, want.Name)
+	}
+}
+
 // addPayload is how a routed batch reaches the corpus: its events, with the envelope
 // fields that differ between batches resolved into an envelope.
 func addPayload(p *testCorpus, payload mpv2.Payload[any]) {
-	p.Add(envelope{
+	p.Add(envelopeOf(payload), payload.Events...)
+}
+
+// envelopeOf resolves the fields of an mpv2 envelope that differ between batches.
+func envelopeOf(payload mpv2.Payload[any]) envelope {
+	return envelope{
 		At:              time.UnixMicro(payload.TimestampMicros).UTC(),
 		Session:         payload.SessionID,
 		Personalization: personalizationGranted(payload.Consent),
-	}, payload.Events...)
+	}
 }
 
 // personalizationGranted reads personalization consent off an envelope. No consent block means no
@@ -297,8 +376,9 @@ func TestAffinityRecoversPersona(t *testing.T) {
 	}
 }
 
-// TestAffinityNearestItemIsPurchase measures the other distance: of the whole catalog,
-// the dress closest to the derived affinity is the one the shopper bought.
+// TestAffinityNearestItemIsPurchase measures the other distance, per category: in every
+// category the shopper chose from — dresses, trousers, and one in home decoration — the
+// product the derived taste ranks first is one the persona likes.
 func TestAffinityNearestItemIsPurchase(t *testing.T) {
 	t.Parallel()
 
@@ -311,9 +391,9 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 			p := newAffinityCorpus(nil)
 			p.Add(envelope{}, events...)
 
-			want := purchased(t, events)
-			got := nearestItem(p.Derive(affinity), mock.Catalog())
-			assert.Equal(t, want.ItemID, got.ItemID, "want %q, got %q", want.Description, got.Description)
+			got := p.Derive(affinity)
+			assertPerCategory(t, got, persona, events)
+
 		})
 	}
 }
@@ -326,10 +406,10 @@ func TestAddAppliesFilter(t *testing.T) {
 	p := newAffinityCorpus(only(sesamy.EventNameSelectItem, sesamy.EventNameViewItem, sesamy.EventNameAddToCart))
 	p.Add(envelope{}, kateJourney()...)
 
-	assert.Equal(t, 3, p.Len())
+	assert.Equal(t, 10, p.Len())
 	assert.Equal(t, map[sesamy.EventName]int{
-		sesamy.EventNameSelectItem: 1,
-		sesamy.EventNameViewItem:   1,
+		sesamy.EventNameSelectItem: 7,
+		sesamy.EventNameViewItem:   2,
 		sesamy.EventNameAddToCart:  1,
 	}, p.Derive(funnel))
 	assert.Equal(t, mock.PersonaBusinessKate.Name, nearestPersona(p.Derive(affinity), mock.Personas()).Name)
@@ -444,9 +524,9 @@ func TestOneCorpusManyQuestions(t *testing.T) {
 	p.Add(envelope{}, kateJourney()...)
 
 	assert.Equal(t, map[sesamy.EventName]int{
-		sesamy.EventNameViewItemList: 3,
-		sesamy.EventNameSelectItem:   1,
-		sesamy.EventNameViewItem:     1,
+		sesamy.EventNameViewItemList: 8,
+		sesamy.EventNameSelectItem:   7,
+		sesamy.EventNameViewItem:     2,
 		sesamy.EventNameAddToCart:    1,
 	}, p.Derive(funnel))
 
@@ -498,7 +578,10 @@ func TestStampTimeReadsEnvelope(t *testing.T) {
 		return out
 	})
 
-	want := []time.Time{earlier, earlier, earlier, earlier, earlier, earlier, later, later, later, {}}
+	want := append(append(
+		slices.Repeat([]time.Time{earlier}, len(mock.Journey(mock.PersonaFestiveSofia).Events)),
+		slices.Repeat([]time.Time{later}, len(mock.BrowseJourney(mock.PersonaBusinessKate).Events))...),
+		time.Time{})
 	assert.Equal(t, want, stamps)
 }
 
@@ -537,6 +620,16 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 	}
 }
 
+// eventsOf is every event of a history, in order.
+func eventsOf(history []mpv2.Payload[any]) []testEvent {
+	var out []testEvent
+	for _, payload := range history {
+		out = append(out, payload.Events...)
+	}
+
+	return out
+}
+
 // addHistory feeds a shopper's month into the corpus, one routed batch per visit.
 func addHistory(p *testCorpus, history []mpv2.Payload[any]) {
 	for _, payload := range history {
@@ -558,7 +651,7 @@ func drifted(old, recent mock.Persona) []mpv2.Payload[any] {
 
 // TestMonthRecoversPersona is TestAffinityRecoversPersona over a month of visits rather
 // than a single session, derived with decay: a steady taste must still come out as
-// itself, and its nearest dress as the one it keeps buying.
+// itself, and read per category as in TestAffinityNearestItemIsPurchase.
 func TestMonthRecoversPersona(t *testing.T) {
 	t.Parallel()
 
@@ -566,12 +659,13 @@ func TestMonthRecoversPersona(t *testing.T) {
 		t.Run(persona.Name, func(t *testing.T) {
 			t.Parallel()
 
+			history := mock.History(mock.Month(persona))
 			p := newAffinityCorpus(nil)
-			addHistory(p, mock.History(mock.Month(persona)))
+			addHistory(p, history)
 
-			aff := p.Derive(decayed(mock.BaseTime, week))
-			assert.Equal(t, persona.Name, nearestPersona(aff, mock.Personas()).Name)
-			assert.Equal(t, persona.TopMatch(mock.Catalog()).ItemID, nearestItem(aff, mock.Catalog()).ItemID)
+			got := p.Derive(decayed(mock.BaseTime, week))
+			assert.Equal(t, persona.Name, nearestPersona(got, mock.Personas()).Name)
+			assertPerCategory(t, got, persona, eventsOf(history))
 		})
 	}
 }
@@ -592,12 +686,13 @@ func TestDecayFollowsRecentTaste(t *testing.T) {
 			t.Run(old.Name+" then "+recent.Name, func(t *testing.T) {
 				t.Parallel()
 
+				history := drifted(old, recent)
 				p := newAffinityCorpus(nil)
-				addHistory(p, drifted(old, recent))
+				addHistory(p, history)
 
-				aff := p.Derive(decayed(mock.BaseTime, week))
-				assert.Equal(t, recent.Name, nearestPersona(aff, mock.Personas()).Name)
-				assert.Equal(t, recent.TopMatch(mock.Catalog()).ItemID, nearestItem(aff, mock.Catalog()).ItemID)
+				got := p.Derive(decayed(mock.BaseTime, week))
+				assert.Equal(t, recent.Name, nearestPersona(got, mock.Personas()).Name)
+				assertPerCategory(t, got, recent, eventsOf(history[3:])) // the recent half
 			})
 		}
 	}
@@ -605,8 +700,13 @@ func TestDecayFollowsRecentTaste(t *testing.T) {
 
 // TestUndecayedMisreadsDrift is the other side of TestDecayFollowsRecentTaste: summed
 // flat, the same months are misread. Sofia's dresses carry the largest attractors, so
-// her half of a month outweighs Kate's; and a month of Lena then Kate reads as Mira — an
-// average of two tastes is a third one the shopper never had.
+// her half of a month outweighs Kate's; and Mira's three visits outweigh Lena's four, so
+// a shopper who has moved on still reads as who they were.
+//
+// Flat sums used to have a third failure: Lena then Kate read as Mira, an average of two
+// tastes that was neither. That came from listings outweighing choices, and went once
+// listings stopped counting (see intentWeight); across all twelve drifts, a flat sum now
+// reads one of the two real tastes, just too often the old one — four times in twelve.
 func TestUndecayedMisreadsDrift(t *testing.T) {
 	t.Parallel()
 
@@ -614,7 +714,7 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 		old, recent, flat mock.Persona
 	}{
 		"louder old taste wins": {old: mock.PersonaFestiveSofia, recent: mock.PersonaBusinessKate, flat: mock.PersonaFestiveSofia},
-		"average is a stranger": {old: mock.PersonaCasualLena, recent: mock.PersonaBusinessKate, flat: mock.PersonaModernMira},
+		"old taste lingers":     {old: mock.PersonaModernMira, recent: mock.PersonaCasualLena, flat: mock.PersonaModernMira},
 	} {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
@@ -671,8 +771,11 @@ func TestAddWithoutTimeDecaysAway(t *testing.T) {
 
 // phaseThreshold is the cosine a visit must reach against the phase so far to belong to
 // it. Across every persona pair a visit within a phase scores at least 0.94 and the first
-// visit after a drift at most 0.83 — Kate and Mira, the two business shoppers, are the
-// close call — so 0.9 sits in the gap.
+// visit after a drift at most 0.63 — Mira to Lena, who share a minimal, modern taste, is
+// the close call — so 0.9 sits in the gap, nearer its top. A visit is only its choices;
+// the listings it scrolled past add nothing to it. The within-phase side is the tight
+// one: a shopper does not open the same products every visit (Sofia drifts between her
+// sequin and her tulle dress), so even one taste's visits differ.
 const phaseThreshold personalization.Value = 0.9
 
 // window is a run of consecutive sessions, with the affinity shown across them. A phase

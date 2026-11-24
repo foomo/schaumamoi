@@ -25,13 +25,24 @@ type (
 		Best    bool
 	}
 
-	// reading is what one derive made of a corpus: the affinity, its similarity to every
-	// persona, and the dress nearest to it.
+	// categoryReading is a derived taste read in one category the shopper chose from: the
+	// product the taste ranks first there, the persona's own favourite, and whether the
+	// persona likes the first — within mock.GoodEnough of its favourite.
+	categoryReading struct {
+		Name     string
+		Nearest  mock.Item
+		Expected mock.Item
+		OK       bool
+	}
+
+	// reading is what one derive made of a corpus: the taste, its similarity to every
+	// persona, and the reading in each category the shopper chose from.
 	reading struct {
-		Affinity personalization.Map
-		Sims     []similarity
-		Persona  mock.Persona
-		Item     mock.Item
+		Affinity   personalization.Map
+		Sims       []similarity
+		Persona    mock.Persona
+		Categories []categoryReading
+		Correct    int
 	}
 
 	chip struct {
@@ -78,11 +89,12 @@ func TestReport(t *testing.T) {
 		events := mock.Journey(p).Events
 		c := newAffinityCorpus(nil)
 		c.Add(envelope{}, events...)
-		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(c.Derive(affinity))})
+		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Derive(affinity), p, events)})
 
+		month := mock.History(mock.Month(p))
 		c = newAffinityCorpus(nil)
-		addHistory(c, mock.History(mock.Month(p)))
-		months = append(months, monthRow{Persona: p, Read: read(c.Derive(decayed(mock.BaseTime, week))), Phases: chips(c.Derive(phases(phaseThreshold)))})
+		addHistory(c, month)
+		months = append(months, monthRow{Persona: p, Read: read(t, c.Derive(decayed(mock.BaseTime, week)), p, eventsOf(month)), Phases: chips(c.Derive(phases(phaseThreshold)))})
 	}
 
 	for _, old := range mock.Personas() {
@@ -91,13 +103,14 @@ func TestReport(t *testing.T) {
 				continue
 			}
 
+			history := drifted(old, recent)
 			c := newAffinityCorpus(nil)
-			addHistory(c, drifted(old, recent))
+			addHistory(c, history)
 			drifts = append(drifts, driftRow{
 				Old:     old,
 				Recent:  recent,
-				Flat:    read(c.Derive(affinity)),
-				Decayed: read(c.Derive(decayed(mock.BaseTime, week))),
+				Flat:    read(t, c.Derive(affinity), recent, eventsOf(history[3:])),
+				Decayed: read(t, c.Derive(decayed(mock.BaseTime, week)), recent, eventsOf(history[3:])),
 				Phases:  chips(c.Derive(phases(phaseThreshold))),
 			})
 		}
@@ -119,7 +132,12 @@ func TestReport(t *testing.T) {
 	consentedOnly := newAffinityCorpus(consented)
 	addHistory(consentedOnly, history)
 
-	require.NoError(t, report.Write(reportPath, "schaumamoi · corpus report", corpusReport, map[string]any{
+	third := mock.History(mock.Month(mock.PersonaBusinessKate))[2]
+	pipe, err := pipeline("Kate's third visit of her month, two weeks before BaseTime: the shop has learned from two visits by then, and this one ends in the cart", third)
+	require.NoError(t, err)
+
+	require.NoError(t, report.Write(reportPath, "schaumamoi · corpus report", pipelineReport+corpusReport, map[string]any{
+		"Pipeline":  pipe,
 		"Sessions":  sessions,
 		"Months":    months,
 		"Drifts":    drifts,
@@ -138,11 +156,27 @@ func TestReport(t *testing.T) {
 	t.Logf("wrote %s", reportPath)
 }
 
-func read(aff personalization.Map) reading {
-	r := reading{
-		Affinity: aff,
-		Persona:  nearestPersona(aff, mock.Personas()),
-		Item:     nearestItem(aff, mock.Catalog()),
+// read reads a derived taste the way assertPerCategory does — in every category the
+// shopper chose from, against the persona that should have produced it — but records the
+// outcome instead of failing on it.
+func read(t *testing.T, aff personalization.Map, want mock.Persona, events []testEvent) reading {
+	t.Helper()
+
+	r := reading{Affinity: aff, Persona: nearestPersona(aff, mock.Personas())}
+
+	for _, category := range touchedCategories(t, events) {
+		cr := categoryReading{
+			Name:     category,
+			Nearest:  nearestIn(aff, category),
+			Expected: want.TopMatch(mock.Filter{Category: category}.Apply(mock.Catalog())),
+		}
+		cr.OK = want.Likes(cr.Nearest, mock.Filter{Category: category}.Apply(mock.Catalog()))
+
+		if cr.OK {
+			r.Correct++
+		}
+
+		r.Categories = append(r.Categories, cr)
 	}
 
 	for _, p := range mock.Personas() {
@@ -169,18 +203,25 @@ func chips(ws []window) []chip {
 const corpusReport = `
 {{define "sims"}}<div class="sims">{{range .}}<div class="sim{{if .Best}} best{{end}}"><img class="avatar small" src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><br>{{.Persona.Name}}<br>{{score .Score}}</div>{{end}}</div>{{end}}
 {{define "phases"}}<div class="phases">{{range .}}<div class="phase"><img class="avatar small" src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><span><b>{{.Persona.Name}}</b><br>{{date .From}} – {{date .To}} · {{.Sessions}} visits</span></div>{{end}}</div>{{end}}
-{{define "verdict"}}{{if eq .Got.Name .Want.Name}}<span class="tick">✓</span>{{else}}<span class="cross">✗</span>{{end}}{{end}}
+{{define "categories"}}<div class="cats">{{range .}}<div class="cat"><div class="meta"><b>{{.Name}}</b> {{if .OK}}<span class="tick">✓</span>{{else}}<span class="cross">✗</span>{{end}}</div><div class="row"><div class="thumb{{if .OK}} top{{end}}"><img src="{{img .Nearest.ImagePath}}" alt="{{.Nearest.ItemName}}" title="{{.Nearest.ItemName}} — {{.Nearest.Description}}"><b>{{.Nearest.ItemID}}</b>nearest</div>{{if ne .Nearest.ItemID .Expected.ItemID}}<div class="thumb"><img src="{{img .Expected.ImagePath}}" alt="{{.Expected.ItemName}}"><b>{{.Expected.ItemID}}</b>favourite</div>{{end}}</div></div>{{end}}</div>{{end}}
 
 <h1>Corpus report</h1>
 <p class="lede">Generated by <code>TestReport</code> in <code>pkg/corpus</code>. Each block feeds generated traffic through the
-affinity corpus used by the tests (stamp time and session, add attractors, weigh by intent) and shows what it reads back,
-next to the persona that actually produced the traffic. Similarities are cosine; the highlighted avatar is the reading.
+affinity corpus used by the tests and shows what it reads back, next to the persona that actually produced the
+traffic. The taste is one Map across every category; similarities to personas are cosine, and the highlighted avatar is
+the reading. It is then read per category, in every category the shopper chose from — dresses, trousers, and the home
+category of its pick: the product the taste ranks first there, by the shop's own score — the taste seen through that category's weights —
+must be one the persona likes —
+within 80% of its favourite there. Shoppers do not always open their favourite, so the favourite is shown where they differ.
+Home decoration is reached only through the dimensions it shares with fashion, and through the shopper's home picks.
 Decay uses a one-week half-life at BaseTime, {{date .BaseTime}}; phases split below a similarity of {{score .Threshold}}.</p>
-<nav><a href="#session">One session</a><a href="#month">Steady month</a><a href="#drift">Drift</a><a href="#detour">Detour</a><a href="#consent">Consent</a></nav>
+<nav><a href="#pipeline">How the corpus works</a><a href="#session">One session</a><a href="#month">Steady month</a><a href="#drift">Drift</a><a href="#detour">Detour</a><a href="#consent">Consent</a></nav>
+
+{{template "pipeline" .Pipeline}}
 
 <h2 id="session">One session</h2>
-<p class="note">A single converting journey per persona, summed flat. The reading should be the persona itself, and the
-dress nearest the affinity the one it bought.</p>
+<p class="note">A single converting journey per persona — fashion, then home decoration — summed flat. The reading should
+be the persona itself, right in every category it chose from, and in the category of the purchase the product bought.</p>
 <div class="grid">
 {{range .Sessions}}
   <div class="card">
@@ -188,11 +229,8 @@ dress nearest the affinity the one it bought.</p>
       <div class="who"><img src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><b>{{.Persona.Name}}</b><br><span class="muted">shopped</span></div>
       <div>{{template "sims" .Read.Sims}}</div>
     </div>
-    <div class="row" style="margin-top:10px">
-      <div class="thumb"><img src="{{img .Purchased.ImagePath}}" alt="{{.Purchased.ItemName}}"><b>bought</b>{{.Purchased.ItemID}}</div>
-      <div class="thumb top"><img src="{{img .Read.Item.ImagePath}}" alt="{{.Read.Item.ItemName}}"><b>nearest</b>{{.Read.Item.ItemID}}</div>
-      <div style="align-self:center;font-size:20px">{{if eq .Purchased.ItemID .Read.Item.ItemID}}<span class="tick">✓</span>{{else}}<span class="cross">✗</span>{{end}}</div>
-    </div>
+    {{template "categories" .Read.Categories}}
+    <p class="meta">bought <b>{{.Purchased.ItemID}}</b> {{.Purchased.ItemName}}</p>
     {{taste .Read.Affinity}}
   </div>
 {{end}}
@@ -200,7 +238,7 @@ dress nearest the affinity the one it bought.</p>
 
 <h2 id="month">Steady month</h2>
 <p class="note">A month of one persona's visits, read with decay and cut into phases. A steady shopper should read as
-themselves and stay one phase.</p>
+themselves, per category as in a single session, and stay one phase.</p>
 <div class="grid">
 {{range .Months}}
   <div class="card">
@@ -208,27 +246,25 @@ themselves and stay one phase.</p>
       <div class="who"><img src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><b>{{.Persona.Name}}</b><br><span class="muted">shopped</span></div>
       <div>{{template "sims" .Read.Sims}}</div>
     </div>
-    <div class="row" style="margin-top:10px">
-      <div class="thumb top"><img src="{{img .Read.Item.ImagePath}}" alt="{{.Read.Item.ItemName}}"><b>nearest</b>{{.Read.Item.ItemID}}</div>
-      <div>{{template "phases" .Phases}}</div>
-    </div>
+    {{template "categories" .Read.Categories}}
+    <div style="margin-top:10px">{{template "phases" .Phases}}</div>
   </div>
 {{end}}
 </div>
 
 <h2 id="drift">Drift</h2>
 <p class="note">Every ordered pair: the first three visits (up to two weeks ago, including a purchase) are one persona,
-the last four another. Summed flat, the louder or the average taste wins; decayed, the recent one should; phases should
-recover both, split where the taste changed.</p>
+the last four another. Summed flat, the old taste too often wins; decayed, the recent one should — as a persona, and in
+every category the recent half chose from. Phases should recover both, split where the taste changed.</p>
 <div class="scroll">
 <table class="data">
-  <tr><th>Shopped</th><th>Read flat</th><th>Read decayed</th><th>Nearest dress, decayed</th><th>Phases</th></tr>
+  <tr><th>Shopped</th><th>Read flat</th><th>Read decayed</th><th>Categories, decayed</th><th>Phases</th></tr>
   {{range .Drifts}}
   <tr>
     <td style="white-space:nowrap"><img class="avatar small" src="{{img .Old.ImagePath}}" alt="{{.Old.Name}}"> → <img class="avatar small" src="{{img .Recent.ImagePath}}" alt="{{.Recent.Name}}"><br><span class="muted">{{.Old.Name}} then {{.Recent.Name}}</span></td>
-    <td class="{{if eq .Flat.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Flat.Persona.ImagePath}}" alt="{{.Flat.Persona.Name}}"> {{.Flat.Persona.Name}}</td>
-    <td class="{{if eq .Decayed.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Decayed.Persona.ImagePath}}" alt="{{.Decayed.Persona.Name}}"> {{.Decayed.Persona.Name}}</td>
-    <td><div class="thumb"><img src="{{img .Decayed.Item.ImagePath}}" alt="{{.Decayed.Item.ItemName}}" style="width:56px;height:75px">{{.Decayed.Item.ItemID}}</div></td>
+    <td class="{{if eq .Flat.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Flat.Persona.ImagePath}}" alt="{{.Flat.Persona.Name}}"> {{.Flat.Persona.Name}}<br><span class="muted">{{.Flat.Correct}}/{{len .Flat.Categories}} categories</span></td>
+    <td class="{{if eq .Decayed.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Decayed.Persona.ImagePath}}" alt="{{.Decayed.Persona.Name}}"> {{.Decayed.Persona.Name}}<br><span class="muted">{{.Decayed.Correct}}/{{len .Decayed.Categories}} categories</span></td>
+    <td><div class="row">{{range .Decayed.Categories}}<div class="thumb{{if .OK}} top{{end}}"><img src="{{img .Nearest.ImagePath}}" alt="{{.Nearest.ItemName}}" title="{{.Name}}: {{.Nearest.ItemName}}" style="width:56px;height:75px">{{.Nearest.ItemID}}</div>{{end}}</div></td>
     <td>{{template "phases" .Phases}}</td>
   </tr>
   {{end}}
