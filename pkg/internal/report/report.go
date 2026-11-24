@@ -141,6 +141,9 @@ nav a { color: var(--accent); text-decoration: none; }
 .row { display: flex; gap: 10px; align-items: flex-start; overflow-x: auto; padding-bottom: 6px; }
 .row + .row { margin-top: 14px; }
 .who { flex: 0 0 120px; text-align: center; }
+/* in a horizontal slider the persona stays put and the products scroll underneath it */
+.row > .who { position: sticky; left: 0; z-index: 2; align-self: stretch; padding-right: 10px;
+  background: var(--card); box-shadow: 8px 0 8px -8px rgba(0, 0, 0, 0.25); }
 .who img, img.avatar { width: 88px; height: 88px; border-radius: 50%; display: block; margin: 0 auto 4px; }
 img.avatar.small { width: 44px; height: 44px; display: inline-block; margin: 0; vertical-align: middle; }
 .thumb { flex: 0 0 84px; text-align: center; font-size: 12px; color: var(--muted); }
@@ -161,6 +164,9 @@ table.data th { font-size: 12px; color: var(--muted); font-weight: 600; }
 table.data td.hit { background: var(--hit); }
 table.data td.miss { background: var(--miss); }
 .scroll { overflow-x: auto; }
+/* the same for a wide table: its first column, who shopped, stays put */
+.scroll table.data tr > :first-child { position: sticky; left: 0; z-index: 2; background: var(--card);
+  box-shadow: 8px 0 8px -8px rgba(0, 0, 0, 0.25); }
 table.taste { border-collapse: collapse; width: 100%; font-size: 12px; margin-top: 8px; }
 table.taste th { text-align: left; font-weight: 400; color: var(--muted); width: 92px; padding: 1px 6px 1px 0; }
 table.taste td { padding: 1px 0; }
