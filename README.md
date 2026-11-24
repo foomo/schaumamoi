@@ -47,8 +47,10 @@ Four GA4 events — `view_item_list`, `select_item`, `view_item`, `add_to_cart`.
 54 products, each with an attractor vector and a description saying the same thing in
 prose: 18 dresses and 18 trousers, six of each per occasion, and 18 home decoration
 pieces, six per category. Several products in each section suit each persona, so a
-shopper has real alternatives to choose between. They sit in a small category tree,
-and each listing's id is its path:
+shopper has real alternatives to choose between. Names are shop-style, an invented
+model name plus what the product is (`Halden Concrete Pendant`, `Odette Tulle
+Ballgown`); the description, not the name, says what taste it serves. They sit in a
+small category tree, and each listing's id is its path:
 
 | Category | List id | Items |
 |---|---|---|
@@ -113,10 +115,10 @@ dress weights do:
 
 | Persona | | Top match |
 |---|---|---|
-| Kate | conservative lawyer | Pleated Wool Trousers |
-| Sofia | event host, glamour | Tulle Ballgown |
-| Lena | designer, dresses down | Jersey Joggers |
-| Mira | architect, contemporary business | Cigarette Trousers |
+| Kate | conservative lawyer | Temple Pleated Trousers |
+| Sofia | event host, glamour | Odette Tulle Ballgown |
+| Lena | designer, dresses down | Haven Joggers |
+| Mira | architect, contemporary business | Grid Cigarette Trousers |
 
 ### Journeys
 
@@ -240,10 +242,10 @@ assertion reads as dresses rather than as `DRESS_07`:
 
 ```
 ranked for Mira, 41 year old architect, business wear but strictly contemporary:
-  1. Cigarette Trousers          Slim black cigarette trousers with a sharp crease and
-                                 nothing else — modern, minimal, a little severe.
-  2. Architectural Column Dress  Severe black column, architectural seams and hard
-                                 edges — contemporary business wear for a minimalist.
+  1. Grid Cigarette Trousers  Slim black cigarette trousers with a sharp crease and
+                              nothing else — modern, minimal, a little severe.
+  2. Monolith Column Dress    Severe black column, architectural seams and hard
+                              edges — contemporary business wear for a minimalist.
 ```
 
 The description is documentation of the vector, not an input to it; the two are kept in
