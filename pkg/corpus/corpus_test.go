@@ -1,11 +1,11 @@
-package aggregator_test
+package corpus_test
 
 import (
 	"math"
 	"testing"
 	"time"
 
-	"github.com/foomo/schaumamoi/pkg/aggregator"
+	"github.com/foomo/schaumamoi/pkg/corpus"
 	"github.com/foomo/schaumamoi/pkg/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
@@ -14,16 +14,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// batch is the envelope the test pipelines ingest with: the fields of an mpv2 envelope
+// envelope is what the test corpora ingest with: the fields of an mpv2 envelope
 // that differ between the batches of one shopper.
-type batch struct {
+type envelope struct {
 	At      time.Time
 	Session string
 	// Personalization is whether the shopper consented to personalization storage.
 	Personalization bool
 }
 
-// decoration is what the test pipelines fold out of each event: the event's contribution
+// decoration is what the test corpora fold out of each event: the event's contribution
 // to the shopper's affinity, i.e. the attractors of the items it touched, weighted by how
 // strong a signal of taste the event is — and, copied off the envelope, when and in which
 // session it happened, which is what lets a deriver decay by time and cut a history into
@@ -35,12 +35,12 @@ type decoration struct {
 }
 
 type (
-	testEvent      = sesamy.Event[any]
-	testDecorated  = aggregator.DecoratedEvent[any, decoration]
-	testDecorator  = aggregator.EventDecorator[batch, any, decoration]
-	testFilter     = aggregator.EventFilter[batch, any]
-	testPipelineFn = aggregator.PipelineConfig[batch, any, decoration]
-	testPipeline   = aggregator.Pipeline[batch, any, decoration]
+	testEvent     = sesamy.Event[any]
+	testDecorated = corpus.DecoratedEvent[any, decoration]
+	testDecorator = corpus.EventDecorator[envelope, any, decoration]
+	testFilter    = corpus.EventFilter[envelope, any]
+	testConfig    = corpus.Config[envelope, any, decoration]
+	testCorpus    = corpus.Corpus[envelope, any, decoration]
 )
 
 // itemsParams is the one thing every ecommerce event has in common. Decoding into
@@ -60,24 +60,24 @@ var intentWeight = map[sesamy.EventName]personalization.Value{
 	sesamy.EventNameAddToCart:    3,
 }
 
-// recorded and session copy the envelope's time and session onto the event. They read
+// stampTime and stampSession copy the envelope's time and session onto the event. They read
 // the envelope rather than the event, because the event itself carries neither; and
 // they have to, because the corpus keeps the decoration and not the envelope.
-func recorded(b batch, _ testEvent, d decoration) decoration {
-	d.At = b.At
+func stampTime(env envelope, _ testEvent, d decoration) decoration {
+	d.At = env.At
 
 	return d
 }
 
-func session(b batch, _ testEvent, d decoration) decoration {
-	d.Session = b.Session
+func stampSession(env envelope, _ testEvent, d decoration) decoration {
+	d.Session = env.Session
 
 	return d
 }
 
-// touched adds the attractor of every item the event carries to the decoration. An event
+// addAttractors adds the attractor of every item the event carries to the decoration. An event
 // without decodable items leaves the decoration as it was.
-func touched(_ batch, e testEvent, d decoration) decoration {
+func addAttractors(_ envelope, e testEvent, d decoration) decoration {
 	var p itemsParams
 	if err := e.DecodeParams(&p); err != nil {
 		return d
@@ -95,8 +95,8 @@ func touched(_ batch, e testEvent, d decoration) decoration {
 	return d
 }
 
-// intent scales the decoration by the weight of the event. Unknown events weigh nothing.
-func intent(_ batch, e testEvent, d decoration) decoration {
+// weighByIntent scales the decoration by the weight of the event. Unknown events weigh nothing.
+func weighByIntent(_ envelope, e testEvent, d decoration) decoration {
 	w := intentWeight[e.Name]
 
 	out := make(personalization.Map, len(d.Affinity))
@@ -118,15 +118,15 @@ func clone(m personalization.Map) personalization.Map {
 	return out
 }
 
-func newAffinityPipeline(filter testFilter) *testPipeline {
-	return aggregator.NewPipeline(testPipelineFn{
-		PreFilter:      filter,
-		DecoratorChain: []testDecorator{recorded, session, touched, intent},
+func newAffinityCorpus(filter testFilter) *testCorpus {
+	return corpus.New(testConfig{
+		Filter:     filter,
+		Decorators: []testDecorator{stampTime, stampSession, addAttractors, weighByIntent},
 	})
 }
 
 func only(names ...sesamy.EventName) testFilter {
-	return func(_ batch, e testEvent) bool {
+	return func(_ envelope, e testEvent) bool {
 		for _, name := range names {
 			if e.Name == name {
 				return true
@@ -137,7 +137,7 @@ func only(names ...sesamy.EventName) testFilter {
 	}
 }
 
-// kateJourney is the corpus the pipeline will actually see: six heterogeneous GA4 events
+// kateJourney is the stream the corpus will actually see: six heterogeneous GA4 events
 // type-erased to sesamy.Event[any], as sesamy-go hands them downstream.
 func kateJourney() []testEvent {
 	return mock.Journey(mock.PersonaBusinessKate).Events
@@ -146,7 +146,7 @@ func kateJourney() []testEvent {
 // affinity is the domain state: the shopper's affinity to the attractors of the items
 // they interacted with. It sums into a fresh map in slice order — events arrive in order
 // and Add appends, so the float sums are stable, for the reason Map.Score documents — and
-// never writes into a decoration, which the pipeline hands out by reference.
+// never writes into a decoration, which the corpus hands out by reference.
 func affinity(events []testDecorated) personalization.Map {
 	out := personalization.Map{}
 	for _, e := range events {
@@ -162,7 +162,7 @@ func affinity(events []testDecorated) personalization.Map {
 // older than now. Now is handed in rather than read off the clock, so deriving stays a
 // pure read and a test can move time by hand. An event from after now counts in full
 // rather than growing.
-func decayed(now time.Time, halfLife time.Duration) aggregator.StateDeriver[any, decoration, personalization.Map] {
+func decayed(now time.Time, halfLife time.Duration) corpus.StateDeriver[any, decoration, personalization.Map] {
 	return func(events []testDecorated) personalization.Map {
 		out := personalization.Map{}
 		for _, e := range events {
@@ -176,19 +176,19 @@ func decayed(now time.Time, halfLife time.Duration) aggregator.StateDeriver[any,
 	}
 }
 
-// addPayload is how a routed batch reaches the pipeline: its events, with the envelope
-// fields that differ between batches resolved into a batch.
-func addPayload(p *testPipeline, payload mpv2.Payload[any]) {
-	p.Add(batch{
+// addPayload is how a routed batch reaches the corpus: its events, with the envelope
+// fields that differ between batches resolved into an envelope.
+func addPayload(p *testCorpus, payload mpv2.Payload[any]) {
+	p.Add(envelope{
 		At:              time.UnixMicro(payload.TimestampMicros).UTC(),
 		Session:         payload.SessionID,
-		Personalization: granted(payload.Consent),
+		Personalization: personalizationGranted(payload.Consent),
 	}, payload.Events...)
 }
 
-// granted reads personalization consent off an envelope. No consent block means no
+// personalizationGranted reads personalization consent off an envelope. No consent block means no
 // decision was made, which is not consent.
-func granted(c *mpv2.ConsentData) bool {
+func personalizationGranted(c *mpv2.ConsentData) bool {
 	return c != nil && c.PersonalizationStorage != nil && *c.PersonalizationStorage == mpv2.ConsentGranted
 }
 
@@ -279,10 +279,10 @@ func TestAffinityRecoversPersona(t *testing.T) {
 		t.Run(persona.Name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityPipeline(nil)
-			p.Add(batch{}, mock.Journey(persona).Events...)
+			p := newAffinityCorpus(nil)
+			p.Add(envelope{}, mock.Journey(persona).Events...)
 
-			aff := p.DeriveState(affinity)
+			aff := p.Derive(affinity)
 			assert.Equal(t, persona.Name, nearestPersona(aff, mock.Personas()).Name)
 
 			own := cosine(aff, persona.Affinity)
@@ -308,79 +308,79 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 
 			events := mock.Journey(persona).Events
 
-			p := newAffinityPipeline(nil)
-			p.Add(batch{}, events...)
+			p := newAffinityCorpus(nil)
+			p.Add(envelope{}, events...)
 
 			want := purchased(t, events)
-			got := nearestItem(p.DeriveState(affinity), mock.Catalog())
+			got := nearestItem(p.Derive(affinity), mock.Catalog())
 			assert.Equal(t, want.ItemID, got.ItemID, "want %q, got %q", want.Description, got.Description)
 		})
 	}
 }
 
-// TestAddAppliesPreFilter narrows the corpus to deliberate interactions. The listings
+// TestAddAppliesFilter narrows the corpus to deliberate interactions. The listings
 // are gone, and the choices alone still say who the shopper is.
-func TestAddAppliesPreFilter(t *testing.T) {
+func TestAddAppliesFilter(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityPipeline(only(sesamy.EventNameSelectItem, sesamy.EventNameViewItem, sesamy.EventNameAddToCart))
-	p.Add(batch{}, kateJourney()...)
+	p := newAffinityCorpus(only(sesamy.EventNameSelectItem, sesamy.EventNameViewItem, sesamy.EventNameAddToCart))
+	p.Add(envelope{}, kateJourney()...)
 
 	assert.Equal(t, 3, p.Len())
 	assert.Equal(t, map[sesamy.EventName]int{
 		sesamy.EventNameSelectItem: 1,
 		sesamy.EventNameViewItem:   1,
 		sesamy.EventNameAddToCart:  1,
-	}, p.DeriveState(funnel))
-	assert.Equal(t, mock.PersonaBusinessKate.Name, nearestPersona(p.DeriveState(affinity), mock.Personas()).Name)
+	}, p.Derive(funnel))
+	assert.Equal(t, mock.PersonaBusinessKate.Name, nearestPersona(p.Derive(affinity), mock.Personas()).Name)
 }
 
-// TestAddWithoutPreFilterAdmitsEverything pins the zero-value config: a pipeline that
-// only collects must not have to write a keep-everything filter, and must not panic.
-func TestAddWithoutPreFilterAdmitsEverything(t *testing.T) {
+// TestAddWithoutFilterAdmitsEverything pins the zero-value config: a corpus that
+// only collects must not have to write an admit-everything filter, and must not panic.
+func TestAddWithoutFilterAdmitsEverything(t *testing.T) {
 	t.Parallel()
 
 	events := kateJourney()
 
-	p := aggregator.NewPipeline(testPipelineFn{})
-	require.NotPanics(t, func() { p.Add(batch{}, events...) })
+	p := corpus.New(testConfig{})
+	require.NotPanics(t, func() { p.Add(envelope{}, events...) })
 
 	assert.Equal(t, len(events), p.Len())
-	assert.Empty(t, p.DeriveState(affinity), "an empty chain decorates nothing")
+	assert.Empty(t, p.Derive(affinity), "no decorators, no decoration")
 }
 
-// TestDecoratorChainFoldsInOrder uses the fact that the affinity chain does not commute:
+// TestDecoratorsFoldInOrder uses the fact that the affinity decorators do not commute:
 // weighting before anything has been collected scales an empty map.
-func TestDecoratorChainFoldsInOrder(t *testing.T) {
+func TestDecoratorsFoldInOrder(t *testing.T) {
 	t.Parallel()
 
 	pick := mock.PersonaBusinessKate.TopMatch(mock.Catalog())
 	cart := []testEvent{mock.AddToCart(pick).AnyEvent()}
 
-	derive := func(chain ...testDecorator) personalization.Map {
-		p := aggregator.NewPipeline(testPipelineFn{DecoratorChain: chain})
-		p.Add(batch{}, cart...)
+	derive := func(decorators ...testDecorator) personalization.Map {
+		p := corpus.New(testConfig{Decorators: decorators})
+		p.Add(envelope{}, cart...)
 
-		return p.DeriveState(affinity)
+		return p.Derive(affinity)
 	}
 
-	inOrder, reversed := derive(touched, intent), derive(intent, touched)
+	inOrder, reversed := derive(addAttractors, weighByIntent), derive(weighByIntent, addAttractors)
 
 	require.NotEmpty(t, pick.Attractor)
 	for dimension, v := range pick.Attractor {
-		assert.InDelta(t, float64(v*intentWeight[sesamy.EventNameAddToCart]), float64(inOrder[dimension]), 1e-6, "touched, intent: %s", dimension)
-		assert.InDelta(t, float64(v), float64(reversed[dimension]), 1e-6, "intent, touched: %s", dimension)
+		assert.InDelta(t, float64(v*intentWeight[sesamy.EventNameAddToCart]), float64(inOrder[dimension]), 1e-6, "addAttractors, weighByIntent: %s", dimension)
+		assert.InDelta(t, float64(v), float64(reversed[dimension]), 1e-6, "weighByIntent, addAttractors: %s", dimension)
 	}
 }
 
-// TestDeriveStateIsRepeatable is the regression. Decoration happens once, on arrival, so
+// TestDeriveIsRepeatable is the regression. Decoration happens once, on arrival, so
 // deriving state is a pure read: the affinity must not drift with the number of derives,
 // and deriving must not write through into the decorations it was handed.
-func TestDeriveStateIsRepeatable(t *testing.T) {
+func TestDeriveIsRepeatable(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityPipeline(nil)
-	p.Add(batch{}, kateJourney()...)
+	p := newAffinityCorpus(nil)
+	p.Add(envelope{}, kateJourney()...)
 
 	decorations := func(events []testDecorated) []personalization.Map {
 		out := make([]personalization.Map, 0, len(events))
@@ -391,30 +391,30 @@ func TestDeriveStateIsRepeatable(t *testing.T) {
 		return out
 	}
 
-	before := p.DeriveState(decorations)
-	first := p.DeriveState(affinity)
+	before := p.Derive(decorations)
+	first := p.Derive(affinity)
 
 	require.NotEmpty(t, first)
 	for i := range 4 {
-		assert.Equal(t, first, p.DeriveState(affinity), "derive %d", i+2)
+		assert.Equal(t, first, p.Derive(affinity), "derive %d", i+2)
 	}
-	assert.Equal(t, before, p.DeriveState(decorations), "deriving modified the corpus")
+	assert.Equal(t, before, p.Derive(decorations), "deriving modified the corpus")
 }
 
-// TestAddAfterDeriveStateDoesNotRedecorate is the other half of the regression: a later
-// batch must not drag the chain back over events that were already folded. Intent scales,
+// TestAddAfterDeriveDoesNotRedecorate is the other half of the regression: a later
+// batch must not drag the decorators back over events that were already folded. Intent scales,
 // so an event decorated twice would carry its weight squared.
-func TestAddAfterDeriveStateDoesNotRedecorate(t *testing.T) {
+func TestAddAfterDeriveDoesNotRedecorate(t *testing.T) {
 	t.Parallel()
 
 	first, second := kateJourney(), mock.BrowseJourney(mock.PersonaCasualLena).Events
 
-	p := newAffinityPipeline(nil)
-	p.Add(batch{}, first...)
-	require.NotEmpty(t, p.DeriveState(affinity))
-	p.Add(batch{}, second...)
+	p := newAffinityCorpus(nil)
+	p.Add(envelope{}, first...)
+	require.NotEmpty(t, p.Derive(affinity))
+	p.Add(envelope{}, second...)
 
-	got := p.DeriveState(func(events []testDecorated) []personalization.Map {
+	got := p.Derive(func(events []testDecorated) []personalization.Map {
 		out := make([]personalization.Map, 0, len(events))
 		for _, e := range events {
 			out = append(out, e.Decoration.Affinity)
@@ -423,73 +423,73 @@ func TestAddAfterDeriveStateDoesNotRedecorate(t *testing.T) {
 		return out
 	})
 
-	// Stated per event against a pipeline that saw only that event, so a doubled first
+	// Stated per event against a corpus that saw only that event, so a doubled first
 	// batch cannot hide behind anything in the second.
 	all := append(append([]testEvent{}, first...), second...)
 	require.Len(t, got, len(all))
 	for i, e := range all {
-		fresh := newAffinityPipeline(nil)
-		fresh.Add(batch{}, e)
+		fresh := newAffinityCorpus(nil)
+		fresh.Add(envelope{}, e)
 
-		assert.Equal(t, fresh.DeriveState(affinity), got[i], "event %d (%s)", i, e.Name)
+		assert.Equal(t, fresh.Derive(affinity), got[i], "event %d (%s)", i, e.Name)
 	}
 }
 
-// TestOneCorpusManyQuestions is what moving DomainState off the pipeline buys: derivers
+// TestOneCorpusManyQuestions is what moving DomainState off the corpus buys: derivers
 // of unrelated types over a single ingest.
 func TestOneCorpusManyQuestions(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityPipeline(nil)
-	p.Add(batch{}, kateJourney()...)
+	p := newAffinityCorpus(nil)
+	p.Add(envelope{}, kateJourney()...)
 
 	assert.Equal(t, map[sesamy.EventName]int{
 		sesamy.EventNameViewItemList: 3,
 		sesamy.EventNameSelectItem:   1,
 		sesamy.EventNameViewItem:     1,
 		sesamy.EventNameAddToCart:    1,
-	}, p.DeriveState(funnel))
+	}, p.Derive(funnel))
 
-	assert.Equal(t, mock.PersonaBusinessKate.Name, p.DeriveState(func(events []testDecorated) mock.Persona {
+	assert.Equal(t, mock.PersonaBusinessKate.Name, p.Derive(func(events []testDecorated) mock.Persona {
 		return nearestPersona(affinity(events), mock.Personas())
 	}).Name)
 }
 
-// TestDeriveStateIsDeterministic pins the float summation: the same corpus must give a
-// bit-identical affinity every time, and so must a second pipeline fed the same stream,
+// TestDeriveIsDeterministic pins the float summation: the same corpus must give a
+// bit-identical affinity every time, and so must a second corpus fed the same stream,
 // for the reason Map.Score sorts its dimensions.
-func TestDeriveStateIsDeterministic(t *testing.T) {
+func TestDeriveIsDeterministic(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityPipeline(nil)
-	p.Add(batch{}, kateJourney()...)
+	p := newAffinityCorpus(nil)
+	p.Add(envelope{}, kateJourney()...)
 
-	want := p.DeriveState(affinity)
+	want := p.Derive(affinity)
 	for range 8 {
-		assert.Equal(t, want, p.DeriveState(affinity))
+		assert.Equal(t, want, p.Derive(affinity))
 
-		again := newAffinityPipeline(nil)
-		again.Add(batch{}, kateJourney()...)
-		assert.Equal(t, want, again.DeriveState(affinity))
+		again := newAffinityCorpus(nil)
+		again.Add(envelope{}, kateJourney()...)
+		assert.Equal(t, want, again.Derive(affinity))
 	}
 }
 
 const week = 7 * 24 * time.Hour
 
-// TestRecordedStampsBatchTime pins where recency comes from: every event of a batch
+// TestStampTimeReadsEnvelope pins where recency comes from: every event of a batch
 // carries the time of the envelope it was added with, and a zero envelope leaves the
 // zero time.
-func TestRecordedStampsBatchTime(t *testing.T) {
+func TestStampTimeReadsEnvelope(t *testing.T) {
 	t.Parallel()
 
 	earlier, later := mock.BaseTime.Add(-week), mock.BaseTime
 
-	p := newAffinityPipeline(nil)
+	p := newAffinityCorpus(nil)
 	addPayload(p, mock.Journey(mock.PersonaFestiveSofia, mock.WithTimestamp(earlier)))
 	addPayload(p, mock.BrowseJourney(mock.PersonaBusinessKate, mock.WithTimestamp(later)))
-	p.Add(batch{}, mock.AddToCart(mock.PersonaBusinessKate.TopMatch(mock.Catalog())).AnyEvent())
+	p.Add(envelope{}, mock.AddToCart(mock.PersonaBusinessKate.TopMatch(mock.Catalog())).AnyEvent())
 
-	stamps := p.DeriveState(func(events []testDecorated) []time.Time {
+	stamps := p.Derive(func(events []testDecorated) []time.Time {
 		out := make([]time.Time, 0, len(events))
 		for _, e := range events {
 			out = append(out, e.Decoration.At)
@@ -523,11 +523,11 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityPipeline(nil)
-			p.Add(batch{At: mock.BaseTime.Add(-tt.age)}, cart)
+			p := newAffinityCorpus(nil)
+			p.Add(envelope{At: mock.BaseTime.Add(-tt.age)}, cart)
 
-			full := p.DeriveState(affinity)
-			got := p.DeriveState(decayed(mock.BaseTime, week))
+			full := p.Derive(affinity)
+			got := p.Derive(decayed(mock.BaseTime, week))
 
 			require.NotEmpty(t, full)
 			for dimension, v := range full {
@@ -537,8 +537,8 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 	}
 }
 
-// addHistory feeds a shopper's month into the pipeline, one routed batch per visit.
-func addHistory(p *testPipeline, history []mpv2.Payload[any]) {
+// addHistory feeds a shopper's month into the corpus, one routed batch per visit.
+func addHistory(p *testCorpus, history []mpv2.Payload[any]) {
 	for _, payload := range history {
 		addPayload(p, payload)
 	}
@@ -566,10 +566,10 @@ func TestMonthRecoversPersona(t *testing.T) {
 		t.Run(persona.Name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityPipeline(nil)
+			p := newAffinityCorpus(nil)
 			addHistory(p, mock.History(mock.Month(persona)))
 
-			aff := p.DeriveState(decayed(mock.BaseTime, week))
+			aff := p.Derive(decayed(mock.BaseTime, week))
 			assert.Equal(t, persona.Name, nearestPersona(aff, mock.Personas()).Name)
 			assert.Equal(t, persona.TopMatch(mock.Catalog()).ItemID, nearestItem(aff, mock.Catalog()).ItemID)
 		})
@@ -592,10 +592,10 @@ func TestDecayFollowsRecentTaste(t *testing.T) {
 			t.Run(old.Name+" then "+recent.Name, func(t *testing.T) {
 				t.Parallel()
 
-				p := newAffinityPipeline(nil)
+				p := newAffinityCorpus(nil)
 				addHistory(p, drifted(old, recent))
 
-				aff := p.DeriveState(decayed(mock.BaseTime, week))
+				aff := p.Derive(decayed(mock.BaseTime, week))
 				assert.Equal(t, recent.Name, nearestPersona(aff, mock.Personas()).Name)
 				assert.Equal(t, recent.TopMatch(mock.Catalog()).ItemID, nearestItem(aff, mock.Catalog()).ItemID)
 			})
@@ -619,10 +619,10 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityPipeline(nil)
+			p := newAffinityCorpus(nil)
 			addHistory(p, drifted(tt.old, tt.recent))
 
-			assert.Equal(t, tt.flat.Name, nearestPersona(p.DeriveState(affinity), mock.Personas()).Name)
+			assert.Equal(t, tt.flat.Name, nearestPersona(p.Derive(affinity), mock.Personas()).Name)
 		})
 	}
 }
@@ -632,20 +632,20 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 func TestDecayIsRepeatable(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityPipeline(nil)
+	p := newAffinityCorpus(nil)
 	addPayload(p, mock.Journey(mock.PersonaBusinessKate, mock.WithTimestamp(mock.BaseTime)))
 
-	now := p.DeriveState(decayed(mock.BaseTime, week))
+	now := p.Derive(decayed(mock.BaseTime, week))
 	for range 4 {
-		assert.Equal(t, now, p.DeriveState(decayed(mock.BaseTime, week)))
+		assert.Equal(t, now, p.Derive(decayed(mock.BaseTime, week)))
 	}
 
-	later := p.DeriveState(decayed(mock.BaseTime.Add(week), week))
+	later := p.Derive(decayed(mock.BaseTime.Add(week), week))
 	for dimension, v := range now {
 		assert.InDelta(t, float64(v/2), float64(later[dimension]), 1e-6, dimension)
 	}
 
-	assert.Equal(t, now, p.DeriveState(decayed(mock.BaseTime, week)), "deriving later modified the corpus")
+	assert.Equal(t, now, p.Derive(decayed(mock.BaseTime, week)), "deriving later modified the corpus")
 }
 
 // TestAddWithoutTimeDecaysAway pins what Add documents: an event with no recording time
@@ -653,11 +653,11 @@ func TestDecayIsRepeatable(t *testing.T) {
 func TestAddWithoutTimeDecaysAway(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityPipeline(nil)
-	p.Add(batch{}, kateJourney()...)
+	p := newAffinityCorpus(nil)
+	p.Add(envelope{}, kateJourney()...)
 
-	require.NotEmpty(t, p.DeriveState(affinity))
-	for dimension, v := range p.DeriveState(decayed(mock.BaseTime, week)) {
+	require.NotEmpty(t, p.Derive(affinity))
+	for dimension, v := range p.Derive(decayed(mock.BaseTime, week)) {
 		assert.Zero(t, v, dimension)
 	}
 }
@@ -675,21 +675,22 @@ func TestAddWithoutTimeDecaysAway(t *testing.T) {
 // close call — so 0.9 sits in the gap.
 const phaseThreshold personalization.Value = 0.9
 
-// phase is a window of consecutive sessions, with the affinity shown across them.
-type phase struct {
+// window is a run of consecutive sessions, with the affinity shown across them. A phase
+// is a window of steady taste.
+type window struct {
 	From, To time.Time
 	Sessions []string
 	Affinity personalization.Map
 }
 
-// visits groups the corpus into one window per session, in order. Events arrive in
-// order and a session's events arrive together, so a change of session is a new visit.
-func visits(events []testDecorated) []phase {
-	var out []phase
+// sessionWindows groups the corpus into one window per session, in order. Events arrive in
+// order and a session's events arrive together, so a change of session opens a new window.
+func sessionWindows(events []testDecorated) []window {
+	var out []window
 
 	for i, e := range events {
 		if i == 0 || e.Decoration.Session != events[i-1].Decoration.Session {
-			out = append(out, phase{From: e.Decoration.At, Sessions: []string{e.Decoration.Session}, Affinity: personalization.Map{}})
+			out = append(out, window{From: e.Decoration.At, Sessions: []string{e.Decoration.Session}, Affinity: personalization.Map{}})
 		}
 
 		v := &out[len(out)-1]
@@ -708,11 +709,11 @@ func visits(events []testDecorated) []phase {
 //
 // Phases are contiguous. A shopper who drifts away and comes back gets three windows,
 // not two — the return is news about when the taste held, which a merge would lose.
-func phases(threshold personalization.Value) aggregator.StateDeriver[any, decoration, []phase] {
-	return func(events []testDecorated) []phase {
-		var out []phase
+func phases(threshold personalization.Value) corpus.StateDeriver[any, decoration, []window] {
+	return func(events []testDecorated) []window {
+		var out []window
 
-		for _, v := range visits(events) {
+		for _, v := range sessionWindows(events) {
 			if len(out) > 0 {
 				current := &out[len(out)-1]
 				if len(v.Affinity) == 0 || cosine(v.Affinity, current.Affinity) >= threshold {
@@ -733,9 +734,9 @@ func phases(threshold personalization.Value) aggregator.StateDeriver[any, decora
 	}
 }
 
-// phaseOwners names the persona each phase is nearest to, which is how a test reads a
+// phasePersonas names the persona each phase is nearest to, which is how a test reads a
 // list of phases back.
-func phaseOwners(ps []phase) []string {
+func phasePersonas(ps []window) []string {
 	out := make([]string, 0, len(ps))
 	for _, p := range ps {
 		out = append(out, nearestPersona(p.Affinity, mock.Personas()).Name)
@@ -744,15 +745,15 @@ func phaseOwners(ps []phase) []string {
 	return out
 }
 
-// TestSessionDecoratorReadsBatch pins where the session comes from: the envelope, not
+// TestStampSessionReadsEnvelope pins where the session comes from: the envelope, not
 // the event. Every event of a visit carries that visit's session id, and an
-// event added without a batch carries none.
-func TestSessionDecoratorReadsBatch(t *testing.T) {
+// event added with a zero envelope carries none.
+func TestStampSessionReadsEnvelope(t *testing.T) {
 	t.Parallel()
 
 	history := mock.History(mock.Month(mock.PersonaBusinessKate))
 
-	p := newAffinityPipeline(nil)
+	p := newAffinityCorpus(nil)
 	addHistory(p, history)
 
 	want := make([]string, 0, len(history))
@@ -760,9 +761,9 @@ func TestSessionDecoratorReadsBatch(t *testing.T) {
 		want = append(want, payload.SessionID)
 	}
 
-	got := p.DeriveState(func(events []testDecorated) []string {
+	got := p.Derive(func(events []testDecorated) []string {
 		var out []string
-		for _, v := range visits(events) {
+		for _, v := range sessionWindows(events) {
 			out = append(out, v.Sessions...)
 		}
 
@@ -770,10 +771,10 @@ func TestSessionDecoratorReadsBatch(t *testing.T) {
 	})
 	assert.Equal(t, want, got)
 
-	bare := newAffinityPipeline(nil)
-	bare.Add(batch{}, kateJourney()...)
-	assert.Equal(t, []string{""}, bare.DeriveState(func(events []testDecorated) []string {
-		return visits(events)[0].Sessions
+	bare := newAffinityCorpus(nil)
+	bare.Add(envelope{}, kateJourney()...)
+	assert.Equal(t, []string{""}, bare.Derive(func(events []testDecorated) []string {
+		return sessionWindows(events)[0].Sessions
 	}))
 }
 
@@ -786,12 +787,12 @@ func TestSteadyMonthIsOnePhase(t *testing.T) {
 		t.Run(persona.Name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityPipeline(nil)
+			p := newAffinityCorpus(nil)
 			addHistory(p, mock.History(mock.Month(persona)))
 
-			got := p.DeriveState(phases(phaseThreshold))
+			got := p.Derive(phases(phaseThreshold))
 			require.Len(t, got, 1)
-			assert.Equal(t, []string{persona.Name}, phaseOwners(got))
+			assert.Equal(t, []string{persona.Name}, phasePersonas(got))
 			assert.Equal(t, mock.BaseTime.Add(-27*mock.Day), got[0].From)
 			assert.Equal(t, mock.BaseTime, got[0].To)
 			assert.Len(t, got[0].Sessions, len(mock.Month(persona)))
@@ -815,12 +816,12 @@ func TestDriftSplitsIntoPhases(t *testing.T) {
 			t.Run(old.Name+" then "+recent.Name, func(t *testing.T) {
 				t.Parallel()
 
-				p := newAffinityPipeline(nil)
+				p := newAffinityCorpus(nil)
 				addHistory(p, drifted(old, recent))
 
-				got := p.DeriveState(phases(phaseThreshold))
+				got := p.Derive(phases(phaseThreshold))
 				require.Len(t, got, 2)
-				assert.Equal(t, []string{old.Name, recent.Name}, phaseOwners(got))
+				assert.Equal(t, []string{old.Name, recent.Name}, phasePersonas(got))
 
 				assert.Equal(t, mock.BaseTime.Add(-14*mock.Day), got[0].To, "the old taste ends with the first purchase")
 				assert.Equal(t, mock.BaseTime.Add(-9*mock.Day), got[1].From, "the new taste starts with the next visit")
@@ -841,36 +842,36 @@ func TestReturningTasteIsANewPhase(t *testing.T) {
 	visitsOf[2].Persona = mock.PersonaFestiveSofia
 	visitsOf[3].Persona = mock.PersonaFestiveSofia
 
-	p := newAffinityPipeline(nil)
+	p := newAffinityCorpus(nil)
 	addHistory(p, mock.History(visitsOf))
 
-	got := p.DeriveState(phases(phaseThreshold))
-	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phaseOwners(got))
+	got := p.Derive(phases(phaseThreshold))
+	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(got))
 }
 
 // TestPhasesNeedSessions shows the decorator doing the work: the same drifted month
-// through a chain without it is one undivided visit, so there is nothing to split.
+// through decorators without it is one undivided visit, so there is nothing to split.
 func TestPhasesNeedSessions(t *testing.T) {
 	t.Parallel()
 
-	p := aggregator.NewPipeline(testPipelineFn{DecoratorChain: []testDecorator{recorded, touched, intent}})
+	p := corpus.New(testConfig{Decorators: []testDecorator{stampTime, addAttractors, weighByIntent}})
 	addHistory(p, drifted(mock.PersonaFestiveSofia, mock.PersonaBusinessKate))
 
-	assert.Len(t, p.DeriveState(phases(phaseThreshold)), 1)
+	assert.Len(t, p.Derive(phases(phaseThreshold)), 1)
 }
 
 // consented keeps only events from batches whose shopper consented to personalization.
 // It is a filter by where an event came from rather than by what it is, which only the
 // envelope can answer.
-func consented(b batch, _ testEvent) bool {
-	return b.Personalization
+func consented(env envelope, _ testEvent) bool {
+	return env.Personalization
 }
 
-// TestPreFilterSeesEnvelope is why the filter gets the envelope too. Sofia shops twice
-// without consent in the middle of Kate's month; a personalization pipeline must never
+// TestFilterSeesEnvelope is why the filter gets the envelope too. Sofia shops twice
+// without consent in the middle of Kate's month; a personalization corpus must never
 // see those visits, so the month reads as Kate's in one unbroken phase — where, admitted,
 // the same visits would split it.
-func TestPreFilterSeesEnvelope(t *testing.T) {
+func TestFilterSeesEnvelope(t *testing.T) {
 	t.Parallel()
 
 	visitsOf := mock.Month(mock.PersonaBusinessKate)
@@ -882,7 +883,7 @@ func TestPreFilterSeesEnvelope(t *testing.T) {
 		history[i].Consent = mock.ConsentDenied()
 	}
 
-	all, filtered := newAffinityPipeline(nil), newAffinityPipeline(consented)
+	all, filtered := newAffinityCorpus(nil), newAffinityCorpus(consented)
 	addHistory(all, history)
 	addHistory(filtered, history)
 
@@ -894,6 +895,6 @@ func TestPreFilterSeesEnvelope(t *testing.T) {
 	}
 
 	assert.Equal(t, admitted, filtered.Len())
-	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phaseOwners(all.DeriveState(phases(phaseThreshold))))
-	assert.Equal(t, []string{"Kate"}, phaseOwners(filtered.DeriveState(phases(phaseThreshold))))
+	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(all.Derive(phases(phaseThreshold))))
+	assert.Equal(t, []string{"Kate"}, phasePersonas(filtered.Derive(phases(phaseThreshold))))
 }
