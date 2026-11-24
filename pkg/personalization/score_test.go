@@ -75,3 +75,31 @@ func TestScoreStable(t *testing.T) {
 		assert.Equal(t, want, left.Score(right))
 	}
 }
+
+func TestWeightedScore(t *testing.T) {
+	t.Parallel()
+
+	const (
+		a personalization.Dimension = "a"
+		b personalization.Dimension = "b"
+	)
+
+	left, right := personalization.Map{a: 1, b: 2}, personalization.Map{a: 3, b: 4}
+
+	for name, tt := range map[string]struct {
+		weights personalization.Map
+		want    personalization.Value
+	}{
+		"unit weights are Score":           {weights: personalization.Map{a: 1, b: 1}, want: left.Score(right)},
+		"a weight scales its dimension":    {weights: personalization.Map{a: 2, b: 1}, want: 2*3 + 8},
+		"an unnamed dimension counts zero": {weights: personalization.Map{a: 1}, want: 3},
+		"no weights score nothing":         {weights: nil, want: 0},
+	} {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			assert.InDelta(t, float64(tt.want), float64(left.WeightedScore(right, tt.weights)), 1e-6)
+			assert.InDelta(t, float64(tt.want), float64(right.WeightedScore(left, tt.weights)), 1e-6, "weighted score must be symmetric")
+		})
+	}
+}
