@@ -143,6 +143,7 @@ func TestReport(t *testing.T) {
 		"Drifts":    drifts,
 		"Detour":    detourPhases,
 		"Consented": chips(consentedOnly.Derive(phases(phaseThreshold))),
+		"Intents":   intentRows(t),
 		"Threshold": phaseThreshold,
 		"BaseTime":  mock.BaseTime,
 	}, map[string]any{
@@ -215,7 +216,7 @@ must be one the persona likes —
 within 80% of its favourite there. Shoppers do not always open their favourite, so the favourite is shown where they differ.
 Home decoration is reached only through the dimensions it shares with fashion, and through the shopper's home picks.
 Decay uses a one-week half-life at BaseTime, {{date .BaseTime}}; phases split below a similarity of {{score .Threshold}}.</p>
-<nav><a href="#pipeline">How the corpus works</a><a href="#session">One session</a><a href="#month">Steady month</a><a href="#drift">Drift</a><a href="#detour">Detour</a><a href="#consent">Consent</a></nav>
+<nav><a href="#pipeline">How the corpus works</a><a href="#session">One session</a><a href="#month">Steady month</a><a href="#drift">Drift</a><a href="#intent">Changing intent</a><a href="#detour">Detour</a><a href="#consent">Consent</a></nav>
 
 {{template "pipeline" .Pipeline}}
 
@@ -270,6 +271,19 @@ every category the recent half chose from. Phases should recover both, split whe
   {{end}}
 </table>
 </div>
+
+<h2 id="intent">Changing intent</h2>
+<p class="note">Long histories through the shop as it is: a visit every two days, the persona — the intent — changing every
+six visits. Each visit shows who was shopping and three checks: <b>L</b> the landing page, ranked before the visit, opens
+on something the intent likes; <b>C</b> so does the visit's closing look; <b>V</b> the vector the corpus emits after the
+visit reads as that persona. A strong change, to a taste that does not overlap the old one, should be read on its first
+visit and served by its second; a gentle one, between overlapping tastes, within a few. The vector fades per event and
+collapses its past when the recent picks point clearly elsewhere.</p>
+{{range .Intents}}
+  <div class="row card" style="margin-top:10px">
+    {{range .Visits}}<div class="thumb"{{if .PhaseStart}} style="border-left:2px solid var(--accent);padding-left:6px"{{end}}><img class="avatar small" src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><b>{{.Persona.Name}}</b>L{{if .Landing}}<span class="tick">✓</span>{{else}}<span class="cross">·</span>{{end}} C{{if .Closing}}<span class="tick">✓</span>{{else}}<span class="cross">·</span>{{end}} V{{if .Corpus}}<span class="tick">✓</span>{{else}}<span class="cross">·</span>{{end}}</div>{{end}}
+  </div>
+{{end}}
 
 <h2 id="detour">Detour</h2>
 <p class="note">Kate's month with visits three and four shopped by Sofia. Phases are contiguous, so the return is a

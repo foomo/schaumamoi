@@ -162,13 +162,14 @@ back into the ranking: Sofia lands on the sequin cocktail dress on her first vis
 the shop shows it first for a while, until she finds her way to the tulle ballgown.
 
 Every listing is personalized, but by the shop, not the persona. The shop never sees a
-persona: it keeps a `mock.Profile` per shopper, a taste vector learned from what they
-open, view and buy, which starts neutral. So a first visit lands on the catalog order,
-and each listing after it is ranked by one more pick. Every visit ends back on the
-top-level department, ranked by all the visit taught the shop — the closing look that
-shows what the shop has learned. A test replays each journey's own events into a fresh
-profile and checks every listing's order against it. The persona only decides what the
-shopper picks; how well the listings anticipate it is up to the profile.
+persona and keeps no learner of its own. Each shopper's events go into an affinity
+corpus (`pkg/affinity`) as they happen, and every listing is ranked with the
+personalization vector that corpus emits at that moment. A first visit, with no events
+yet, lands on the catalog order, and each listing after it is ranked with one more
+pick. Every visit ends back on the top-level department, ranked by all the visit has
+shown: the closing look. A test replays each journey's own events into a fresh corpus
+and checks every listing's order against the vector it emits. The persona only decides
+what the shopper picks; how well the listings anticipate it is up to the vector.
 
 Nothing is hardcoded per persona: the occasion comes from the persona's strongest
 occasion dimension and the product from its highest affinity score. Change a persona's
@@ -182,16 +183,48 @@ mock.History(mock.Month(mock.PersonaBusinessKate))  // []mpv2.Payload[any], 7 vi
 ```
 
 `Month` spans the four weeks up to `mock.BaseTime`, mostly browsing, converting twice.
-The profile carries over from visit to visit, the way a shop recognises a returning
-client: from the second visit on, the landing page already ranks the shopper's top
-match first on its rail.
-The persona is set per `Visit`, so taste can drift within one history — overwrite the
-persona of the early visits and the shopper starts the month as someone else.
+The shopper's corpus carries over from visit to visit, the way a shop recognises a
+returning client.
+The persona is set per `Visit`, so the intent can change within one history: overwrite
+the persona of some visits and the shopper wants something else from then on.
+
+### The personalization vector
+
+The vector the shop ranks with is `affinity.Fade.Vector`, derived from the shopper's
+choices (selections, views and carts; listings never enter the corpus). Recency is
+counted in events, not time: a shopper who comes back after three weeks is not a
+stranger. Three rules, applied in event order:
+
+- every event fades everything before it by a factor (0.95: about 60% of the vector
+  survives a visit);
+- only the last 1000 events count at all, far more than the mock data reach;
+- a strong change of intent forgets faster. When the last 3 choices point clearly away
+  from the rest of the vector (cosine below 0.5, over the dimensions both name), the
+  rest collapses to a fifth. Moving into a new category's own dimensions (clothes to
+  cushions) is no change of intent and never triggers it.
+
+`TestIntentPicksUpQuickly` checks this on long histories (a visit every two days, the
+intent changing every six visits, every direction of change between the personas):
+
+- **Strong change** to a taste that doesn't overlap the old one: the corpus reads it on
+  the first visit, and the shop serves it by the second.
+- **Gentle change** between overlapping tastes (Mira and Lena are both minimal and
+  modern): the vector only fades into it, within three or four visits.
+
+With the per-event fade alone, strong changes take as long as gentle ones. With no fade
+at all, which was the shop's old behaviour, the shop stops following new intents once
+the history is long enough. The corpus report's "Changing intent" section shows it
+visit by visit.
 
 ### Filtering and ranking
 
 ```go
-profile := mock.Profile{}.Learn(mock.LearnSelect, pick)  // what the shop has learned
+shopper := affinity.New(nil)            // one corpus per shopper
+shopper.Add(envelope, events...)         // their events so far
+profile := mock.Profile{
+    Taste:   shopper.Derive(affinity.DefaultFade.Vector),
+    Signals: shopper.Len(),
+}
 
 f := mock.SectionFilter(mock.PersonaBusinessKate).Personalize(profile)
 // Filter{Category: "Women's Fashion", Occasion: "business",
