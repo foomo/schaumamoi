@@ -128,7 +128,7 @@ const shell = `<!doctype html>
 * { box-sizing: border-box; }
 body { margin: 0; padding: 24px 16px 64px; background: var(--bg); color: var(--fg);
   font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
-main { max-width: 1280px; margin: 0 auto; }
+main { width: 100%; }
 h1 { font-size: 26px; margin: 0 0 4px; }
 h2 { font-size: 19px; margin: 40px 0 4px; padding-top: 16px; border-top: 1px solid var(--line); }
 h3 { font-size: 15px; margin: 0 0 4px; }
@@ -167,9 +167,20 @@ table.taste td { padding: 1px 0; }
 table.taste td.num { width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
 .track { position: relative; height: 8px; background: var(--line); border-radius: 4px; }
 .track::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+.track.share::after { display: none; }
+.cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
+.cat { border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
 .bar { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
 .bar.pos { background: var(--pos); }
 .bar.neg { background: var(--neg); }
+.flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin-top: 12px; }
+.flow .stage { flex: 1 1 200px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.flow .stage.wide { flex-grow: 2; flex-basis: 320px; }
+.flow .stage h4 { margin: 0 0 6px; font-size: 13px; }
+.flow .stage p { margin: 0 0 6px; }
+.flow .stage ol, .flow .stage ul { margin: 0 0 6px; padding-left: 18px; }
+.flow .arrow { align-self: center; }
+table.trace td { font-size: 12px; white-space: nowrap; }
 .phases { display: flex; gap: 6px; flex-wrap: wrap; }
 .phase { display: flex; gap: 6px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 22px; padding: 2px 10px 2px 2px; font-size: 12px; }
 .sims { display: flex; gap: 8px; }
