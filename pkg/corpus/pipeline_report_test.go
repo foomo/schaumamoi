@@ -100,7 +100,7 @@ func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) 
 		case p.ItemListID != "" && len(p.Items) != 1:
 			row.Subject = p.ItemListID
 		case len(p.Items) == 1:
-			row.Subject = p.Items[0].ItemID + " " + p.Items[0].ItemName
+			row.Subject = p.Items[0].ItemName
 		}
 
 		// a dropped event never reaches the decorators

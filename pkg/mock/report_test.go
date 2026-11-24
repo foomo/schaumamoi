@@ -315,7 +315,7 @@ Visits are relative to BaseTime, {{date .BaseTime}}.</p>
 category its own. The list id is the category's path. These are as a new shopper sees them, ranked by a neutral profile.</p>
 {{range .Listings}}
   <h3 style="margin-top:16px">{{.Name}} <span class="muted">· <code>{{.ID}}</code> · {{len .Items}} items</span></h3>
-  <div class="row">{{range .Items}}<div class="thumb"><img src="{{.ImagePath}}" alt="{{.ItemName}}" title="{{.ItemName}} — {{.Description}}"><b>{{.ItemID}}</b>€{{.Price}}</div>{{end}}</div>
+  <div class="row">{{range .Items}}<div class="thumb"><img src="{{.ImagePath}}" alt="{{.ItemName}}" title="{{.ItemID}} · {{.Description}}"><b>{{.ItemName}}</b>€{{.Price}}</div>{{end}}</div>
 {{end}}
 
 <h2 id="personas">Personas</h2>
@@ -330,7 +330,7 @@ industrial) come from the personas' own vectors, the shared ones carry over from
     <p class="meta" style="text-align:center">{{.Persona.Description}} · browses <b>{{.Occasion}}</b></p>
     {{taste .Persona.Affinity}}
     <p class="meta" style="margin-top:12px">favourite per category — the overall top match outlined</p>
-    <div class="row">{{$top := .Top.Item.ItemID}}{{range .Favourites}}<div class="thumb{{if eq .Item.ItemID $top}} top{{end}}"><img src="{{.Item.ImagePath}}" alt="{{.Item.ItemName}}" title="{{.Item.ItemName}} — {{.Item.Description}}"><b>{{.Category}}</b>{{.Item.ItemID}} · {{score .Score}}</div>{{end}}</div>
+    <div class="row">{{$top := .Top.Item.ItemID}}{{range .Favourites}}<div class="thumb{{if eq .Item.ItemID $top}} top{{end}}"><img src="{{.Item.ImagePath}}" alt="{{.Item.ItemName}}" title="{{.Item.ItemID}} · {{.Item.Description}}"><b>{{.Item.ItemName}}</b>{{.Category}} · {{score .Score}}</div>{{end}}</div>
   </div>
 {{end}}
 </div>
@@ -343,7 +343,7 @@ The front of each row should look like the persona; the back like their opposite
   <div class="row">
     <div class="who"><img src="{{.Persona.ImagePath}}" alt="{{.Persona.Name}}"><b>{{.Persona.Name}}</b></div>
     {{range $i, $r := .Ranking}}
-      <div class="thumb{{if eq $i 0}} top{{end}}"><img src="{{$r.Item.ImagePath}}" alt="{{$r.Item.ItemName}}" title="{{$r.Item.ItemName}} — {{$r.Item.Description}}"><b>{{plusOne $i}}. {{$r.Item.ItemID}}</b>{{score $r.Score}}</div>
+      <div class="thumb{{if eq $i 0}} top{{end}}"><img src="{{$r.Item.ImagePath}}" alt="{{$r.Item.ItemName}}" title="{{$r.Item.ItemID}} · {{$r.Item.Description}}"><b>{{plusOne $i}}. {{$r.Item.ItemName}}</b>{{score $r.Score}}</div>
     {{end}}
   </div>
 {{end}}
@@ -362,7 +362,7 @@ not always the first, not always its favourite.</p>
     {{range $i, $s := .Journey}}
       {{if $i}}<div class="arrow">→</div>{{end}}
       <div class="step"><h4>{{$s.Name}}</h4>{{with $s.ListID}}<div class="meta"><code>{{.}}</code>{{with $s.Facets}} · {{.}}{{end}}</div>{{end}}<div class="thumbs">
-        {{range $s.Items}}<img {{if eq (len $s.Items) 1}}class="big" {{end}}src="{{.ImagePath}}" alt="{{.ItemName}}" title="{{.ItemID}} {{.ItemName}}">{{end}}
+        {{range $s.Items}}<img {{if eq (len $s.Items) 1}}class="big" {{end}}src="{{.ImagePath}}" alt="{{.ItemName}}" title="{{.ItemName}} ({{.ItemID}})">{{end}}
       </div></div>
     {{end}}
   </div>
@@ -378,8 +378,8 @@ thumbnail beside it is what the shop put first instead.</p>
   <div class="row card">
     <div class="who"><img src="{{.Persona.ImagePath}}" alt="{{.Persona.Name}}"><b>{{.Persona.Name}}</b></div>
     {{range .Month}}
-      <div class="thumb{{if .Bought}} top{{end}}"><img src="{{.Item.ImagePath}}" alt="{{.Item.ItemName}}"><b>{{if .Bought}}bought{{else}}viewed{{end}}</b>{{date .At}}<br>{{if .Signals}}{{.Signals}} interactions{{else}}neutral{{end}} · #{{.Rank}}{{if ne .Rank 1}} (#{{.RailRank}} on rail){{end}}</div>
-      {{if ne .Rank 1}}<div class="thumb" style="opacity:.75"><img src="{{.LandingTop.ImagePath}}" alt="{{.LandingTop.ItemName}}"><b>shop's #1</b>{{.LandingTop.ItemID}}</div>{{end}}
+      <div class="thumb{{if .Bought}} top{{end}}"><img src="{{.Item.ImagePath}}" alt="{{.Item.ItemName}}" title="{{.Item.ItemID}}"><b>{{.Item.ItemName}}</b>{{if .Bought}}bought{{else}}viewed{{end}} · {{date .At}}<br>{{if .Signals}}{{.Signals}} interactions{{else}}neutral{{end}} · #{{.Rank}}{{if ne .Rank 1}} (#{{.RailRank}} on rail){{end}}</div>
+      {{if ne .Rank 1}}<div class="thumb" style="opacity:.75"><img src="{{.LandingTop.ImagePath}}" alt="{{.LandingTop.ItemName}}" title="{{.LandingTop.ItemID}}"><b>{{.LandingTop.ItemName}}</b>shop's #1</div>{{end}}
     {{end}}
   </div>
 {{end}}
@@ -395,7 +395,7 @@ each category — read per category, each should come first among its category's
   <div class="card" style="margin-top:12px">
     <div class="row">
       <div class="who"><img src="{{$p.ImagePath}}" alt="{{$p.Name}}"><b>{{$p.Name}}</b><br><span class="muted">{{.Label}}<br>{{.Signals}} interactions</span></div>
-      {{range .Items}}<div class="thumb{{if .Favourite}} top{{end}}"><img src="{{.Item.ImagePath}}" alt="{{.Item.ItemName}}" title="{{.Item.ItemName}} — {{.Item.Category}}"><b>#{{.Rank}} {{.Item.ItemID}}</b>{{score .Score}}</div>{{end}}
+      {{range .Items}}<div class="thumb{{if .Favourite}} top{{end}}"><img src="{{.Item.ImagePath}}" alt="{{.Item.ItemName}}" title="{{.Item.ItemID}} · {{.Item.Category}}"><b>#{{.Rank}} {{.Item.ItemName}}</b>{{score .Score}}</div>{{end}}
     </div>
   </div>
   {{end}}
