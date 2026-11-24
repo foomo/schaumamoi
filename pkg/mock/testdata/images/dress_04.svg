@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Crepe Wrap Dress, burgundy">
+<title>Crepe Wrap Dress (DRESS_04)</title>
+<rect width="300" height="400" fill="#eceff3"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L88,62 L212,62 Z" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<defs><clipPath id="body-dress_04"><path d="M108,100 L116.4,170 L105.2,310 Q150,320 194.8,310 L183.6,170 L192,100 L150,134 L108,100 Z"/></clipPath></defs>
+<path d="M116,101 L122,54 M184,101 L178,54" stroke="#47111d" stroke-width="3" stroke-linecap="round"/>
+<path d="M108,100 L116.4,170 L105.2,310 Q150,320 194.8,310 L183.6,170 L192,100 L150,134 L108,100 Z" fill="#6d1a2c"/>
+<g clip-path="url(#body-dress_04)">
+</g>
+<path d="M108,100 L116.4,170 L105.2,310 Q150,320 194.8,310 L183.6,170 L192,100 L150,134 L108,100 Z" fill="none" stroke="#47111d" stroke-width="2" stroke-linejoin="round"/>
+<path d="M122,102 L183.6,170 M183.6,170 l10,34 M183.6,170 l18,30" fill="none" stroke="#47111d" stroke-width="2" stroke-linecap="round"/>
+</svg>

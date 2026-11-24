@@ -1,4 +1,5 @@
-// Command gen writes the mock payloads out as MPv2 wire-format JSON fixtures.
+// Command gen writes the mock payloads out as MPv2 wire-format JSON fixtures, and the
+// catalog and persona images out as SVG.
 //
 // The mocks are deterministic, so regenerating is a no-op unless a mock actually
 // changed. Run it via `go generate ./...` from the repository root.
@@ -38,6 +39,16 @@ func run(dir string) error {
 		}
 
 		if err := os.WriteFile(filepath.Join(dir, name), append(body, '\n'), 0o600); err != nil {
+			return fmt.Errorf("write %s: %w", name, err)
+		}
+	}
+
+	if err := os.MkdirAll(filepath.Join(dir, mock.ImageDir), 0o755); err != nil {
+		return err
+	}
+
+	for name, svg := range mock.Images() {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(svg), 0o600); err != nil {
 			return fmt.Errorf("write %s: %w", name, err)
 		}
 	}

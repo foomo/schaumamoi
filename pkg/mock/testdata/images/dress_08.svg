@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Tulle Ballgown, blush">
+<title>Tulle Ballgown (DRESS_08)</title>
+<rect width="300" height="400" fill="#f6efe4"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L88,62 L212,62 Z" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<defs><clipPath id="body-dress_08"><path d="M108,100 L121.3,170 L52.7,372 Q150,382 247.3,372 L178.7,170 L192,100 Q172,86 150,108 Q128,86 108,100 Z"/></clipPath></defs>
+<path d="M116,101 L122,54 M184,101 L178,54" stroke="#9d7f81" stroke-width="3" stroke-linecap="round"/>
+<path d="M108,100 L121.3,170 L52.7,372 Q150,382 247.3,372 L178.7,170 L192,100 Q172,86 150,108 Q128,86 108,100 Z" fill="#f1c4c6"/>
+<g clip-path="url(#body-dress_08)">
+<path d="M97.3,240.7 Q150,252.7 202.7,240.7" fill="none" stroke="#f5d6d7" stroke-width="2" stroke-opacity="0.8"/>
+<path d="M80.1,291.2 Q150,303.2 219.9,291.2" fill="none" stroke="#f7dfe0" stroke-width="2" stroke-opacity="0.8"/>
+<path d="M63,341.7 Q150,353.7 237,341.7" fill="none" stroke="#f9e7e8" stroke-width="2" stroke-opacity="0.8"/>
+</g>
+<path d="M108,100 L121.3,170 L52.7,372 Q150,382 247.3,372 L178.7,170 L192,100 Q172,86 150,108 Q128,86 108,100 Z" fill="none" stroke="#9d7f81" stroke-width="2" stroke-linejoin="round"/>
+</svg>

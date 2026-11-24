@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300" role="img" aria-label="Mira, 41 year old architect, business wear but strictly contemporary">
+<title>Mira, 41 year old architect, business wear but strictly contemporary</title>
+<defs><clipPath id="avatar-mira"><circle cx="150" cy="150" r="150"/></clipPath></defs>
+<g clip-path="url(#avatar-mira)">
+<rect width="300" height="300" fill="#cdcdcd"/>
+<rect x="134" y="170" width="32" height="56" rx="10" fill="#7c4b20"/>
+<path d="M52,300 C54,238 96,218 150,218 C204,218 246,238 248,300 Z" fill="#1a1a1a"/>
+<path d="M128,218 L150,248 L172,218 Z" fill="#7c4b20"/>
+<ellipse cx="150" cy="140" rx="42" ry="50" fill="#8d5524"/>
+<circle cx="134" cy="146" r="3.5" fill="#2a2a2a"/><circle cx="166" cy="146" r="3.5" fill="#2a2a2a"/><path d="M139,168 Q150,176 161,168" fill="none" stroke="#7a3b32" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M106,138 C98,84 200,78 196,130 C176,106 138,112 106,138 Z" fill="#2b1d14"/>
+<g fill="none" stroke="#1d1d1d" stroke-width="3"><rect x="120" y="136" width="26" height="20" rx="3"/><rect x="154" y="136" width="26" height="20" rx="3"/><path d="M146,144 L154,144"/></g>
+</g>
+</svg>

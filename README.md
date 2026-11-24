@@ -186,3 +186,15 @@ go test ./... -update # same, via the golden test
 ```
 
 The fixtures are covered by a golden test, so they cannot drift from the constructors.
+
+### Images
+
+`pkg/mock/testdata/images` holds an SVG product shot for every dress (`dress_01.svg` …)
+and an avatar for every persona (`persona_kate.svg` …), drawn by `Item.SVG` and
+`Persona.SVG` and regenerated with the fixtures.
+
+Like the journeys, nothing is drawn per id. A dress's hem comes from its length, its
+waist, flare, sleeves and neckline from its attractor, its colour from its variant and
+its fabric finish (sequins, velvet, silk, tulle, print) from the material its description
+names. A persona's hairstyle and accessories come from its taste vector, and it wears the
+colour of its top-match dress. Change the data and the picture follows.

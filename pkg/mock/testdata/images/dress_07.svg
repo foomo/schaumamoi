@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Silk Slip Dress, champagne">
+<title>Silk Slip Dress (DRESS_07)</title>
+<rect width="300" height="400" fill="#f6efe4"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L88,62 L212,62 Z" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<defs><clipPath id="body-dress_07"><path d="M108,100 L115,170 L98.9,310 Q150,320 201.1,310 L185,170 L192,100 L108,100 Z"/></clipPath><linearGradient id="fabric-dress_07" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e3cfa2"/><stop offset="0.42" stop-color="#f0e5cc"/><stop offset="0.58" stop-color="#e3cfa2"/><stop offset="1" stop-color="#c1b08a"/></linearGradient></defs>
+<path d="M116,101 L122,54 M184,101 L178,54" stroke="#948769" stroke-width="3" stroke-linecap="round"/>
+<path d="M108,100 L115,170 L98.9,310 Q150,320 201.1,310 L185,170 L192,100 L108,100 Z" fill="url(#fabric-dress_07)"/>
+<g clip-path="url(#body-dress_07)">
+</g>
+<path d="M108,100 L115,170 L98.9,310 Q150,320 201.1,310 L185,170 L192,100 L108,100 Z" fill="none" stroke="#948769" stroke-width="2" stroke-linejoin="round"/>
+</svg>

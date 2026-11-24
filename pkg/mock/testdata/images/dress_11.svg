@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Linen Smock Dress, sand">
+<title>Linen Smock Dress (DRESS_11)</title>
+<rect width="300" height="400" fill="#edf3ec"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L88,62 L212,62 Z" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<defs><clipPath id="body-dress_11"><path d="M128,60 L100,66 L74,112 L96,120 L106,110 L113.6,170 L82.3,372 Q150,382 217.7,372 L186.4,170 L194,110 L204,120 L226,112 L200,66 L172,60 Q150,88 128,60 Z"/></clipPath></defs>
+<path d="M128,60 L100,66 L74,112 L96,120 L106,110 L113.6,170 L82.3,372 Q150,382 217.7,372 L186.4,170 L194,110 L204,120 L226,112 L200,66 L172,60 Q150,88 128,60 Z" fill="#d9c4a0"/>
+<g clip-path="url(#body-dress_11)">
+<path d="M108,120 q6,-4 12,0 t12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="#8d7f68" stroke-width="1.5" stroke-opacity="0.6"/><path d="M108,128 q6,-4 12,0 t12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="#8d7f68" stroke-width="1.5" stroke-opacity="0.6"/><path d="M108,136 q6,-4 12,0 t12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="#8d7f68" stroke-width="1.5" stroke-opacity="0.6"/><path d="M108,144 q6,-4 12,0 t12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="#8d7f68" stroke-width="1.5" stroke-opacity="0.6"/>
+</g>
+<path d="M128,60 L100,66 L74,112 L96,120 L106,110 L113.6,170 L82.3,372 Q150,382 217.7,372 L186.4,170 L194,110 L204,120 L226,112 L200,66 L172,60 Q150,88 128,60 Z" fill="none" stroke="#8d7f68" stroke-width="2" stroke-linejoin="round"/>
+</svg>

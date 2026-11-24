@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300" role="img" aria-label="Sofia, 28 year old event host with a taste for glamour">
+<title>Sofia, 28 year old event host with a taste for glamour</title>
+<defs><clipPath id="avatar-sofia"><circle cx="150" cy="150" r="150"/></clipPath></defs>
+<g clip-path="url(#avatar-sofia)">
+<rect width="300" height="300" fill="#fcf2f2"/>
+<path d="M100,140 C96,80 204,80 200,140 L210,250 C180,262 120,262 90,250 Z" fill="#a0522d"/>
+<rect x="134" y="170" width="32" height="56" rx="10" fill="#c59772"/>
+<path d="M52,300 C54,238 96,218 150,218 C204,218 246,238 248,300 Z" fill="#f1c4c6"/>
+<path d="M128,218 L150,248 L172,218 Z" fill="#c59772"/>
+<ellipse cx="150" cy="140" rx="42" ry="50" fill="#e0ac82"/>
+<circle cx="134" cy="146" r="3.5" fill="#2a2a2a"/><circle cx="166" cy="146" r="3.5" fill="#2a2a2a"/><path d="M139,168 Q150,176 161,168" fill="none" stroke="#7a3b32" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M106,145 C102,86 198,86 194,145 C186,110 160,104 150,104 C132,106 114,116 106,145 Z" fill="#a0522d"/>
+<circle cx="108" cy="162" r="6" fill="#d4af37"/><circle cx="192" cy="162" r="6" fill="#d4af37"/>
+</g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Wool Blend Shift Dress, charcoal">
+<title>Wool Blend Shift Dress (DRESS_02)</title>
+<rect width="300" height="400" fill="#eceff3"/>
+<path d="M150,30 C150,18 162,18 162,26 M150,30 L88,62 L212,62 Z" fill="none" stroke="#8a8f96" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<defs><clipPath id="body-dress_02"><path d="M128,60 L100,66 L74,112 L96,120 L106,110 L108,170 L100,310 Q150,320 200,310 L192,170 L194,110 L204,120 L226,112 L200,66 L172,60 Q150,88 128,60 Z"/></clipPath></defs>
+<path d="M128,60 L100,66 L74,112 L96,120 L106,110 L108,170 L100,310 Q150,320 200,310 L192,170 L194,110 L204,120 L226,112 L200,66 L172,60 Q150,88 128,60 Z" fill="#3a3d42"/>
+<g clip-path="url(#body-dress_02)">
+<path d="M106,170 L194,170" stroke="#26282b" stroke-width="1.5" stroke-opacity="0.7"/>
+</g>
+<path d="M128,60 L100,66 L74,112 L96,120 L106,110 L108,170 L100,310 Q150,320 200,310 L192,170 L194,110 L204,120 L226,112 L200,66 L172,60 Q150,88 128,60 Z" fill="none" stroke="#26282b" stroke-width="2" stroke-linejoin="round"/>
+</svg>
