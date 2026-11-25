@@ -1,4 +1,4 @@
-package mock
+package shop
 
 import (
 	"net/url"
@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
 
@@ -44,8 +45,8 @@ type Filter struct {
 // Apply returns the subset of items the filter selects, in the filter's sort order.
 // Listings are always derived through this, never hand-picked, so a fixture cannot
 // report items that contradict its own facets.
-func (f Filter) Apply(items []Item) []Item {
-	out := make([]Item, 0, len(items))
+func (f Filter) Apply(items []catalog.Item) []catalog.Item {
+	out := make([]catalog.Item, 0, len(items))
 
 	for _, item := range items {
 		if f.matches(item) {
@@ -69,10 +70,10 @@ func (f Filter) Apply(items []Item) []Item {
 // that tie-break the order of two equally good products would be arbitrary and the
 // generated fixtures would not be reproducible — and under a neutral profile, where every
 // score is equal, it is the whole order.
-func (f Filter) sortByAffinity(items []Item) {
+func (f Filter) sortByAffinity(items []catalog.Item) {
 	scores := make(map[string]personalization.Value, len(items))
 	for _, item := range items {
-		scores[item.ItemID] = Score(f.Profile.Taste, item)
+		scores[item.ItemID] = catalog.Score(f.Profile.Taste, item)
 	}
 
 	sort.SliceStable(items, func(i, j int) bool {
@@ -84,7 +85,7 @@ func (f Filter) sortByAffinity(items []Item) {
 	})
 }
 
-func (f Filter) matches(item Item) bool {
+func (f Filter) matches(item catalog.Item) bool {
 	switch {
 	case f.Category != "" && !hasCategory(item, f.Category):
 		return false
@@ -103,7 +104,7 @@ func (f Filter) matches(item Item) bool {
 
 // hasCategory matches against the whole category path, so browsing "Women's Fashion",
 // "Dresses" and "Festive" all work.
-func hasCategory(item Item, category string) bool {
+func hasCategory(item catalog.Item, category string) bool {
 	for _, v := range []string{
 		item.ItemCategory,
 		item.ItemCategory2,
@@ -148,7 +149,7 @@ func (f Filter) ListID() string {
 	}
 
 	path := slug(f.Category)
-	for parent := categoryParent[f.Category]; parent != ""; parent = categoryParent[parent] {
+	for parent := catalog.Parent(f.Category); parent != ""; parent = catalog.Parent(parent) {
 		path = slug(parent) + "/" + path
 	}
 
@@ -211,11 +212,11 @@ func slug(v string) string {
 //     degrade to "[{...}]" on the gtag wire.
 //   - Nothing is embedded here. Fields are spelled out so that both encoding/json and
 //     sesamy.Decode see the same shape - mapstructure does not inline an untagged
-//     embedded field, which is the trap mock.Item documents.
+//     embedded field, which is the trap catalog.Item documents.
 type ItemListParams struct {
-	ItemListID   string `json:"item_list_id,omitempty"`
-	ItemListName string `json:"item_list_name,omitempty"`
-	Items        []Item `json:"items,omitempty"`
+	ItemListID   string         `json:"item_list_id,omitempty"`
+	ItemListName string         `json:"item_list_name,omitempty"`
+	Items        []catalog.Item `json:"items,omitempty"`
 
 	FilterCategory string  `json:"filter_category,omitempty"`
 	FilterOccasion string  `json:"filter_occasion,omitempty"`

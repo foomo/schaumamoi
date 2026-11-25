@@ -23,13 +23,14 @@ last bits and flip the ranking of near-tied products.
 
 ## Weights per category
 
-How much each part of the vector counts is defined per category (`pkg/internal/mock/weights.go`).
+How much each part of the vector counts is defined per category in the test shop's catalog
+(`pkg/internal/mock/catalog/weights.go`, see [Catalog](/guide/test-shop/catalog#weights-and-score)).
 Each department states what it looks at: fashion leads with the occasion, home with how
 a room should feel (cozy, natural, industrial). Each category overrides only where it
 differs. Dresses weigh femininity and romance up and tailoring down, trousers the
 reverse. Cushions are about comfort and texture, lamps about industrial, modern or
 classic design, vases about colour, material and statement. Every product is scored
-with its own category's weights (`mock.Score`): by the shop when it ranks, by the
+with its own category's weights (`catalog.Score`): by the shop when it ranks, by the
 personas when they choose, and by the corpus when it reads a category. A category's
 weights are a complete statement (anything they don't name counts for nothing, and a
 test keeps every dimension its products carry named). They're scaled to average 1, so

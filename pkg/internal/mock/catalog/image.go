@@ -1,38 +1,19 @@
-package mock
+package catalog
 
 import (
 	"fmt"
-	"hash/fnv"
 	"math"
 	"strings"
 
-	"github.com/foomo/schaumamoi/pkg/personalization"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/internal/svg"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/taste"
 )
 
-// ImageDir is the directory the generated images live in, relative to FixtureDir.
+// ImageDir is the directory the generated images live in, relative to mock.FixtureDir.
 const ImageDir = "images"
 
-// Images returns every generated image keyed by its path relative to FixtureDir: one
-// product shot per dress and one avatar per persona. Like Fixtures, it is shared by the
-// generator and the golden test.
-func Images() map[string]string {
-	out := map[string]string{}
-	for _, item := range Catalog() {
-		out[item.ImagePath()] = item.SVG()
-	}
-
-	for _, p := range Personas() {
-		out[p.ImagePath()] = p.SVG()
-	}
-
-	return out
-}
-
-// ImagePath is where the item's product shot is written, relative to FixtureDir.
+// ImagePath is where the item's product shot is written, relative to mock.FixtureDir.
 func (i Item) ImagePath() string { return ImageDir + "/" + strings.ToLower(i.ItemID) + ".svg" }
-
-// ImagePath is where the persona's avatar is written, relative to FixtureDir.
-func (p Persona) ImagePath() string { return ImageDir + "/persona_" + strings.ToLower(p.Name) + ".svg" }
 
 // Swatches maps every colour variant in the catalog to the fill its image is drawn in.
 // TestSwatchesCoverCatalog keeps the two in step.
@@ -94,7 +75,7 @@ func (i Item) SVG() string {
 func (i Item) open(b *strings.Builder) {
 	fmt.Fprintf(b, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="%s, %s">`+"\n", i.ItemName, i.ItemVariant)
 	fmt.Fprintf(b, "<title>%s (%s)</title>\n", i.ItemName, i.ItemID)
-	fmt.Fprintf(b, `<rect width="300" height="400" fill="%s"/>`+"\n", backdrop(i.Occasion()))
+	fmt.Fprintf(b, `<rect width="300" height="400" fill="%s"/>`+"\n", Backdrop(i.Occasion()))
 }
 
 // fabric writes the gradient a sheen fabric is painted with, if the copy names one, and
@@ -106,14 +87,14 @@ func (i Item) fabric(b *strings.Builder, id, fill string) string {
 	case i.mentions("velvet"):
 		// pile catches the light down the middle and falls dark at the edges
 		fmt.Fprintf(b, `<linearGradient id="fabric-%s" x1="0" x2="1" y1="0" y2="0">`, id)
-		stops(b, [][2]string{{"0", mix(fill, "#000000", 0.45)}, {"0.38", fill}, {"0.5", mix(fill, "#ffffff", 0.2)}, {"0.62", fill}, {"1", mix(fill, "#000000", 0.45)}})
+		svg.Stops(b, [][2]string{{"0", svg.Mix(fill, "#000000", 0.45)}, {"0.38", fill}, {"0.5", svg.Mix(fill, "#ffffff", 0.2)}, {"0.62", fill}, {"1", svg.Mix(fill, "#000000", 0.45)}})
 		b.WriteString(`</linearGradient>`)
 
 		paint = "url(#fabric-" + id + ")"
 	case i.mentions("silk"):
 		// a bias-cut sheen running diagonally across the body
 		fmt.Fprintf(b, `<linearGradient id="fabric-%s" x1="0" x2="1" y1="0" y2="1">`, id)
-		stops(b, [][2]string{{"0", fill}, {"0.42", mix(fill, "#ffffff", 0.45)}, {"0.58", fill}, {"1", mix(fill, "#000000", 0.15)}})
+		svg.Stops(b, [][2]string{{"0", fill}, {"0.42", svg.Mix(fill, "#ffffff", 0.45)}, {"0.58", fill}, {"1", svg.Mix(fill, "#000000", 0.15)}})
 		b.WriteString(`</linearGradient>`)
 
 		paint = "url(#fabric-" + id + ")"
@@ -127,8 +108,8 @@ func (i Item) fabric(b *strings.Builder, id, fill string) string {
 // structured and casual cuts get sleeves, the rest straps.
 func (i Item) dressSVG() string {
 	cut := cutOf(i)
-	fill := swatch(i.ItemVariant)
-	line := mix(fill, "#000000", 0.35)
+	fill := Swatch(i.ItemVariant)
+	line := svg.Mix(fill, "#000000", 0.35)
 	id := strings.ToLower(i.ItemID)
 	body := cut.path()
 
@@ -145,7 +126,7 @@ func (i Item) dressSVG() string {
 
 	if !cut.sleeves {
 		fmt.Fprintf(&b, `<path d="M%s L%s M%s L%s" stroke="%s" stroke-width="3" stroke-linecap="round"/>`+"\n",
-			pt(cut.c-34, cut.top+1), pt(cut.c-28, 54), pt(cut.c+34, cut.top+1), pt(cut.c+28, 54), line)
+			svg.Pt(cut.c-34, cut.top+1), svg.Pt(cut.c-28, 54), svg.Pt(cut.c+34, cut.top+1), svg.Pt(cut.c+28, 54), line)
 	}
 
 	fmt.Fprintf(&b, `<path d="%s" fill="%s"/>`+"\n", body, paint)
@@ -158,14 +139,14 @@ func (i Item) dressSVG() string {
 		// a pointed collar lying over the neckline
 		for _, side := range []float64{-1, 1} {
 			fmt.Fprintf(&b, `<path d="M%s L%s L%s Z" fill="%s" stroke="%s" stroke-width="2" stroke-linejoin="round"/>`+"\n",
-				pt(cut.c+side*cut.neck, 60), pt(cut.c+side*3, 60+cut.depth+4), pt(cut.c+side*(cut.neck+10), 82), mix(fill, "#ffffff", 0.25), line)
+				svg.Pt(cut.c+side*cut.neck, 60), svg.Pt(cut.c+side*3, 60+cut.depth+4), svg.Pt(cut.c+side*(cut.neck+10), 82), svg.Mix(fill, "#ffffff", 0.25), line)
 		}
 	}
 
 	if cut.v && i.mentions("wrap") {
 		// the wrap's crossover, tied at the waist
 		fmt.Fprintf(&b, `<path d="M%s L%s M%s l10,34 M%s l18,30" fill="none" stroke="%s" stroke-width="2" stroke-linecap="round"/>`+"\n",
-			pt(cut.c-28, cut.top+2), pt(cut.c+cut.waist, cut.waistY), pt(cut.c+cut.waist, cut.waistY), pt(cut.c+cut.waist, cut.waistY), line)
+			svg.Pt(cut.c-28, cut.top+2), svg.Pt(cut.c+cut.waist, cut.waistY), svg.Pt(cut.c+cut.waist, cut.waistY), svg.Pt(cut.c+cut.waist, cut.waistY), line)
 	}
 
 	b.WriteString("</svg>\n")
@@ -207,18 +188,18 @@ func cutOf(i Item) cut {
 		c.hemY = 310
 	}
 
-	c.sleeves = a[PersoDimensionStructured] >= 0.4 || a[PersoDimensionCasual] >= 0.85
-	c.waist = 42 - 14*float64(a[PersoDimensionFeminine])
+	c.sleeves = a[taste.Structured] >= 0.4 || a[taste.Casual] >= 0.85
+	c.waist = 42 - 14*float64(a[taste.Feminine])
 
-	flare := a[PersoDimensionOpulent] + 0.5*a[PersoDimensionRomantic] + 0.5*a[PersoDimensionBohemian] - 0.5*a[PersoDimensionStructured]
-	c.hem = c.waist + 8 + 60*clamp(float64(flare), 0, 1.3)/1.3*(c.hemY-c.waistY)/200
+	flare := a[taste.Opulent] + 0.5*a[taste.Romantic] + 0.5*a[taste.Bohemian] - 0.5*a[taste.Structured]
+	c.hem = c.waist + 8 + 60*svg.Clamp(float64(flare), 0, 1.3)/1.3*(c.hemY-c.waistY)/200
 
 	switch {
 	case c.sleeves:
 		c.top = 60
-	case a[PersoDimensionRomantic] >= 0.7:
+	case a[taste.Romantic] >= 0.7:
 		c.top, c.heart = 100, true
-	case a[PersoDimensionMinimalistic] >= 0.5:
+	case a[taste.Minimalistic] >= 0.5:
 		c.top = 100
 	default:
 		c.top, c.v, c.depth = 100, true, 34
@@ -248,26 +229,26 @@ func (c cut) path() string {
 			b.WriteString(" L")
 		}
 
-		b.WriteString(pt(c.c-p[0], p[1]))
+		b.WriteString(svg.Pt(c.c-p[0], p[1]))
 	}
 
-	fmt.Fprintf(&b, " Q%s %s", pt(c.c, c.hemY+10), pt(c.c+c.hem, c.hemY))
+	fmt.Fprintf(&b, " Q%s %s", svg.Pt(c.c, c.hemY+10), svg.Pt(c.c+c.hem, c.hemY))
 
 	for n := len(left) - 2; n >= 0; n-- {
-		b.WriteString(" L" + pt(c.c+left[n][0], left[n][1]))
+		b.WriteString(" L" + svg.Pt(c.c+left[n][0], left[n][1]))
 	}
 
 	start := left[0]
 
 	switch {
 	case c.heart:
-		fmt.Fprintf(&b, " Q%s %s Q%s %s", pt(c.c+22, c.top-14), pt(c.c, c.top+8), pt(c.c-22, c.top-14), pt(c.c-start[0], start[1]))
+		fmt.Fprintf(&b, " Q%s %s Q%s %s", svg.Pt(c.c+22, c.top-14), svg.Pt(c.c, c.top+8), svg.Pt(c.c-22, c.top-14), svg.Pt(c.c-start[0], start[1]))
 	case c.v:
-		fmt.Fprintf(&b, " L%s L%s", pt(c.c, c.top+c.depth), pt(c.c-start[0], start[1]))
+		fmt.Fprintf(&b, " L%s L%s", svg.Pt(c.c, c.top+c.depth), svg.Pt(c.c-start[0], start[1]))
 	case c.sleeves:
-		fmt.Fprintf(&b, " Q%s %s", pt(c.c, 60+2*c.depth), pt(c.c-start[0], start[1]))
+		fmt.Fprintf(&b, " Q%s %s", svg.Pt(c.c, 60+2*c.depth), svg.Pt(c.c-start[0], start[1]))
 	default:
-		fmt.Fprintf(&b, " L%s", pt(c.c-start[0], start[1]))
+		fmt.Fprintf(&b, " L%s", svg.Pt(c.c-start[0], start[1]))
 	}
 
 	b.WriteString(" Z")
@@ -284,7 +265,7 @@ func (c cut) halfWidth(y float64) float64 {
 func dressFinish(b *strings.Builder, i Item, c cut, fill, line string) {
 	switch {
 	case i.mentions("sequin"):
-		sequins(b, fill, 70, 232, c.hemY+12)
+		svg.Sequins(b, fill, 70, 232, c.hemY+12)
 	case i.mentions("floral"):
 		for row, y := 0, 70.0; y < c.hemY+10; row, y = row+1, y+30 {
 			for x := 80.0 + float64(row%2)*16; x < 230; x += 32 {
@@ -299,19 +280,19 @@ func dressFinish(b *strings.Builder, i Item, c cut, fill, line string) {
 			y := c.waistY + (c.hemY-c.waistY)*k
 			w := c.halfWidth(y)
 			fmt.Fprintf(b, `<path d="M%s Q%s %s" fill="none" stroke="%s" stroke-width="2" stroke-opacity="0.8"/>`+"\n",
-				pt(c.c-w, y), pt(c.c, y+12), pt(c.c+w, y), mix(fill, "#ffffff", 0.3+0.15*float64(n)))
+				svg.Pt(c.c-w, y), svg.Pt(c.c, y+12), svg.Pt(c.c+w, y), svg.Mix(fill, "#ffffff", 0.3+0.15*float64(n)))
 		}
 	}
 
 	if i.mentions("seams") {
 		fmt.Fprintf(b, `<path d="M%s L%s M%s L%s" stroke="%s" stroke-width="2"/>`+"\n",
-			pt(c.c-16, 60), pt(c.c-22, c.hemY+10), pt(c.c+16, 60), pt(c.c+22, c.hemY+10), mix(fill, "#ffffff", 0.18))
+			svg.Pt(c.c-16, 60), svg.Pt(c.c-22, c.hemY+10), svg.Pt(c.c+16, 60), svg.Pt(c.c+22, c.hemY+10), svg.Mix(fill, "#ffffff", 0.18))
 	}
 
 	if i.mentions("buttons") {
-		fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.5"/>`, pt(c.c, 60+c.depth), pt(c.c, c.hemY+10), line)
+		fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.5"/>`, svg.Pt(c.c, 60+c.depth), svg.Pt(c.c, c.hemY+10), line)
 		for y := 60 + c.depth + 14; y < c.hemY-6; y += 28 {
-			fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="3" fill="#f7f7f2" stroke="%s"/>`, num(c.c+6), num(y), line)
+			fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="3" fill="#f7f7f2" stroke="%s"/>`, svg.Num(c.c+6), svg.Num(y), line)
 		}
 
 		b.WriteString("\n")
@@ -320,7 +301,7 @@ func dressFinish(b *strings.Builder, i Item, c cut, fill, line string) {
 	if i.mentions("smock") {
 		// gathered rows across the yoke
 		for y := 120.0; y <= 144; y += 8 {
-			fmt.Fprintf(b, `<path d="M%s q6,-4 12,0 t12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="%s" stroke-width="1.5" stroke-opacity="0.6"/>`, pt(c.c-42, y), line)
+			fmt.Fprintf(b, `<path d="M%s q6,-4 12,0 t12,0 t12,0 t12,0 t12,0 t12,0 t12,0" fill="none" stroke="%s" stroke-width="1.5" stroke-opacity="0.6"/>`, svg.Pt(c.c-42, y), line)
 		}
 
 		b.WriteString("\n")
@@ -329,135 +310,21 @@ func dressFinish(b *strings.Builder, i Item, c cut, fill, line string) {
 	if i.Occasion() == OccasionBusiness && !c.v && !i.mentions("seams") {
 		// a tailored waist seam
 		fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.5" stroke-opacity="0.7"/>`+"\n",
-			pt(c.c-c.waist-2, c.waistY), pt(c.c+c.waist+2, c.waistY), line)
+			svg.Pt(c.c-c.waist-2, c.waistY), svg.Pt(c.c+c.waist+2, c.waistY), line)
 	}
 }
 
 func flower(b *strings.Builder, x, y float64) {
 	for n := range 5 {
 		angle := float64(n) * 2 * math.Pi / 5
-		fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="3.6" fill="#fbf3ea"/>`, num(x+5*math.Sin(angle)), num(y-5*math.Cos(angle)))
+		fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="3.6" fill="#fbf3ea"/>`, svg.Num(x+5*math.Sin(angle)), svg.Num(y-5*math.Cos(angle)))
 	}
 
 	fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="2.4" fill="#e3b341"/><path d="M%s q4,6 10,6" fill="none" stroke="#5f8a52" stroke-width="2"/>`,
-		num(x), num(y), pt(x+4, y+6))
+		svg.Num(x), svg.Num(y), svg.Pt(x+4, y+6))
 }
 
-// SVG draws the persona as an avatar, wearing the colour of the dress they score highest.
-//
-// As with the dresses, nothing is drawn per name. The hairstyle is the taste the persona
-// leans to most — classic and structured wear a bob, romantic and feminine long hair,
-// casual and bohemian a bun, modern and edgy a pixie cut — and the accessories follow
-// the strongest single traits. Skin and hair colour come from a palette by the persona's
-// place in Personas(), so the four never share a look; a stated age of fifty or more
-// turns the hair silver.
-func (p Persona) SVG() string {
-	a := p.Affinity
-	top := p.TopMatch(Catalog())
-	outfit := swatch(top.ItemVariant)
-	skins := []string{"#f2d3b8", "#e0ac82", "#c68642", "#8d5524"}
-	hairs := []string{"#2b1d14", "#6b3f22", "#a0522d", "#d6b06a"}
-	n := p.slot()
-	skin, hair := skins[n%len(skins)], hairs[(n+1)%len(hairs)]
-
-	var age int
-	if _, err := fmt.Sscanf(p.Description, "%d", &age); err == nil && age >= 50 {
-		hair = "#c4c4c8"
-	}
-
-	shade := mix(skin, "#000000", 0.12)
-	id := strings.ToLower(p.Name)
-
-	var b strings.Builder
-
-	fmt.Fprintf(&b, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300" role="img" aria-label="%s, %s">`+"\n", p.Name, p.Description)
-	fmt.Fprintf(&b, "<title>%s, %s</title>\n", p.Name, p.Description)
-	fmt.Fprintf(&b, `<defs><clipPath id="avatar-%s"><circle cx="150" cy="150" r="150"/></clipPath></defs>`+"\n", id)
-	fmt.Fprintf(&b, `<g clip-path="url(#avatar-%s)">`+"\n", id)
-	fmt.Fprintf(&b, `<rect width="300" height="300" fill="%s"/>`+"\n", mix(outfit, "#ffffff", 0.78))
-
-	style := hairstyle(a)
-
-	switch style {
-	case "long":
-		fmt.Fprintf(&b, `<path d="M100,140 C96,80 204,80 200,140 L210,250 C180,262 120,262 90,250 Z" fill="%s"/>`+"\n", hair)
-	case "bob":
-		fmt.Fprintf(&b, `<path d="M102,145 C98,82 202,82 198,145 L200,188 L100,188 Z" fill="%s"/>`+"\n", hair)
-	case "bun":
-		fmt.Fprintf(&b, `<circle cx="150" cy="82" r="24" fill="%s"/>`+"\n", hair)
-	}
-
-	// neck, shoulders and the neckline of the dress
-	fmt.Fprintf(&b, `<rect x="134" y="170" width="32" height="56" rx="10" fill="%s"/>`+"\n", shade)
-	fmt.Fprintf(&b, `<path d="M52,300 C54,238 96,218 150,218 C204,218 246,238 248,300 Z" fill="%s"/>`+"\n", outfit)
-	fmt.Fprintf(&b, `<path d="M128,218 L150,248 L172,218 Z" fill="%s"/>`+"\n", shade)
-
-	// head and face
-	fmt.Fprintf(&b, `<ellipse cx="150" cy="140" rx="42" ry="50" fill="%s"/>`+"\n", skin)
-	fmt.Fprintf(&b, `<circle cx="134" cy="146" r="3.5" fill="#2a2a2a"/><circle cx="166" cy="146" r="3.5" fill="#2a2a2a"/>`)
-	fmt.Fprintf(&b, `<path d="M139,168 Q150,176 161,168" fill="none" stroke="#7a3b32" stroke-width="2.5" stroke-linecap="round"/>`+"\n")
-
-	switch style {
-	case "long":
-		fmt.Fprintf(&b, `<path d="M106,145 C102,86 198,86 194,145 C186,110 160,104 150,104 C132,106 114,116 106,145 Z" fill="%s"/>`+"\n", hair)
-	case "bob":
-		fmt.Fprintf(&b, `<path d="M104,150 C100,86 200,86 196,150 C190,124 176,116 150,116 C126,116 112,124 104,150 Z" fill="%s"/>`+"\n", hair)
-	case "bun":
-		fmt.Fprintf(&b, `<path d="M108,136 C108,90 192,90 192,136 C176,110 124,110 108,136 Z" fill="%s"/>`+"\n", hair)
-	default: // pixie: short, swept to one side
-		fmt.Fprintf(&b, `<path d="M106,138 C98,84 200,78 196,130 C176,106 138,112 106,138 Z" fill="%s"/>`+"\n", hair)
-	}
-
-	if a[PersoDimensionEdgy] >= 0.7 {
-		// square, heavy frames
-		b.WriteString(`<g fill="none" stroke="#1d1d1d" stroke-width="3"><rect x="120" y="136" width="26" height="20" rx="3"/><rect x="154" y="136" width="26" height="20" rx="3"/><path d="M146,144 L154,144"/></g>` + "\n")
-	}
-
-	if a[PersoDimensionOpulent] >= 0.8 {
-		b.WriteString(`<circle cx="108" cy="162" r="6" fill="#d4af37"/><circle cx="192" cy="162" r="6" fill="#d4af37"/>` + "\n")
-	}
-
-	if a[PersoDimensionClassic] >= 0.9 {
-		// a string of pearls along the neckline
-		for n := range 9 {
-			t := float64(n) / 8
-			x := 126 + 48*t
-			y := 222 + 18*math.Sin(t*math.Pi)
-			fmt.Fprintf(&b, `<circle cx="%s" cy="%s" r="3.6" fill="#f8f5ee" stroke="#d8d2c4"/>`, num(x), num(y))
-		}
-
-		b.WriteString("\n")
-	}
-
-	b.WriteString("</g>\n</svg>\n")
-
-	return b.String()
-}
-
-// hairstyle is the style of the taste group the persona leans to most. Groups are
-// compared in a fixed order, so ties resolve the same way on every run.
-func hairstyle(a personalization.Map) string {
-	best, score := "", personalization.Value(0)
-
-	for n, g := range []struct {
-		style string
-		dims  [2]personalization.Dimension
-	}{
-		{"bob", [2]personalization.Dimension{PersoDimensionClassic, PersoDimensionStructured}},
-		{"long", [2]personalization.Dimension{PersoDimensionRomantic, PersoDimensionFeminine}},
-		{"bun", [2]personalization.Dimension{PersoDimensionCasual, PersoDimensionBohemian}},
-		{"pixie", [2]personalization.Dimension{PersoDimensionModern, PersoDimensionEdgy}},
-	} {
-		v := a[g.dims[0]] + a[g.dims[1]]
-		if n == 0 || v > score {
-			best, score = g.style, v
-		}
-	}
-
-	return best
-}
-
-func swatch(colour string) string {
+func Swatch(colour string) string {
 	if hex, ok := Swatches[colour]; ok {
 		return hex
 	}
@@ -465,71 +332,12 @@ func swatch(colour string) string {
 	return "#b0b0b0"
 }
 
-func backdrop(occasion string) string {
+func Backdrop(occasion string) string {
 	if hex, ok := backdrops[occasion]; ok {
 		return hex
 	}
 
 	return "#f2f2f2"
-}
-
-func stops(b *strings.Builder, s [][2]string) {
-	for _, stop := range s {
-		fmt.Fprintf(b, `<stop offset="%s" stop-color="%s"/>`, stop[0], stop[1])
-	}
-}
-
-// mix blends two #rrggbb colours, t of the way from a to b.
-func mix(a, b string, t float64) string {
-	var ar, ag, ab, br, bg, bb int
-	_, _ = fmt.Sscanf(a, "#%02x%02x%02x", &ar, &ag, &ab)
-	_, _ = fmt.Sscanf(b, "#%02x%02x%02x", &br, &bg, &bb)
-
-	lerp := func(x, y int) int { return int(math.Round(float64(x) + (float64(y)-float64(x))*t)) }
-
-	return fmt.Sprintf("#%02x%02x%02x", lerp(ar, br), lerp(ag, bg), lerp(ab, bb))
-}
-
-func clamp(v, lo, hi float64) float64 { return math.Max(lo, math.Min(hi, v)) }
-
-// num formats a coordinate with at most one decimal, so the images stay byte-stable.
-func num(v float64) string {
-	return strings.TrimSuffix(strings.TrimRight(fmt.Sprintf("%.1f", v), "0"), ".")
-}
-
-func pt(x, y float64) string { return num(x) + "," + num(y) }
-
-// slot is the persona's position in Personas(), which picks its palette entries. A
-// persona defined elsewhere falls back to a hash of its name: stable, if not distinct.
-func (p Persona) slot() int {
-	for n, known := range Personas() {
-		if known.Name == p.Name {
-			return n
-		}
-	}
-
-	h := fnv.New32a()
-	_, _ = h.Write([]byte(p.Name))
-
-	return int(h.Sum32() % 1024)
-}
-
-// sequins covers the band between x0 and x1, from the top of the image down to y1, in
-// staggered rows of light and dark discs; the body's clip path trims them to the garment.
-func sequins(b *strings.Builder, fill string, x0, x1, y1 float64) {
-	light, dark := mix(fill, "#ffffff", 0.5), mix(fill, "#000000", 0.2)
-	for row, y := 0, 50.0; y < y1; row, y = row+1, y+10 {
-		for x := x0 + float64(row%2)*5; x < x1; x += 10 {
-			colour := light
-			if (row+int(x/10))%3 == 0 {
-				colour = dark
-			}
-
-			fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="2.6" fill="%s"/>`, num(x), num(y), colour)
-		}
-	}
-
-	b.WriteString("\n")
 }
 
 // legs is the geometry of a pair of trousers, derived once and shared by the outline and
@@ -565,11 +373,11 @@ func legsOf(i Item) legs {
 		l.hemY = 372
 	}
 
-	wide := 0.6*a[PersoDimensionOpulent] + a[PersoDimensionRomantic] + 0.8*a[PersoDimensionBohemian] +
-		0.5*a[PersoDimensionFeminine] + 0.5*a[PersoDimensionRetro] -
-		0.6*a[PersoDimensionEdgy] - 0.4*a[PersoDimensionMinimalistic] - 0.4*a[PersoDimensionStructured]
+	wide := 0.6*a[taste.Opulent] + a[taste.Romantic] + 0.8*a[taste.Bohemian] +
+		0.5*a[taste.Feminine] + 0.5*a[taste.Retro] -
+		0.6*a[taste.Edgy] - 0.4*a[taste.Minimalistic] - 0.4*a[taste.Structured]
 
-	l.width = 22 + 12*clamp(float64(wide), -0.75, 1.9)
+	l.width = 22 + 12*svg.Clamp(float64(wide), -0.75, 1.9)
 	l.centre = 30 + 0.4*math.Max(0, l.width-22)
 
 	if i.mentions("flare") {
@@ -582,6 +390,7 @@ func legsOf(i Item) legs {
 // outer and inner are the x of the left leg's edges at the hem. A wide leg's inner edge
 // stops just short of the centre line, so the two legs never merge into a skirt.
 func (l legs) outer() float64 { return l.c - l.centre - l.width }
+
 func (l legs) inner() float64 { return math.Min(l.c-l.centre+l.width, l.c-3) }
 
 // path is the outline: down the outside of the left leg, across its hem, up to the
@@ -606,13 +415,13 @@ func (l legs) path() string {
 			b.WriteString(" L")
 		}
 
-		b.WriteString(pt(p[0], p[1]))
+		b.WriteString(svg.Pt(p[0], p[1]))
 	}
 
-	b.WriteString(" L" + pt(l.c, l.crotchY))
+	b.WriteString(" L" + svg.Pt(l.c, l.crotchY))
 
 	for n := len(left) - 1; n >= 0; n-- {
-		b.WriteString(" L" + pt(2*l.c-left[n][0], left[n][1]))
+		b.WriteString(" L" + svg.Pt(2*l.c-left[n][0], left[n][1]))
 	}
 
 	b.WriteString(" Z")
@@ -623,8 +432,8 @@ func (l legs) path() string {
 // trousersSVG draws a pair of trousers hanging from a clip hanger by the waistband.
 func (i Item) trousersSVG() string {
 	l := legsOf(i)
-	fill := swatch(i.ItemVariant)
-	line := mix(fill, "#000000", 0.35)
+	fill := Swatch(i.ItemVariant)
+	line := svg.Mix(fill, "#000000", 0.35)
 	id := strings.ToLower(i.ItemID)
 	body := l.path()
 
@@ -647,12 +456,12 @@ func (i Item) trousersSVG() string {
 
 	if i.mentions("drawstring") {
 		fmt.Fprintf(&b, `<path d="M%s q-2,14 -6,28 M%s q4,12 10,24" fill="none" stroke="%s" stroke-width="2.5" stroke-linecap="round"/>`+"\n",
-			pt(l.c-4, l.bandY-4), pt(l.c+4, l.bandY-4), mix(fill, "#ffffff", 0.6))
+			svg.Pt(l.c-4, l.bandY-4), svg.Pt(l.c+4, l.bandY-4), svg.Mix(fill, "#ffffff", 0.6))
 	}
 
 	// the clips, over the waistband
 	for _, x := range []float64{l.c - 44, l.c + 34} {
-		fmt.Fprintf(&b, `<rect x="%s" y="44" width="10" height="34" rx="2" fill="#8a8f96"/>`, num(x))
+		fmt.Fprintf(&b, `<rect x="%s" y="44" width="10" height="34" rx="2" fill="#8a8f96"/>`, svg.Num(x))
 	}
 
 	b.WriteString("\n</svg>\n")
@@ -665,17 +474,17 @@ func (i Item) trousersSVG() string {
 func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 	switch {
 	case i.mentions("sequin"):
-		sequins(b, fill, 20, 280, l.hemY+12)
+		svg.Sequins(b, fill, 20, 280, l.hemY+12)
 	case i.mentions("brocade"):
 		// a small woven lozenge, alternating light and dark
 		for row, y := 0, 92.0; y < l.hemY+10; row, y = row+1, y+14 {
 			for x := 24.0 + float64(row%2)*9; x < 280; x += 18 {
-				colour := mix(fill, "#ffffff", 0.35)
+				colour := svg.Mix(fill, "#ffffff", 0.35)
 				if row%2 == 1 {
-					colour = mix(fill, "#000000", 0.25)
+					colour = svg.Mix(fill, "#000000", 0.25)
 				}
 
-				fmt.Fprintf(b, `<path d="M%s l5,6 l-5,6 l-5,-6 Z" fill="%s"/>`, pt(x, y-6), colour)
+				fmt.Fprintf(b, `<path d="M%s l5,6 l-5,6 l-5,-6 Z" fill="%s"/>`, svg.Pt(x, y-6), colour)
 			}
 		}
 
@@ -683,13 +492,13 @@ func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 	case i.mentions("check"):
 		// a Prince of Wales check: a wide pale grid over a fine dark one
 		for x := 24.0; x < 280; x += 24 {
-			fmt.Fprintf(b, `<path d="M%s V400 M%s V400" stroke="%s" stroke-width="1"/>`, pt(x, 0), pt(x+6, 0), mix(fill, "#000000", 0.25))
-			fmt.Fprintf(b, `<path d="M%s V400" stroke="%s" stroke-width="2" stroke-opacity="0.6"/>`, pt(x+12, 0), mix(fill, "#ffffff", 0.35))
+			fmt.Fprintf(b, `<path d="M%s V400 M%s V400" stroke="%s" stroke-width="1"/>`, svg.Pt(x, 0), svg.Pt(x+6, 0), svg.Mix(fill, "#000000", 0.25))
+			fmt.Fprintf(b, `<path d="M%s V400" stroke="%s" stroke-width="2" stroke-opacity="0.6"/>`, svg.Pt(x+12, 0), svg.Mix(fill, "#ffffff", 0.35))
 		}
 
 		for y := 90.0; y < 400; y += 24 {
-			fmt.Fprintf(b, `<path d="M%s H300 M%s H300" stroke="%s" stroke-width="1"/>`, pt(0, y), pt(0, y+6), mix(fill, "#000000", 0.25))
-			fmt.Fprintf(b, `<path d="M%s H300" stroke="%s" stroke-width="2" stroke-opacity="0.6"/>`, pt(0, y+12), mix(fill, "#ffffff", 0.35))
+			fmt.Fprintf(b, `<path d="M%s H300 M%s H300" stroke="%s" stroke-width="1"/>`, svg.Pt(0, y), svg.Pt(0, y+6), svg.Mix(fill, "#000000", 0.25))
+			fmt.Fprintf(b, `<path d="M%s H300" stroke="%s" stroke-width="2" stroke-opacity="0.6"/>`, svg.Pt(0, y+12), svg.Mix(fill, "#ffffff", 0.35))
 		}
 
 		b.WriteString("\n")
@@ -697,13 +506,13 @@ func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 
 	// the waistband
 	fmt.Fprintf(b, `<rect x="0" y="%s" width="300" height="%s" fill="%s" fill-opacity="0.55"/>`+"\n",
-		num(l.waistY), num(l.bandY-l.waistY), mix(fill, "#000000", 0.3))
+		svg.Num(l.waistY), svg.Num(l.bandY-l.waistY), svg.Mix(fill, "#000000", 0.3))
 
 	if i.mentions("stripe") {
 		// a satin stripe down each outside seam
 		for _, side := range []float64{-1, 1} {
 			fmt.Fprintf(b, `<path d="M%s L%s L%s" fill="none" stroke="%s" stroke-width="6"/>`,
-				pt(l.c+side*(l.waist-2), l.bandY), pt(l.c+side*(l.hip-2), l.hipY), pt(l.c+side*(l.centre+l.width-2), l.hemY+4), mix(fill, "#ffffff", 0.3))
+				svg.Pt(l.c+side*(l.waist-2), l.bandY), svg.Pt(l.c+side*(l.hip-2), l.hipY), svg.Pt(l.c+side*(l.centre+l.width-2), l.hemY+4), svg.Mix(fill, "#ffffff", 0.3))
 		}
 
 		b.WriteString("\n")
@@ -712,25 +521,25 @@ func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 	if !i.mentions("drawstring") {
 		// the fly
 		fmt.Fprintf(b, `<path d="M%s L%s Q%s %s" fill="none" stroke="%s" stroke-width="1.5"/>`+"\n",
-			pt(l.c, l.bandY), pt(l.c, l.crotchY-26), pt(l.c, l.crotchY-14), pt(l.c-12, l.crotchY-12), line)
+			svg.Pt(l.c, l.bandY), svg.Pt(l.c, l.crotchY-26), svg.Pt(l.c, l.crotchY-14), svg.Pt(l.c-12, l.crotchY-12), line)
 	}
 
 	for _, side := range []float64{-1, 1} {
 		legX := l.c + side*l.centre // the leg's centre at the hem
 
 		if i.mentions("pleat") {
-			fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.5"/>`, pt(l.c+side*22, l.bandY), pt(l.c+side*26, l.hipY+10), line)
+			fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.5"/>`, svg.Pt(l.c+side*22, l.bandY), svg.Pt(l.c+side*26, l.hipY+10), line)
 		}
 
 		if i.mentions("pleat") || i.mentions("crease") {
 			// a pressed crease down the front of the leg
-			fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.2" stroke-opacity="0.8"/>`, pt(l.c+side*28, l.hipY), pt(legX, l.hemY), mix(fill, "#ffffff", 0.25))
+			fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.2" stroke-opacity="0.8"/>`, svg.Pt(l.c+side*28, l.hipY), svg.Pt(legX, l.hemY), svg.Mix(fill, "#ffffff", 0.25))
 		}
 
 		if i.mentions("denim") {
 			// scooped front pockets and the orange topstitching that says jeans
 			fmt.Fprintf(b, `<path d="M%s Q%s %s" fill="none" stroke="#d08a3a" stroke-width="1.5" stroke-dasharray="3 2"/>`,
-				pt(l.c+side*(l.waist-4), l.bandY), pt(l.c+side*(l.waist-6), l.bandY+26), pt(l.c+side*(l.waist-26), l.bandY+28))
+				svg.Pt(l.c+side*(l.waist-4), l.bandY), svg.Pt(l.c+side*(l.waist-6), l.bandY+26), svg.Pt(l.c+side*(l.waist-26), l.bandY+28))
 		}
 
 		if i.mentions("patch pocket") {
@@ -741,7 +550,7 @@ func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 			}
 
 			fmt.Fprintf(b, `<rect x="%s" y="200" width="30" height="36" rx="2" fill="none" stroke="%s" stroke-width="1.5"/><path d="M%s h30" stroke="%s" stroke-width="1.5"/>`,
-				num(x), line, pt(x, 210), line)
+				svg.Num(x), line, svg.Pt(x, 210), line)
 		}
 
 		if i.mentions("cuffs") {
@@ -750,7 +559,7 @@ func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 				x0, x1 = 2*l.c-l.inner(), 2*l.c-l.outer()
 			}
 
-			fmt.Fprintf(b, `<rect x="%s" y="%s" width="%s" height="14" fill="%s"/>`, num(x0), num(l.hemY-14), num(x1-x0), mix(fill, "#000000", 0.2))
+			fmt.Fprintf(b, `<rect x="%s" y="%s" width="%s" height="14" fill="%s"/>`, svg.Num(x0), svg.Num(l.hemY-14), svg.Num(x1-x0), svg.Mix(fill, "#000000", 0.2))
 		}
 	}
 
@@ -762,8 +571,8 @@ func trousersFinish(b *strings.Builder, i Item, l legs, fill, line string) {
 // the clothes: a pendant hangs, a floor lamp stands tall, a ginger jar has its lid, a
 // pleated shade is pleated.
 func (i Item) homeSVG() string {
-	fill := swatch(i.ItemVariant)
-	line := mix(fill, "#000000", 0.35)
+	fill := Swatch(i.ItemVariant)
+	line := svg.Mix(fill, "#000000", 0.35)
 	id := strings.ToLower(i.ItemID)
 
 	var b strings.Builder
@@ -786,7 +595,7 @@ func (i Item) homeSVG() string {
 
 // shadow grounds a piece: a soft ellipse where it stands.
 func shadow(b *strings.Builder, y, rx float64) {
-	fmt.Fprintf(b, `<ellipse cx="150" cy="%s" rx="%s" ry="8" fill="#000000" fill-opacity="0.08"/>`+"\n", num(y), num(rx))
+	fmt.Fprintf(b, `<ellipse cx="150" cy="%s" rx="%s" ry="8" fill="#000000" fill-opacity="0.08"/>`+"\n", svg.Num(y), svg.Num(rx))
 }
 
 // clipped draws body, clips whatever finish draws to it, and outlines it.
@@ -796,7 +605,7 @@ func clipped(b *strings.Builder, id, body, paint, line string, width float64, fi
 	fmt.Fprintf(b, `<g clip-path="url(#body-%s)">`+"\n", id)
 	finish()
 	b.WriteString("</g>\n")
-	fmt.Fprintf(b, `<path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-linejoin="round"/>`+"\n", body, line, num(width))
+	fmt.Fprintf(b, `<path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-linejoin="round"/>`+"\n", body, line, svg.Num(width))
 }
 
 func (i Item) cushion(b *strings.Builder, id, fill, line string) {
@@ -816,14 +625,14 @@ func (i Item) cushion(b *strings.Builder, id, fill, line string) {
 			// cable braids running top to bottom
 			for x := 84.0; x <= 216; x += 33 {
 				fmt.Fprintf(b, `<path d="M%s c12,14 -12,28 0,42 c12,14 -12,28 0,42 c12,14 -12,28 0,42 c12,14 -12,28 0,42 c12,14 -12,28 0,42" fill="none" stroke="%s" stroke-width="7" stroke-opacity="0.3"/>`,
-					pt(x, 100), line)
+					svg.Pt(x, 100), line)
 			}
 
 			b.WriteString("\n")
 		case i.mentions("linen"):
 			// a fine, uneven weave
 			for y := 112.0; y < 312; y += 6 {
-				fmt.Fprintf(b, `<path d="M40,%s H260" stroke="%s" stroke-width="1" stroke-opacity="0.12"/>`, num(y), line)
+				fmt.Fprintf(b, `<path d="M40,%s H260" stroke="%s" stroke-width="1" stroke-opacity="0.12"/>`, svg.Num(y), line)
 			}
 
 			b.WriteString("\n")
@@ -839,7 +648,7 @@ func (i Item) cushion(b *strings.Builder, id, fill, line string) {
 			// the nubby loops of bouclé
 			for row, y := 0, 112.0; y < 312; row, y = row+1, y+9 {
 				for x := 52.0 + float64(row%2)*5; x < 250; x += 10 {
-					fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="3" fill="none" stroke="%s" stroke-opacity="0.35"/>`, num(x), num(y), line)
+					fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="3" fill="none" stroke="%s" stroke-opacity="0.35"/>`, svg.Num(x), svg.Num(y), line)
 				}
 			}
 
@@ -847,7 +656,7 @@ func (i Item) cushion(b *strings.Builder, id, fill, line string) {
 		case i.mentions("geometric"):
 			for row, y := 0, 104.0; y < 320; row, y = row+1, y+36 {
 				for x := 40.0 + float64(row%2)*20; x < 260; x += 40 {
-					fmt.Fprintf(b, `<path d="M%s l40,0 l-20,32 Z" fill="#1d1d1d"/>`, pt(x, y))
+					fmt.Fprintf(b, `<path d="M%s l40,0 l-20,32 Z" fill="#1d1d1d"/>`, svg.Pt(x, y))
 				}
 			}
 
@@ -860,7 +669,7 @@ func (i Item) cushion(b *strings.Builder, id, fill, line string) {
 			dx, dy := c[0]-150, c[1]-210
 			dx, dy = dx/math.Hypot(dx, dy)*18, dy/math.Hypot(dx, dy)*18
 			fmt.Fprintf(b, `<path d="M%s l%s,%s m-4,0 l%s,%s m8,0 l%s,%s" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/><circle cx="%s" cy="%s" r="4" fill="#d4af37"/>`,
-				pt(c[0], c[1]), num(dx), num(dy), num(dx), num(dy), num(dx), num(dy), num(c[0]), num(c[1]))
+				svg.Pt(c[0], c[1]), svg.Num(dx), svg.Num(dy), svg.Num(dx), svg.Num(dy), svg.Num(dx), svg.Num(dy), svg.Num(c[0]), svg.Num(c[1]))
 		}
 
 		b.WriteString("\n")
@@ -868,12 +677,12 @@ func (i Item) cushion(b *strings.Builder, id, fill, line string) {
 }
 
 func (i Item) lamp(b *strings.Builder, id, fill, line string) {
-	shade := mix(fill, "#ffffff", 0.55)
+	shade := svg.Mix(fill, "#ffffff", 0.55)
 	if i.mentions("concrete") {
 		shade = fill
 	}
 
-	shadeLine := mix(shade, "#000000", 0.35)
+	shadeLine := svg.Mix(shade, "#000000", 0.35)
 
 	switch {
 	case i.mentions("pendant"):
@@ -885,7 +694,7 @@ func (i Item) lamp(b *strings.Builder, id, fill, line string) {
 				// the pitted surface of cast concrete
 				for n := range 40 {
 					x, y := 84+float64((n*37)%136), 128+float64((n*53)%76)
-					fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="1.6" fill="%s"/>`, num(x), num(y), shadeLine)
+					fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="1.6" fill="%s"/>`, svg.Num(x), svg.Num(y), shadeLine)
 				}
 
 				b.WriteString("\n")
@@ -899,7 +708,7 @@ func (i Item) lamp(b *strings.Builder, id, fill, line string) {
 		clipped(b, id, body, shade, shadeLine, 2, func() {
 			if i.mentions("woven") || i.mentions("rattan") {
 				for x := 60.0; x < 250; x += 10 {
-					fmt.Fprintf(b, `<path d="M%s l40,100 M%s l-40,100" stroke="%s" stroke-width="2" stroke-opacity="0.45"/>`, pt(x, 52), pt(x, 52), shadeLine)
+					fmt.Fprintf(b, `<path d="M%s l40,100 M%s l-40,100" stroke="%s" stroke-width="2" stroke-opacity="0.45"/>`, svg.Pt(x, 52), svg.Pt(x, 52), shadeLine)
 				}
 
 				b.WriteString("\n")
@@ -935,7 +744,7 @@ func (i Item) lamp(b *strings.Builder, id, fill, line string) {
 			if i.mentions("pleat") {
 				for n := 0; n <= 14; n++ {
 					t := float64(n) / 14
-					fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.2" stroke-opacity="0.5"/>`, pt(98+104*t, 118), pt(66+168*t, 214), shadeLine)
+					fmt.Fprintf(b, `<path d="M%s L%s" stroke="%s" stroke-width="1.2" stroke-opacity="0.5"/>`, svg.Pt(98+104*t, 118), svg.Pt(66+168*t, 214), shadeLine)
 				}
 
 				b.WriteString("\n")
@@ -966,7 +775,7 @@ func (i Item) vase(b *strings.Builder, id, fill, line string) {
 	if i.mentions("smoked") {
 		// light passing through the middle of tinted glass
 		fmt.Fprintf(&defs, `<linearGradient id="glass-%s" x1="0" x2="1" y1="0" y2="0">`, id)
-		stops(&defs, [][2]string{{"0", fill}, {"0.45", mix(fill, "#ffffff", 0.25)}, {"0.6", fill}, {"1", mix(fill, "#000000", 0.4)}})
+		svg.Stops(&defs, [][2]string{{"0", fill}, {"0.45", svg.Mix(fill, "#ffffff", 0.25)}, {"0.6", fill}, {"1", svg.Mix(fill, "#000000", 0.4)}})
 		defs.WriteString(`</linearGradient>`)
 
 		paint = "url(#glass-" + id + ")"
@@ -987,19 +796,19 @@ func (i Item) vase(b *strings.Builder, id, fill, line string) {
 
 			b.WriteString("\n")
 		case i.mentions("swirl"):
-			for n, colour := range []string{"#e0a030", mix(fill, "#ffffff", 0.45), "#e0a030"} {
+			for n, colour := range []string{"#e0a030", svg.Mix(fill, "#ffffff", 0.45), "#e0a030"} {
 				x := 104 + float64(n)*30
 				fmt.Fprintf(b, `<path d="M%s C%s %s %s" fill="none" stroke="%s" stroke-width="9" stroke-opacity="0.75"/>`,
-					pt(x, 150), pt(x+60, 210), pt(x-50, 280), pt(x+20, 350), colour)
+					svg.Pt(x, 150), svg.Pt(x+60, 210), svg.Pt(x-50, 280), svg.Pt(x+20, 350), colour)
 			}
 
 			b.WriteString("\n")
 		case i.mentions("raw foot"):
 			// the unglazed foot, and speckles in the glaze
-			fmt.Fprintf(b, `<rect x="60" y="318" width="180" height="30" fill="%s"/>`, mix(fill, "#ffffff", 0.35))
+			fmt.Fprintf(b, `<rect x="60" y="318" width="180" height="30" fill="%s"/>`, svg.Mix(fill, "#ffffff", 0.35))
 			for n := range 30 {
 				x, y := 90+float64((n*41)%120), 180+float64((n*29)%130)
-				fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="1.4" fill="%s"/>`, num(x), num(y), line)
+				fmt.Fprintf(b, `<circle cx="%s" cy="%s" r="1.4" fill="%s"/>`, svg.Num(x), svg.Num(y), line)
 			}
 
 			b.WriteString("\n")

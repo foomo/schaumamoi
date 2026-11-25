@@ -1,14 +1,15 @@
-package mock_test
+package catalog_test
 
 import (
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/internal/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/taste"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/assert"
 )
 
-var categories = []string{mock.CategoryDresses, mock.CategoryTrousers, mock.CategoryCushions, mock.CategoryLamps, mock.CategoryVases}
+var categories = []string{catalog.CategoryDresses, catalog.CategoryTrousers, catalog.CategoryCushions, catalog.CategoryLamps, catalog.CategoryVases}
 
 // TestCategoryWeightsAreComplete keeps the weights a complete statement: every dimension
 // a product carries is named in its category's weights. A dimension the weights left out
@@ -16,8 +17,8 @@ var categories = []string{mock.CategoryDresses, mock.CategoryTrousers, mock.Cate
 func TestCategoryWeightsAreComplete(t *testing.T) {
 	t.Parallel()
 
-	for _, item := range mock.Catalog() {
-		w := mock.CategoryWeights(item.Category())
+	for _, item := range catalog.All() {
+		w := catalog.CategoryWeights(item.Category())
 		for d := range item.Attractor {
 			assert.Contains(t, w, d, "%s carries %s, which %s does not weigh", item.ItemID, d, item.Category())
 		}
@@ -31,7 +32,7 @@ func TestCategoryWeightsAverageOne(t *testing.T) {
 	t.Parallel()
 
 	for _, category := range categories {
-		w := mock.CategoryWeights(category)
+		w := catalog.CategoryWeights(category)
 
 		var sum personalization.Value
 		for _, v := range w {
@@ -48,16 +49,16 @@ func TestCategoryWeightsAverageOne(t *testing.T) {
 func TestFashionOnlyDimensionsDoNotCountAtHome(t *testing.T) {
 	t.Parallel()
 
-	taste := personalization.Map{mock.PersoDimensionBusiness: 1, mock.PersoDimensionFestive: 1}
-	for _, item := range mock.HomeDecoration() {
+	liked := personalization.Map{taste.Business: 1, taste.Festive: 1}
+	for _, item := range catalog.HomeDecoration() {
 		withBusiness := personalization.Map{}
 		for d, v := range item.Attractor {
 			withBusiness[d] = v
 		}
 
-		withBusiness[mock.PersoDimensionBusiness] = 1 // even if a home item carried it
+		withBusiness[taste.Business] = 1 // even if a home item carried it
 
 		item.Attractor = withBusiness
-		assert.Zero(t, mock.Score(taste, item), item.ItemID)
+		assert.Zero(t, catalog.Score(liked, item), item.ItemID)
 	}
 }

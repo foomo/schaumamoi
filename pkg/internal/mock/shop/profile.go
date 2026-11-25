@@ -1,6 +1,8 @@
-package mock
+package shop
 
-import "github.com/foomo/schaumamoi/pkg/personalization"
+import (
+	"github.com/foomo/schaumamoi/pkg/personalization"
+)
 
 // Profile is what the shop ranks a listing with: the shopper's personalization vector as
 // the affinity corpus emits it from their events so far, and how many events went into

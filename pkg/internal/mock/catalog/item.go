@@ -1,4 +1,4 @@
-package mock
+package catalog
 
 import (
 	"strings"
@@ -42,5 +42,7 @@ type Item struct {
 // already carry this, and putting it on the wire a second time would be two sources of
 // truth that can drift.
 func (i Item) Category() string { return i.ItemCategory2 }
+
 func (i Item) Occasion() string { return strings.ToLower(i.ItemCategory3) }
-func (i Item) Length() string   { return strings.ToLower(i.ItemCategory4) }
+
+func (i Item) Length() string { return strings.ToLower(i.ItemCategory4) }

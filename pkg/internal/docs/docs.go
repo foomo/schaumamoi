@@ -47,12 +47,24 @@ type PageInfo struct {
 // Pages are the generated pages, in the order the site's Reports section lists them.
 var Pages = []PageInfo{
 	{
-		Name: "mock", Title: "The shop",
-		Summary: "The generated traffic: catalog and category tree, personas and their taste, how they browse and choose, and how the shop ranks for them.",
+		Name: "catalog", Title: "The catalog",
+		Summary: "What the test shop sells: the category tree, the dimensions each department speaks, the weights every category scores with, and every product with its copy and attractor.",
+	},
+	{
+		Name: "personas", Title: "The personas",
+		Summary: "The four shoppers the traffic is generated for: their taste, their favourite in every category, how they choose, and how each ranks the whole catalog.",
+	},
+	{
+		Name: "shop", Title: "The shop",
+		Summary: "The listings the shop renders, filtered out of the catalog and ranked by nothing but what a shopper has done.",
+	},
+	{
+		Name: "shoppers", Title: "The shoppers",
+		Summary: "Each persona taken through the shop: its journey step by step, its month of visits, and the shop's final ranking for it.",
 	},
 	{
 		Name: "corpus", Title: "The corpus",
-		Summary: "What the corpus reads back from that traffic: how it is set up, and how it reads sessions, months, drifts, detours and consent.",
+		Summary: "What the corpus reads back from the shoppers' traffic: how it is set up, and how it reads sessions, months, drifts, detours and consent.",
 	},
 	{
 		Name: "affinity", Title: "The vector",
@@ -114,7 +126,7 @@ func Page(name string, data any, funcs template.FuncMap) error {
 		"plusOne": func(i int) int { return i + 1 },
 		"pct":     func(v float64) string { return fmt.Sprintf("%.0f%%", v) },
 		"num":     func(v float64) string { return fmt.Sprintf("%.1f", v) },
-		// img resolves an image path from mock.Item.ImagePath or Persona.ImagePath to the
+		// img resolves an image path from catalog.Item.ImagePath or persona.Persona.ImagePath to the
 		// image next to the page. The ./ matters: VitePress resolves image paths as imports,
 		// and without it images/x.svg reads as a package.
 		"img":  func(path string) string { return "./" + path },

@@ -8,7 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/foomo/schaumamoi/pkg/internal/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
 
@@ -77,7 +78,7 @@ func funcName(fn any) string {
 // pipeline builds the section from affinityDecorators, tracing a visit through it
 // request by request, each under its own envelope. It returns an error naming any
 // decorator the docs do not cover.
-func pipeline(label string, session mock.Session) (pipelineSection, error) {
+func pipeline(label string, session wire.Session) (pipelineSection, error) {
 	s := pipelineSection{Derivers: derivers, Batch: label, Envelope: envelopeOf(session[0])}
 
 	for _, d := range affinityDecorators {
@@ -94,7 +95,7 @@ func pipeline(label string, session mock.Session) (pipelineSection, error) {
 	for n, hit := range session {
 		env, e := envelopeOf(hit), hit.Events[0]
 
-		var p mock.ItemListParams // every event here carries its items under "items"
+		var p shop.ItemListParams // every event here carries its items under "items"
 		_ = e.DecodeParams(&p)
 
 		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Admitted: choices(env, e), Consent: consented(env, e)}

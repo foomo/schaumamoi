@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 
 	"github.com/foomo/schaumamoi/pkg/internal/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
 )
 
 func main() {
@@ -43,7 +44,7 @@ func run(dir string) error {
 		}
 	}
 
-	if err := os.MkdirAll(filepath.Join(dir, mock.ImageDir), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(dir, catalog.ImageDir), 0o755); err != nil {
 		return err
 	}
 

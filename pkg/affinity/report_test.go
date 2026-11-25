@@ -9,7 +9,9 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
-	"github.com/foomo/schaumamoi/pkg/internal/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/require"
 )
@@ -21,23 +23,23 @@ const (
 
 // history is a shopper whose intent changes every phaseVisits visits, one visit every
 // gapDays days, every third visit converting — the shape TestIntentPicksUpQuickly checks.
-func history(order ...mock.Persona) ([]mock.Visit, []mock.Session) {
+func history(order ...persona.Persona) ([]shopper.Visit, []wire.Session) {
 	n := len(order) * phaseVisits
-	visits := make([]mock.Visit, 0, n)
+	visits := make([]shopper.Visit, 0, n)
 
 	for i := range n {
-		visits = append(visits, mock.Visit{
+		visits = append(visits, shopper.Visit{
 			Persona: order[i/phaseVisits],
-			Ago:     time.Duration(n-1-i) * gapDays * mock.Day,
+			Ago:     time.Duration(n-1-i) * gapDays * shopper.Day,
 			Convert: i%3 == 2,
 		})
 	}
 
-	return visits, mock.History(visits)
+	return visits, shopper.History(visits)
 }
 
 // add feeds a visit into the corpus request by request, each under its own envelope.
-func add(c *affinity.Corpus, session mock.Session) {
+func add(c *affinity.Corpus, session wire.Session) {
 	for _, hit := range session {
 		c.Add(affinity.Envelope{At: time.UnixMicro(hit.TimestampMicros).UTC(), Session: hit.SessionID}, hit.Events...)
 	}
@@ -46,13 +48,13 @@ func add(c *affinity.Corpus, session mock.Session) {
 // traced is a history run through an affinity corpus and traced choice by choice: every
 // admitted event, which visit it belongs to, and the fade's step after it.
 type traced struct {
-	visits  []mock.Visit
+	visits  []shopper.Visit
 	visitOf []int
 	steps   []affinity.Step
 	events  []affinity.Decorated
 }
 
-func trace(t *testing.T, order ...mock.Persona) traced {
+func trace(t *testing.T, order ...persona.Persona) traced {
 	t.Helper()
 
 	visits, sessions := history(order...)
@@ -123,7 +125,7 @@ func (tr traced) readsAs(title string) docs.Chart {
 		YTicks: []float64{-1, -0.5, 0, 0.5, 1}, Bands: tr.bands(), Rows: tr.rows(), XTicks: tr.visitTicks(),
 	}
 
-	for slot, p := range mock.Personas() {
+	for slot, p := range persona.All() {
 		s := docs.Series{Name: p.Name, Slot: slot + 1}
 		for _, step := range tr.steps {
 			s.Values = append(s.Values, float64(cosine(step.Vector, p.Affinity)))
@@ -179,13 +181,13 @@ func (tr traced) collapses() int {
 // decayed by time, and faded per event.
 type comparison struct {
 	Visit   int
-	Shopper mock.Persona
-	Flat    mock.Persona
-	Decayed mock.Persona
-	Faded   mock.Persona
+	Shopper persona.Persona
+	Flat    persona.Persona
+	Decayed persona.Persona
+	Faded   persona.Persona
 }
 
-func compare(t *testing.T, order ...mock.Persona) []comparison {
+func compare(t *testing.T, order ...persona.Persona) []comparison {
 	t.Helper()
 
 	visits, sessions := history(order...)
@@ -215,7 +217,7 @@ func compare(t *testing.T, order ...mock.Persona) []comparison {
 func TestReport(t *testing.T) {
 	t.Parallel()
 
-	k, s, l, m := mock.PersonaBusinessKate, mock.PersonaFestiveSofia, mock.PersonaCasualLena, mock.PersonaModernMira
+	k, s, l, m := persona.Kate, persona.Sofia, persona.Lena, persona.Mira
 	f := affinity.DefaultFade
 
 	curve := docs.Chart{
@@ -273,13 +275,13 @@ func cosine(a, b personalization.Map) personalization.Value {
 	return personalization.Value(float64(a.Score(b)) / math.Sqrt(norm))
 }
 
-func nearestPersona(aff personalization.Map) mock.Persona {
+func nearestPersona(aff personalization.Map) persona.Persona {
 	var (
-		best  mock.Persona
+		best  persona.Persona
 		score personalization.Value
 	)
 
-	for i, p := range mock.Personas() {
+	for i, p := range persona.All() {
 		if v := cosine(aff, p.Affinity); i == 0 || v > score {
 			best, score = p, v
 		}

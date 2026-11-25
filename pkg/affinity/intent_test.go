@@ -5,7 +5,9 @@ import (
 	"testing"
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
-	"github.com/foomo/schaumamoi/pkg/internal/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -33,10 +35,10 @@ type pickup struct{ vector, closing, landing int }
 // phaseVisits visits. Together they hold every ordered pair of personas, so every
 // direction of change is tested — each deep into a history, behind earlier intents, which
 // is where a learner that never forgets stops keeping up.
-func intentOrders() [][]mock.Persona {
-	k, s, l, m := mock.PersonaBusinessKate, mock.PersonaFestiveSofia, mock.PersonaCasualLena, mock.PersonaModernMira
+func intentOrders() [][]persona.Persona {
+	k, s, l, m := persona.Kate, persona.Sofia, persona.Lena, persona.Mira
 
-	return [][]mock.Persona{
+	return [][]persona.Persona{
 		{k, s, l, m},
 		{m, l, s, k},
 		{s, m, k, l},
@@ -46,16 +48,16 @@ func intentOrders() [][]mock.Persona {
 
 // intentReading is how one visit served and read the intent it was made with.
 type intentReading struct {
-	Persona mock.Persona
+	Persona persona.Persona
 	Landing bool // the visit's first listing opens on something the intent likes
 	Closing bool // so does its closing look at the department
-	Vector  bool // after the visit, the emitted vector reads as the intent's persona
+	Vector  bool // after the visit, the emitted vector reads as the intent's who
 }
 
 // readIntents runs a history with the given order of intents (see history) through the
 // shop and the shop's own affinity corpus, and reads every visit against the persona that
 // made it.
-func readIntents(t *testing.T, order []mock.Persona) []intentReading {
+func readIntents(t *testing.T, order []persona.Persona) []intentReading {
 	t.Helper()
 
 	visits, history := history(order...)
@@ -80,17 +82,17 @@ func readIntents(t *testing.T, order []mock.Persona) []intentReading {
 	return out
 }
 
-func listingsOf(t *testing.T, session mock.Session) []mock.ItemListParams {
+func listingsOf(t *testing.T, session wire.Session) []shop.ItemListParams {
 	t.Helper()
 
-	var out []mock.ItemListParams
+	var out []shop.ItemListParams
 
 	for _, e := range session.Events() {
 		if e.Name != sesamy.EventNameViewItemList {
 			continue
 		}
 
-		var p mock.ItemListParams
+		var p shop.ItemListParams
 		require.NoError(t, e.DecodeParams(&p))
 		out = append(out, p)
 	}
@@ -109,12 +111,12 @@ func TestIntentPicksUpQuickly(t *testing.T) {
 	for _, order := range intentOrders() {
 		readings := readIntents(t, order)
 
-		for phase, persona := range order {
+		for phase, who := range order {
 			from := phase * phaseVisits
-			name, bound := persona.Name, strongPickup
+			name, bound := who.Name, strongPickup
 			if phase > 0 {
-				name = order[phase-1].Name + " then " + persona.Name
-				if cosine(order[phase-1].Affinity, persona.Affinity) > 0 {
+				name = order[phase-1].Name + " then " + who.Name
+				if cosine(order[phase-1].Affinity, who.Affinity) > 0 {
 					name, bound = name+" (gentle)", gentlePickup
 				}
 			}
@@ -153,7 +155,7 @@ func assertPickedUp(t *testing.T, visits []intentReading, ok func(intentReading)
 	assert.Less(t, first, within, "%s picked up the intent only on visit %d", what, first+1)
 }
 
-func names(order []mock.Persona) string {
+func names(order []persona.Persona) string {
 	out := ""
 	for _, p := range order {
 		out += p.Name[:1]

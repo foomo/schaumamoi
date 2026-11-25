@@ -73,13 +73,3 @@ func TestImagesAreDistinct(t *testing.T) {
 		seen[body] = name
 	}
 }
-
-// TestSwatchesCoverCatalog keeps every colour variant drawable: a new colour in the
-// catalog without a swatch would quietly render grey.
-func TestSwatchesCoverCatalog(t *testing.T) {
-	t.Parallel()
-
-	for _, item := range mock.Catalog() {
-		assert.Contains(t, mock.Swatches, item.ItemVariant, item.ItemID)
-	}
-}

@@ -14,7 +14,10 @@ images next to them, to `docs/reports/images`.
 
 | Report | What it shows |
 |---|---|
-| [The shop](/reports/mock) | listings, personas, rankings, journeys, months, final rankings, catalog |
+| [The catalog](/reports/catalog) | the category tree, the dimensions and weights, every product with its copy and attractor |
+| [The personas](/reports/personas) | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
+| [The shop](/reports/shop) | every listing as a new shopper sees it, and ranked by what one visit taught the shop |
+| [The shoppers](/reports/shoppers) | journeys step by step, months of visits, and the shop's final rankings |
 | [The corpus](/reports/corpus) | how the corpus works, and what it reads back: sessions, months, drift, detour, consent |
 | [The vector](/reports/affinity) | how the personalization vector fades and follows a changing intent (visit by visit, as `TestIntentPicksUpQuickly` checks it), against a flat sum and a decay by time |
 

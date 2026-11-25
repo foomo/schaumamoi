@@ -14,7 +14,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: See the Reports
-      link: /reports/mock
+      link: /reports/catalog
     - theme: alt
       text: View on GitHub
       link: https://github.com/foomo/schaumamoi
@@ -31,17 +31,17 @@ features:
     link: /guide/vector
   - title: A shop to test against
     details: Deterministic GA4 traffic from a two-department shop — personas with hidden taste browse, choose and buy, request by request, while every listing is ranked with the vector the corpus emits.
-    link: /guide/shop
+    link: /guide/test-shop/
 ---
 
 ## Reports from the tests
 
-The [Reports](/reports/mock) are written by the test suite: every page is computed from
+The [Reports](/reports/catalog) are written by the test suite: every page is computed from
 the real code on every run, every product and persona shown by its image, every claim
 next to the test that checks it.
 
-- [The shop](/reports/mock): listings, personas, rankings, journeys, months, final
-  rankings, catalog
+- [The catalog](/reports/catalog), [the personas](/reports/personas), [the shop](/reports/shop)
+  and [the shoppers](/reports/shoppers): the test shop, package by package
 - [The corpus](/reports/corpus): how the corpus works, and what it reads back from the
   traffic
 - [The vector](/reports/affinity): how the personalization vector fades and follows a

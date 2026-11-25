@@ -19,7 +19,7 @@ mise install
 go test ./...
 ```
 
-Besides checking the code, the tests write the [Reports](/reports/mock) of this site:
+Besides checking the code, the tests write the [Reports](/reports/catalog) of this site:
 pages computed from the real code on every run, next to the tests that check them.
 
 ## Build the documentation
@@ -36,5 +36,5 @@ mise run docs:dev    # generate the reports and serve the site with live reload
 | `pkg/personalization` | the sparse taste vector: `Map`, `Score`, `WeightedScore` — see [Personalization](/guide/personalization) |
 | `pkg/corpus` | a corpus of events: filtered and decorated once on arrival, read by any number of derivers — see [The corpus](/guide/corpus) |
 | `pkg/affinity` | the corpus that emits a shopper's personalization vector — see [The vector](/guide/vector) |
-| `pkg/internal/mock` | the test shop: deterministic GA4 traffic from two departments — see [The shop](/guide/shop) and [Events on the wire](/guide/events) |
+| `pkg/internal/mock` | the test shop: deterministic GA4 traffic from two departments, in `catalog`, `persona`, `shop`, `shopper` and `wire` — see [The test shop](/guide/test-shop/) |
 | `pkg/internal/docs` | the templates the tests render their reports with — see [Documentation](/guide/documentation) |
