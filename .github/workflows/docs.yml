@@ -1,12 +1,12 @@
-# Builds the documentation site from the test suite and publishes it to GitHub Pages.
-#
-# The site is test output (see pkg/internal/docs): `mise run docs` runs every test and
-# writes build/site, which is uploaded as the Pages artifact. Pull requests build the
-# site too — a failing test or a broken page shows before merge — but only main deploys.
+name: Publish docs
+
+# The documentation site (docs/, VitePress) is built from the hand-written guides and the
+# reports the test suite generates: `mise run docs` runs the tests, then `vitepress
+# build`. Pull requests build it too, so a failing test or a dead link shows before
+# merge; pushes to main publish it to GitHub Pages.
 #
 # Requires the repository's Pages source to be set to "GitHub Actions"
 # (Settings → Pages → Build and deployment → Source).
-name: docs
 
 on:
   push:
@@ -17,35 +17,40 @@ on:
 permissions:
   contents: read
 
-# one deployment at a time; a newer push supersedes a queued one, a running one finishes
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      # https://github.com/actions/checkout/releases
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
-      # installs the tools pinned in .mise.toml (Go) and makes `mise run` available
-      - uses: jdx/mise-action@v2
+      # installs the tools pinned in .mise.toml: Go for the tests, Bun for VitePress
+      # https://github.com/jdx/mise-action/releases
+      - uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
 
-      - name: Build the documentation site
+      - name: Build docs
         run: mise run docs
 
-      - uses: actions/configure-pages@v5
+      # https://github.com/actions/configure-pages/releases
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
         if: github.event_name != 'pull_request'
 
-      - uses: actions/upload-pages-artifact@v3
+      # https://github.com/actions/upload-pages-artifact/releases
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         if: github.event_name != 'pull_request'
         with:
-          path: build/site
+          path: docs/.vitepress/dist
 
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write
@@ -53,5 +58,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        # https://github.com/actions/deploy-pages/releases
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
