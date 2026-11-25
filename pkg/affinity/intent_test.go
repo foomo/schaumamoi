@@ -1,9 +1,8 @@
-package corpus_test
+package affinity_test
 
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/mock"
@@ -13,27 +12,22 @@ import (
 )
 
 // How quickly a new intent has to be picked up, in visits from the first visit of the
-// new intent, by the corpus's reading after the visit, the visit's closing look and the
+// new intent, by the vector's reading after the visit, the visit's closing look and the
 // next landing page — which is ranked before the shopper has done anything on its visit,
 // so it is always a visit behind.
 //
 // A strong change — to a taste that does not overlap the old one — is what the vector's
-// change detection is for: the corpus reads it on the very first visit, the shop serves
+// change detection is for: the vector reads it on the very first visit, the shop serves
 // it by the second. A gentle change, between tastes that overlap (Mira and Lena are both
 // minimal and modern), is not taken for a new intent; the vector only fades into it,
 // which takes a few visits. Without the change detection strong changes take as long as
 // gentle ones; without any fade the shop never catches up at all.
 var (
-	strongPickup = pickup{corpus: 1, closing: 2, landing: 2}
-	gentlePickup = pickup{corpus: 3, closing: 3, landing: 4}
+	strongPickup = pickup{vector: 1, closing: 2, landing: 2}
+	gentlePickup = pickup{vector: 3, closing: 3, landing: 4}
 )
 
-type pickup struct{ corpus, closing, landing int }
-
-const (
-	phaseVisits     = 6
-	intentGapInDays = 2
-)
+type pickup struct{ vector, closing, landing int }
 
 // intentOrders are long histories with a changing intent: the persona changes every
 // phaseVisits visits. Together they hold every ordered pair of personas, so every
@@ -50,38 +44,22 @@ func intentOrders() [][]mock.Persona {
 	}
 }
 
-// longHistory is a schedule of visits, one every intentGapInDays days, phaseVisits per
-// persona in the given order, every third one converting.
-func longHistory(order []mock.Persona) []mock.Visit {
-	n := len(order) * phaseVisits
-	out := make([]mock.Visit, 0, n)
-
-	for i := range n {
-		out = append(out, mock.Visit{
-			Persona: order[i/phaseVisits],
-			Ago:     time.Duration(n-1-i) * intentGapInDays * mock.Day,
-			Convert: i%3 == 2,
-		})
-	}
-
-	return out
-}
-
 // intentReading is how one visit served and read the intent it was made with.
 type intentReading struct {
 	Persona mock.Persona
 	Landing bool // the visit's first listing opens on something the intent likes
 	Closing bool // so does its closing look at the department
-	Corpus  bool // after the visit, the emitted vector reads as the intent's persona
+	Vector  bool // after the visit, the emitted vector reads as the intent's persona
 }
 
-// readIntents replays a history through the shop's own affinity corpus and reads every
-// visit against the persona that made it.
-func readIntents(t *testing.T, visits []mock.Visit) []intentReading {
+// readIntents runs a history with the given order of intents (see history) through the
+// shop and the shop's own affinity corpus, and reads every visit against the persona that
+// made it.
+func readIntents(t *testing.T, order []mock.Persona) []intentReading {
 	t.Helper()
 
-	history := mock.History(visits)
-	c := newAffinityCorpus(nil)
+	visits, history := history(order...)
+	c := affinity.New(nil)
 	out := make([]intentReading, 0, len(history))
 
 	for i, session := range history {
@@ -89,13 +67,13 @@ func readIntents(t *testing.T, visits []mock.Visit) []intentReading {
 		lists := listingsOf(t, session)
 		require.GreaterOrEqual(t, len(lists), 5)
 
-		addSession(c, session)
+		add(c, session)
 
 		out = append(out, intentReading{
 			Persona: want,
 			Landing: want.Likes(lists[0].Items[0], lists[0].Items),
 			Closing: want.Likes(lists[4].Items[0], lists[4].Items),
-			Corpus:  nearestPersona(c.Derive(affinity.DefaultFade.Vector), mock.Personas()).Name == want.Name,
+			Vector:  nearestPersona(c.Derive(affinity.DefaultFade.Vector)).Name == want.Name,
 		})
 	}
 
@@ -122,14 +100,14 @@ func listingsOf(t *testing.T, session mock.Session) []mock.ItemListParams {
 
 // TestIntentPicksUpQuickly runs long histories with a changing intent through the shop as
 // it is — the same route every visit, the persona changing every few visits — and checks
-// that the shop and the corpus follow each change quickly, and stay with it: within the
-// pickup for the kind of change the corpus reads the new intent, the closing look and the
+// that the vector and the shop follow each change quickly, and stay with it: within the
+// pickup for the kind of change the vector reads the new intent, the closing look and the
 // landing page serve it, and none of them falls back for the rest of the phase.
 func TestIntentPicksUpQuickly(t *testing.T) {
 	t.Parallel()
 
 	for _, order := range intentOrders() {
-		readings := readIntents(t, longHistory(order))
+		readings := readIntents(t, order)
 
 		for phase, persona := range order {
 			from := phase * phaseVisits
@@ -146,7 +124,7 @@ func TestIntentPicksUpQuickly(t *testing.T) {
 
 				visits := readings[from : from+phaseVisits]
 
-				assertPickedUp(t, visits, func(r intentReading) bool { return r.Corpus }, bound.corpus, "the corpus")
+				assertPickedUp(t, visits, func(r intentReading) bool { return r.Vector }, bound.vector, "the vector")
 				assertPickedUp(t, visits, func(r intentReading) bool { return r.Closing }, bound.closing, "the closing look")
 				assertPickedUp(t, visits, func(r intentReading) bool { return r.Landing }, bound.landing, "the landing page")
 			})
@@ -184,7 +162,7 @@ func names(order []mock.Persona) string {
 	return out
 }
 
-// intentRow is one long history as the corpus report shows it: every visit's reading,
+// intentRow is one long history as the vector report shows it: every visit's reading,
 // with the first visit of each new intent marked.
 type intentRow struct {
 	Visits []intentVisit
@@ -202,7 +180,7 @@ func intentRows(t *testing.T) []intentRow {
 
 	for _, order := range intentOrders() {
 		var row intentRow
-		for i, r := range readIntents(t, longHistory(order)) {
+		for i, r := range readIntents(t, order) {
 			row.Visits = append(row.Visits, intentVisit{intentReading: r, PhaseStart: i > 0 && i%phaseVisits == 0})
 		}
 

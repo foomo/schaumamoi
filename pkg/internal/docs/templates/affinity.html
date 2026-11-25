@@ -8,7 +8,7 @@ affinity corpus emits from a shopper's choices — selections, views and carts �
 with. This report shows how <code>Fade.Vector</code> lets it follow a shopper whose intent changes: how fast the past
 fades, when the change detection steps in, and what the vector reads as along the way. The histories are the shape
 <code>TestIntentPicksUpQuickly</code> checks: a visit every two days, the persona changing every six visits.</p>
-<nav><a href="#fade">The fade</a><a href="#strong">Strong changes</a><a href="#gentle">A gentle change</a><a href="#compare">Against flat and time decay</a></nav>
+<nav><a href="#fade">The fade</a><a href="#strong">Strong changes</a><a href="#gentle">A gentle change</a><a href="#intent">Changing intent</a><a href="#compare">Against flat and time decay</a></nav>
 
 <h2 id="fade">The fade</h2>
 <p class="note">Every choice fades everything before it by the same factor, so recency is counted in choices, not in
@@ -43,6 +43,20 @@ the vector holds, so the change detection should not fire ({{.GentleCollapse}} c
 vector across, more slowly.</p>
 {{.GentleDetect.SVG}}
 {{.GentleReads.SVG}}
+
+<h2 id="intent">Changing intent</h2>
+<p class="note">What <code>TestIntentPicksUpQuickly</code> checks, visit by visit: long histories through the shop as it is, a
+visit every two days, the persona — the intent — changing every six visits, every direction of change between the
+personas. Each visit shows who was shopping and three checks: <b>L</b> the landing page, ranked before the visit, opens
+on something the intent likes; <b>C</b> so does the visit's closing look; <b>V</b> the vector the corpus emits after the
+visit reads as that persona. A strong change, to a taste that does not overlap the old one, should be read on its first
+visit and served by its second; a gentle one, between overlapping tastes, within a few. The vector fades per event and
+collapses its past when the recent picks point clearly elsewhere.</p>
+{{range .Intents}}
+  <div class="row card" style="margin-top:10px">
+    {{range .Visits}}<div class="thumb"{{if .PhaseStart}} style="border-left:2px solid var(--accent);padding-left:6px"{{end}}><img class="avatar small" src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><b>{{.Persona.Name}}</b>L{{if .Landing}}<span class="tick">✓</span>{{else}}<span class="cross">·</span>{{end}} C{{if .Closing}}<span class="tick">✓</span>{{else}}<span class="cross">·</span>{{end}} V{{if .Vector}}<span class="tick">✓</span>{{else}}<span class="cross">·</span>{{end}}</div>{{end}}
+  </div>
+{{end}}
 
 <h2 id="compare">Against a flat sum and a decay by time</h2>
 <p class="note">The same history read three ways after every visit: summed flat, decayed by time (a one-week

@@ -258,6 +258,7 @@ func TestReport(t *testing.T) {
 		"GentleDetect":   gentle.detection("Change detection: Mira, then Lena"),
 		"GentleCollapse": gentle.collapses(),
 		"Compare":        compare(t, k, s, l, m),
+		"Intents":        intentRows(t),
 	}, nil))
 
 	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "affinity.md"))

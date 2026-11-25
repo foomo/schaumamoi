@@ -15,8 +15,8 @@ images next to them, to `docs/reports/images`.
 | Report | What it shows |
 |---|---|
 | [The shop](/reports/mock) | listings, personas, rankings, journeys, months, final rankings, catalog |
-| [The corpus](/reports/corpus) | how the corpus works, and what it reads back: sessions, months, drift, changing intent, detour, consent |
-| [The vector](/reports/affinity) | how the personalization vector fades and follows a changing intent, against a flat sum and a decay by time |
+| [The corpus](/reports/corpus) | how the corpus works, and what it reads back: sessions, months, drift, detour, consent |
+| [The vector](/reports/affinity) | how the personalization vector fades and follows a changing intent (visit by visit, as `TestIntentPicksUpQuickly` checks it), against a flat sum and a decay by time |
 
 The generated pages are git-ignored. They are test output, deterministic but rebuilt
 on every run, so they never go stale in version control.

@@ -137,7 +137,6 @@ func TestReport(t *testing.T) {
 		"Drifts":    drifts,
 		"Detour":    detourPhases,
 		"Consented": chips(consentedOnly.Derive(phases(phaseThreshold))),
-		"Intents":   intentRows(t),
 		"Threshold": phaseThreshold,
 		"BaseTime":  mock.BaseTime,
 	}, nil))

@@ -52,11 +52,11 @@ var Pages = []PageInfo{
 	},
 	{
 		Name: "corpus", Title: "The corpus",
-		Summary: "What the corpus reads back from that traffic: how it is set up, and how it reads sessions, months, drifts, changing intents, detours and consent.",
+		Summary: "What the corpus reads back from that traffic: how it is set up, and how it reads sessions, months, drifts, detours and consent.",
 	},
 	{
 		Name: "affinity", Title: "The vector",
-		Summary: "How the personalization vector fades and follows a shopper whose intent changes — and how that compares to a flat sum and a decay by time.",
+		Summary: "How the personalization vector fades and follows a shopper whose intent changes — checked visit by visit on long histories — and how that compares to a flat sum and a decay by time.",
 	},
 }
 

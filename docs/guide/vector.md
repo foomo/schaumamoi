@@ -23,7 +23,7 @@ intent changing every six visits, every direction of change between the personas
 
 With the per-event fade alone, strong changes take as long as gentle ones. With no fade
 at all, which was the shop's old behaviour, the shop stops following new intents once
-the history is long enough. [Changing intent](/reports/corpus#intent) in the corpus
-report shows it visit by visit, and [The vector](/reports/affinity) charts the fade and
-every collapse choice by choice.
+the history is long enough. [The vector](/reports/affinity) report charts the fade and every collapse choice by
+choice, and [Changing intent](/reports/affinity#intent) shows the test's histories visit
+by visit.
 
