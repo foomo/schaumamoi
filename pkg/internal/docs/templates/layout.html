@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{template "title" .}} · schaumamoi</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">schaumamoi</a>
+  <nav>{{range pages}}<a href="{{.File}}"{{if eq .Name page}} aria-current="page"{{end}}>{{.Title}}</a>{{end}}</nav>
+</header>
+<main>
+{{template "body" .}}
+</main>
+<script src="assets/chart.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{{define "title"}}Overview{{end}}
+
+{{define "body"}}
+<h1>schaumamoi</h1>
+<p class="lede">Event aggregation, metering and analysis for GA4 event data as produced by
+<a href="https://github.com/foomo/sesamy-go">foomo/sesamy-go</a>. This site is written by the project's tests: every
+page shows what the code actually does, computed on every run, next to the tests that check it.</p>
+
+<div class="grid" style="margin-top:16px">
+  <div class="card">
+    <h3>Taste as a sparse vector</h3>
+    <p class="meta">pkg/personalization</p>
+    <p>Shoppers and products are described in one sparse space of taste dimensions — classic, modern, cozy,
+    festive… A product only names the dimensions that describe it, so taste carries between categories through what
+    they share. Each category weighs the dimensions it looks at.</p>
+  </div>
+  <div class="card">
+    <h3>A corpus of events</h3>
+    <p class="meta">pkg/corpus, pkg/affinity</p>
+    <p>Events are admitted and decorated once, on arrival, and read by any number of derivers. The affinity corpus
+    admits a shopper's choices — selections, views, carts — and emits their personalization vector, which fades per
+    choice and lets go of the past when the intent changes.</p>
+  </div>
+  <div class="card">
+    <h3>A shop to test it against</h3>
+    <p class="meta">pkg/mock</p>
+    <p>Deterministic GA4 traffic from a two-department shop: personas with hidden taste browse, choose what they like
+    and buy, request by request, while the shop ranks every listing with the vector the corpus emits for them.</p>
+  </div>
+</div>
+
+<h2>Pages</h2>
+<div class="pages">
+{{range pages}}{{if ne .Name "index"}}
+  <a class="card" href="{{.File}}">
+    <h3>{{.Title}}</h3>
+    <p class="meta">{{.Summary}}</p>
+    <ul>{{range .Sections}}<li>{{.Title}}</li>{{end}}</ul>
+  </a>
+{{end}}{{end}}
+</div>
+
+<h2>Sections</h2>
+<div class="scroll">
+<table class="data">
+  {{range pages}}{{if ne .Name "index"}}{{$page := .}}
+  <tr><th>{{.Title}}</th><td>{{range $i, $s := .Sections}}{{if $i}} · {{end}}<a href="{{$page.File}}#{{$s.Anchor}}">{{$s.Title}}</a>{{end}}</td></tr>
+  {{end}}{{end}}
+</table>
+</div>
+
+<h2>How this site is made</h2>
+<p class="note">Each package's <code>TestReport</code> computes its page's data from the real code and hands it to
+<code>pkg/internal/docs</code>, which holds the layout, the page templates, the charts and the styles. Build it with
+<code>mise run docs</code>: it runs the whole test suite and leaves the site in <code>build/site</code>, ready to
+publish as a GitHub Pages site. The site is not kept in version control.</p>
+{{end}}

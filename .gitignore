@@ -22,6 +22,6 @@ coverage.*
 # .opencode/ instead, which is deliberately not ignored.
 /opencode.json
 
-# HTML reports the tests write for visual verification. Deterministic, but output, not
-# fixtures: run the tests to get them.
-**/testdata/report.html
+# The documentation site the tests write (mise run docs). Deterministic, but output, not
+# a fixture: it is built and published, never committed.
+/build/

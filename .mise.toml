@@ -2,3 +2,12 @@
 
 [tools]
 go = "1.27.1"
+
+[tasks.docs]
+description = "Build the documentation site from the tests into build/site, ready for GitHub Pages"
+run = [
+  "rm -rf build/site",
+  # -count=1: a cached test run would skip writing its pages
+  "go test -count=1 ./...",
+  "test -f build/site/index.html",
+]

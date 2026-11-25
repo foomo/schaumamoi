@@ -366,21 +366,32 @@ a ginger jar has its lid) and so does the finish (tassels, cable knit, a pleated
 swirled glass). A persona's hairstyle and accessories come from its taste vector, and it
 wears the colour of its top-match product. Change the data and the picture follows.
 
-### Reports
+## Documentation site
 
-The tests also write three HTML pages for checking the concept by eye. They show every
-product and persona by its generated image:
+The tests write a static documentation site that shows what the code actually does,
+computed on every run, with every product and persona shown by its generated image:
 
 ```bash
-go test ./pkg/mock ./pkg/corpus ./pkg/affinity
-open pkg/mock/testdata/report.html      # listings, personas, rankings, journeys, months, catalog
-open pkg/corpus/testdata/report.html    # what the corpus reads back: sessions, decay, drift, phases, consent
-open pkg/affinity/testdata/report.html  # how the vector fades and follows a changing intent
+mise run docs           # runs the whole suite and writes build/site
+open build/site/index.html
 ```
 
-The affinity report charts the fade curve, the change detection choice by choice
-(with the threshold and every collapse), and who the vector reads as through strong
-and gentle changes of intent. It also compares the fade with a flat sum and a decay by
-time. Charts have a hover readout and a table view.
+| Page | What it shows |
+|---|---|
+| `index.html` | overview, and links into every section |
+| `mock.html` | listings, personas, rankings, journeys, months, final rankings, catalog |
+| `corpus.html` | how the corpus works, and what it reads back: sessions, months, drift, changing intent, detour, consent |
+| `affinity.html` | how the personalization vector fades and follows a changing intent, against a flat sum and a decay by time |
 
-They are deterministic but git-ignored: they're test output, not fixtures.
+Each package's `TestReport` computes its page's data and hands it to
+`pkg/internal/docs`, which owns everything presentational:
+
+- the layout, with a header linking every page;
+- one template file per page, and shared partials, under `templates/`;
+- the styles and the chart script under `templates/assets/`;
+- the line-chart helper, whose charts have a hover readout and a table view.
+
+The site is written to `build/site` at the module root, or wherever `SCHAUMAMOI_SITE`
+points. It is git-ignored: it's built and published, never committed. All links are
+relative and the site carries a `.nojekyll` marker, so the directory can be published
+as is as a GitHub Pages site, including under a project path.
