@@ -1,0 +1,57 @@
+# Builds the documentation site from the test suite and publishes it to GitHub Pages.
+#
+# The site is test output (see pkg/internal/docs): `mise run docs` runs every test and
+# writes build/site, which is uploaded as the Pages artifact. Pull requests build the
+# site too — a failing test or a broken page shows before merge — but only main deploys.
+#
+# Requires the repository's Pages source to be set to "GitHub Actions"
+# (Settings → Pages → Build and deployment → Source).
+name: docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# one deployment at a time; a newer push supersedes a queued one, a running one finishes
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # installs the tools pinned in .mise.toml (Go) and makes `mise run` available
+      - uses: jdx/mise-action@v2
+
+      - name: Build the documentation site
+        run: mise run docs
+
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: build/site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
