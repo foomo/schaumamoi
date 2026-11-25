@@ -2,7 +2,9 @@
   <img src="docs/public/logo.png" alt="schaumamoi — a Woipertinger in a Bavarian hat reading a ticker tape: &quot;Schau ma moi&quot;" width="320">
 </p>
 
-# schaumamoi
+# schau ma moi
+
+“Schau ma moi” is Bavarian dialect for “Let’s have a look” or “Let’s see.”
 
 event aggregation, metering and analysis
 
@@ -11,6 +13,8 @@ it folds a shopper's events into a personalization vector, and tests that agains
 deterministic traffic from a mock shop.
 
 **Documentation: [foomo.github.io/schaumamoi](https://foomo.github.io/schaumamoi/)**
+
+**WARNING: this API is in early development**
 
 ## Requirements
 
@@ -30,11 +34,11 @@ mise run docs:dev    # serve it locally with live reload
 
 ## Packages
 
-| Package | |
-|---|---|
-| `pkg/personalization` | the sparse taste vector and its (weighted) score |
-| `pkg/corpus` | a corpus of events: filtered and decorated once, read by any number of derivers |
-| `pkg/affinity` | the corpus that emits a shopper's personalization vector |
+| Package               |                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------- |
+| `pkg/personalization` | the sparse taste vector and its (weighted) score                                |
+| `pkg/corpus`          | a corpus of events: filtered and decorated once, read by any number of derivers |
+| `pkg/affinity`        | the corpus that emits a shopper's personalization vector                        |
 
 The tests drive them with deterministic GA4 traffic from a two-department shop,
 `pkg/internal/mock`: test fixtures, not a public API.
