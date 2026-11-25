@@ -483,16 +483,16 @@ func TestItemListParamsDecode(t *testing.T) {
 	assert.Equal(t, len(p.Items), p.ResultCount)
 }
 
-// TestJourneyIsMixed pins the shape journeys are built in: one envelope carrying several
-// differently typed events, which is what sesamy-go hands downstream, along a route that
-// crosses both rails and comes back to the department.
+// TestJourneyIsMixed pins the shape journeys are built in: differently typed events —
+// what sesamy-go hands downstream as sesamy.Event[any] — along a route that crosses both
+// rails and comes back to the department.
 func TestJourneyIsMixed(t *testing.T) {
 	t.Parallel()
 
 	names := make([]sesamy.EventName, 0)
 	var lists []string
 
-	for _, e := range mock.Journey(mock.PersonaBusinessKate).Events {
+	for _, e := range mock.Journey(mock.PersonaBusinessKate).Events() {
 		names = append(names, e.Name)
 
 		if e.Name == sesamy.EventNameViewItemList {
@@ -529,11 +529,11 @@ func TestEveryListIsInteractedWith(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range mock.Personas() {
-		for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
+		for name, journey := range map[string]mock.Session{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
 			t.Run(p.Name+" "+name, func(t *testing.T) {
 				t.Parallel()
 
-				events := journey.Events
+				events := journey.Events()
 				lists := 0
 
 				for i, e := range events {
@@ -578,7 +578,7 @@ func TestJourneyIsPersonaDriven(t *testing.T) {
 	for _, p := range mock.Personas() {
 		var added []mock.Item
 
-		for _, e := range mock.Journey(p).Events {
+		for _, e := range mock.Journey(p).Events() {
 			if e.Name != sesamy.EventNameAddToCart {
 				continue
 			}
@@ -601,13 +601,13 @@ func TestJourneyIsPersonaDriven(t *testing.T) {
 func TestBrowseJourneyDoesNotConvert(t *testing.T) {
 	t.Parallel()
 
-	for _, e := range mock.BrowseJourney(mock.PersonaBusinessKate).Events {
+	for _, e := range mock.BrowseJourney(mock.PersonaBusinessKate).Events() {
 		assert.NotEqual(t, sesamy.EventNameAddToCart, e.Name)
 	}
 }
 
 // TestMonthIsAMonth pins the shape of a history: one session per visit, oldest first,
-// inside the thirty days up to BaseTime, each with a session id of its own.
+// starting inside the thirty days up to BaseTime, each with a session id of its own.
 func TestMonthIsAMonth(t *testing.T) {
 	t.Parallel()
 
@@ -619,27 +619,30 @@ func TestMonthIsAMonth(t *testing.T) {
 	sessions := map[string]bool{}
 	conversions := 0
 
-	for i, payload := range history {
-		at := time.UnixMicro(payload.TimestampMicros)
+	for i, session := range history {
+		at := session.Start()
 
 		assert.False(t, at.After(mock.BaseTime), "visit %d is after BaseTime", i)
 		assert.False(t, at.Before(mock.BaseTime.Add(-30*mock.Day)), "visit %d is more than a month old", i)
 		if i > 0 {
-			assert.Greater(t, payload.TimestampMicros, history[i-1].TimestampMicros, "visit %d is out of order", i)
+			assert.True(t, at.After(history[i-1].Start()), "visit %d is out of order", i)
 		}
 
-		assert.Equal(t, "U-KATE", payload.UserID, "options reach every visit")
-		assert.NotContains(t, sessions, payload.SessionID, "visit %d reuses a session", i)
-		sessions[payload.SessionID] = true
+		for _, hit := range session {
+			assert.Equal(t, "U-KATE", hit.UserID, "options reach every request of every visit")
+		}
 
-		for _, e := range payload.Events {
+		assert.NotContains(t, sessions, session.ID(), "visit %d reuses a session", i)
+		sessions[session.ID()] = true
+
+		for _, e := range session.Events() {
 			if e.Name == sesamy.EventNameAddToCart {
 				conversions++
 			}
 		}
 	}
 
-	assert.Equal(t, mock.BaseTime.UnixMicro(), history[len(history)-1].TimestampMicros, "the month ends now")
+	assert.Equal(t, mock.BaseTime, history[len(history)-1].Start(), "the last visit starts now")
 	assert.Equal(t, 2, conversions)
 }
 
@@ -655,14 +658,15 @@ func TestHistoryOrdersVisits(t *testing.T) {
 	})
 
 	require.Len(t, history, 2)
-	assert.Less(t, history[0].TimestampMicros, history[1].TimestampMicros)
+	assert.True(t, history[0].Start().Before(history[1].Start()))
 
 	for i, want := range []mock.Persona{mock.PersonaFestiveSofia, mock.PersonaBusinessKate} {
 		var ap params.AddToCart[mock.Item]
-		cart := slices.IndexFunc(history[i].Events, func(e sesamy.Event[any]) bool { return e.Name == sesamy.EventNameAddToCart })
+		events := history[i].Events()
+		cart := slices.IndexFunc(events, func(e sesamy.Event[any]) bool { return e.Name == sesamy.EventNameAddToCart })
 
 		require.NotEqual(t, -1, cart, "visit %d did not convert", i)
-		require.NoError(t, history[i].Events[cart].DecodeParams(&ap))
+		require.NoError(t, events[cart].DecodeParams(&ap))
 		section := mock.SectionFilter(want).Apply(mock.Catalog())
 		assert.Equal(t, want.Occasion(), ap.Items[0].Occasion(), "visit %d", i)
 		assert.True(t, want.Likes(ap.Items[0], section), "visit %d: %s does not like %s", i, want.Name, ap.Items[0].ItemID)
@@ -695,11 +699,11 @@ func TestEveryListIsPersonalized(t *testing.T) {
 
 	var events []sesamy.Event[any]
 	for _, p := range mock.Personas() {
-		events = append(events, mock.Journey(p).Events...)
-		events = append(events, mock.BrowseJourney(p).Events...)
+		events = append(events, mock.Journey(p).Events()...)
+		events = append(events, mock.BrowseJourney(p).Events()...)
 
-		for _, payload := range mock.History(mock.Month(p)) {
-			events = append(events, payload.Events...)
+		for _, session := range mock.History(mock.Month(p)) {
+			events = append(events, session.Events()...)
 		}
 	}
 
@@ -726,7 +730,7 @@ func TestJourneyStartsNeutral(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range mock.Personas() {
-		lists := listings(t, mock.Journey(p).Events)
+		lists := listings(t, mock.Journey(p).Events())
 		require.Len(t, lists, 8)
 
 		assert.Equal(t, itemIDs(mock.Fashion()), itemIDs(lists[0].Items), "%s lands on the catalog order", p.Name)
@@ -754,8 +758,8 @@ func TestHistoryLearns(t *testing.T) {
 
 			previous := -1
 
-			for i, payload := range mock.History(mock.Month(p)) {
-				landing := listings(t, payload.Events)[0]
+			for i, session := range mock.History(mock.Month(p)) {
+				landing := listings(t, session.Events())[0]
 
 				assert.Greater(t, landing.TasteSignals, previous, "visit %d learned nothing", i+1)
 				previous = landing.TasteSignals
@@ -825,18 +829,18 @@ func TestListingsAreSortedByWhatWasLearned(t *testing.T) {
 		t.Run(p.Name, func(t *testing.T) {
 			t.Parallel()
 
-			for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
+			for name, journey := range map[string]mock.Session{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
 				n := 0
-				replayListings(t, affinity.New(nil), journey.Events, func(list mock.ItemListParams, prof mock.Profile) {
+				replayListings(t, affinity.New(nil), journey.Events(), func(list mock.ItemListParams, prof mock.Profile) {
 					n++
 					assertSortedBy(t, list, prof, fmt.Sprintf("%s listing %d (%s)", name, n, list.ItemListID))
 				})
 			}
 
 			c := affinity.New(nil)
-			for i, payload := range mock.History(mock.Month(p)) {
+			for i, session := range mock.History(mock.Month(p)) {
 				n := 0
-				replayListings(t, c, payload.Events, func(list mock.ItemListParams, prof mock.Profile) {
+				replayListings(t, c, session.Events(), func(list mock.ItemListParams, prof mock.Profile) {
 					n++
 					assertSortedBy(t, list, prof, fmt.Sprintf("visit %d listing %d (%s)", i+1, n, list.ItemListID))
 				})
@@ -852,8 +856,8 @@ func TestJourneyClosesOnTheDepartment(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range mock.Personas() {
-		for name, journey := range map[string]mpv2.Payload[any]{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
-			lists := listings(t, journey.Events)
+		for name, journey := range map[string]mock.Session{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)} {
+			lists := listings(t, journey.Events())
 			closing := lists[4] // the fashion route, then the closing look
 
 			assert.Equal(t, mock.CategoryFilter.ListID(), closing.ItemListID, "%s %s", p.Name, name)
@@ -906,11 +910,11 @@ func TestJourneyEndsOnAllProducts(t *testing.T) {
 			t.Parallel()
 
 			visits := map[string][]sesamy.Event[any]{
-				"journey": mock.Journey(p).Events,
-				"browse":  mock.BrowseJourney(p).Events,
+				"journey": mock.Journey(p).Events(),
+				"browse":  mock.BrowseJourney(p).Events(),
 			}
-			for i, payload := range mock.History(mock.Month(p)) {
-				visits[fmt.Sprintf("visit %d", i+1)] = payload.Events
+			for i, session := range mock.History(mock.Month(p)) {
+				visits[fmt.Sprintf("visit %d", i+1)] = session.Events()
 			}
 
 			for name, events := range visits {
@@ -943,4 +947,51 @@ func inCategory(items []mock.Item, category string) []mock.Item {
 	}
 
 	return out
+}
+
+// TestVisitsAreSentRequestByRequest pins how a visit reaches the wire: as a client sends
+// it, one request per event, not one envelope for the whole visit. The requests of a visit
+// share its session id and client, follow each other in time at the pace a shopper takes
+// — seconds to scan a listing, longer to look at a product — and each reports as its
+// engagement time the time since the request before.
+func TestVisitsAreSentRequestByRequest(t *testing.T) {
+	t.Parallel()
+
+	paces := map[sesamy.EventName][2]time.Duration{
+		sesamy.EventNameViewItemList: {5 * time.Second, 25 * time.Second},
+		sesamy.EventNameSelectItem:   {20 * time.Second, 75 * time.Second},
+		sesamy.EventNameViewItem:     {15 * time.Second, 60 * time.Second},
+		sesamy.EventNameAddToCart:    {5 * time.Second, 15 * time.Second},
+	}
+
+	for _, p := range mock.Personas() {
+		visits := map[string]mock.Session{"journey": mock.Journey(p), "browse": mock.BrowseJourney(p)}
+		for i, session := range mock.History(mock.Month(p)) {
+			visits[fmt.Sprintf("visit %d", i+1)] = session
+		}
+
+		for name, session := range visits {
+			label := p.Name + " " + name
+			require.Greater(t, len(session), 10, label)
+
+			for i, hit := range session {
+				require.Len(t, hit.Events, 1, "%s: request %d carries more than one event", label, i+1)
+				assert.Equal(t, session.ID(), hit.SessionID, label)
+				assert.Equal(t, session[0].ClientID, hit.ClientID, label)
+
+				if i == 0 {
+					assert.Equal(t, int64(1000), hit.EngagementTimeMSec, label)
+
+					continue
+				}
+
+				gap := time.Duration(hit.TimestampMicros-session[i-1].TimestampMicros) * time.Microsecond
+				pace := paces[session[i-1].Events[0].Name]
+
+				assert.Equal(t, gap.Milliseconds(), hit.EngagementTimeMSec, "%s: request %d", label, i+1)
+				assert.GreaterOrEqual(t, gap, pace[0], "%s: request %d after %s", label, i+1, session[i-1].Events[0].Name)
+				assert.LessOrEqual(t, gap, pace[1], "%s: request %d after %s", label, i+1, session[i-1].Events[0].Name)
+			}
+		}
+	}
 }

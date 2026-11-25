@@ -10,7 +10,6 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
-	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 )
 
 // The pipeline section of the corpus report: how the corpus is set up and what it does
@@ -75,10 +74,11 @@ func funcName(fn any) string {
 	return name[strings.LastIndex(name, ".")+1:]
 }
 
-// pipeline builds the section from affinityDecorators, tracing payload through it. It
-// returns an error naming any decorator the docs do not cover.
-func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) {
-	s := pipelineSection{Derivers: derivers, Batch: label, Envelope: envelopeOf(payload)}
+// pipeline builds the section from affinityDecorators, tracing a visit through it
+// request by request, each under its own envelope. It returns an error naming any
+// decorator the docs do not cover.
+func pipeline(label string, session mock.Session) (pipelineSection, error) {
+	s := pipelineSection{Derivers: derivers, Batch: label, Envelope: envelopeOf(session[0])}
 
 	for _, d := range affinityDecorators {
 		name := funcName(d)
@@ -91,11 +91,13 @@ func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) 
 		s.Decorators = append(s.Decorators, stage{Name: name, Doc: doc})
 	}
 
-	for n, e := range payload.Events {
+	for n, hit := range session {
+		env, e := envelopeOf(hit), hit.Events[0]
+
 		var p mock.ItemListParams // every event here carries its items under "items"
 		_ = e.DecodeParams(&p)
 
-		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Admitted: choices(s.Envelope, e), Consent: consented(s.Envelope, e)}
+		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Admitted: choices(env, e), Consent: consented(env, e)}
 
 		switch {
 		case p.ItemListID != "" && len(p.Items) != 1:
@@ -112,7 +114,7 @@ func pipeline(label string, payload mpv2.Payload[any]) (pipelineSection, error) 
 			}
 
 			before := d
-			d = decorate(s.Envelope, e, d)
+			d = decorate(env, e, d)
 			row.Steps = append(row.Steps, traceStep{Summary: summarize(funcName(decorate), e, before, d)})
 		}
 
@@ -175,8 +177,8 @@ the decorated events to a deriver and returns whatever state it builds — a pur
 below are read off the chain the tests use, in order.</p>
 <div class="flow">
   <div class="stage">
-    <h4>1 · A routed batch</h4>
-    <p>One mpv2 payload per visit: its events, and an <b>envelope</b> — what upstream knows about the batch beyond the events.</p>
+    <h4>1 · A request</h4>
+    <p>One mpv2 request per interaction, as the client sends it: its event, and an <b>envelope</b> — what upstream knows beyond the event. A visit is many requests under one session id.</p>
     <p class="meta">envelope: <code>At</code> · <code>Session</code> · <code>Personalization</code> consent</p>
   </div>
   <div class="arrow">→</div>
@@ -206,12 +208,12 @@ below are read off the chain the tests use, in order.</p>
   </div>
 </div>
 
-<h3 style="margin-top:20px">One batch, event by event</h3>
+<h3 style="margin-top:20px">One visit, request by request</h3>
 <p class="note">{{.Batch}}, run through the chain above one decorator at a time. Each column is what that decorator made
 of the event: the envelope stamped on, the taste its items carry — one Map, dresses, trousers and lamps alike — and
 finally the weight it is scaled by: a selection in full, the cart three times over. Listings never get that far: the
 affinity corpus filters for the choices it learns from, and drops everything else at the door.</p>
-<p class="meta">envelope: At {{date .Envelope.At}} · Session <code>{{.Envelope.Session}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
+<p class="meta">first request: At {{date .Envelope.At}} · Session <code>{{.Envelope.Session}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
 <div class="scroll">
 <table class="data trace">
   <tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity filter</th><th>consent filter</th>{{range .Decorators}}<th><code>{{.Name}}</code></th>{{end}}</tr>

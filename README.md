@@ -123,9 +123,25 @@ dress weights do:
 ### Journeys
 
 ```go
-mock.Journey(mock.PersonaFestiveSofia)      // mpv2.Payload[any], converts
+mock.Journey(mock.PersonaFestiveSofia)      // mock.Session, converts
 mock.BrowseJourney(mock.PersonaCasualLena)  // browses and leaves
 ```
+
+A visit reaches the wire the way a real client sends it: not as one envelope, but as a
+`mock.Session`, one request per event. Each request carries its own `timestamp_micros`
+and an `engagement_time_msec` of the time since the previous request, and all share the
+visit's session id. The requests follow each other at a shopper's pace, seeded so the
+fixtures don't churn:
+
+| After | Next request |
+|---|---|
+| a listing | 5–25 s (scanning it) |
+| a selection | 20–75 s (looking at the product) |
+| a product view | 15–60 s |
+| an add to cart | 5–15 s |
+
+`Session.Events()` gives a visit's events in order, and `Start()` and `ID()` give its
+start time and session id.
 
 A journey crosses the rails before it decides:
 
@@ -175,11 +191,12 @@ Nothing is hardcoded per persona: the occasion comes from the persona's stronges
 occasion dimension and the product from its highest affinity score. Change a persona's
 vector and its journey follows.
 
-A returning shopper is a history: one payload per visit, oldest first, each stamped with
-its session's start time and a session id derived from it, the way GA4 does:
+A returning shopper is a history: one session per visit, oldest first. Each session
+starts at its scheduled time, and its session id is derived from that time, the way GA4
+does:
 
 ```go
-mock.History(mock.Month(mock.PersonaBusinessKate))  // []mpv2.Payload[any], 7 visits
+mock.History(mock.Month(mock.PersonaBusinessKate))  // []mock.Session, 7 visits
 ```
 
 `Month` spans the four weeks up to `mock.BaseTime`, mostly browsing, converting twice.

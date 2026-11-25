@@ -39,7 +39,7 @@ func Fixtures() map[string]any {
 			WithSessionID(DefaultSessionID),
 		)
 
-		// and the month that shopper came back over, one payload per visit
+		// and the month that shopper came back over, one session of requests per visit
 		out["history_"+name+".mpv2.json"] = History(Month(p),
 			WithClientID(DefaultClientID),
 			WithUserID("U-"+strings.ToUpper(p.Name)),

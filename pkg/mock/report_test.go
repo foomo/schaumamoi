@@ -107,10 +107,10 @@ func TestReport(t *testing.T) {
 			Top:        ranking[0],
 			Favourites: favourites(p),
 			Ranking:    ranking,
-			Journey:    steps(t, mock.Journey(p).Events),
+			Journey:    steps(t, mock.Journey(p).Events()),
 			Month:      month(t, p),
 			Final: []finalRanking{
-				final(t, p, "after one journey", mock.Journey(p).Events, affinity.New(nil)),
+				final(t, p, "after one journey", mock.Journey(p).Events(), affinity.New(nil)),
 				finalOfMonth(t, p),
 			},
 		})
@@ -176,11 +176,11 @@ func finalOfMonth(t *testing.T, p mock.Persona) finalRanking {
 	history := mock.History(mock.Month(p))
 	c := affinity.New(nil)
 
-	for _, payload := range history[:len(history)-1] {
-		replayListings(t, c, payload.Events, func(mock.ItemListParams, mock.Profile) {})
+	for _, session := range history[:len(history)-1] {
+		replayListings(t, c, session.Events(), func(mock.ItemListParams, mock.Profile) {})
 	}
 
-	return final(t, p, "after a month", history[len(history)-1].Events, c)
+	return final(t, p, "after a month", history[len(history)-1].Events(), c)
 }
 
 // favourites is the persona's first choice in every category: the per-category view the
@@ -270,18 +270,23 @@ func month(t *testing.T, p mock.Persona) []visitRow {
 
 	var out []visitRow
 
-	for _, payload := range mock.History(mock.Month(p)) {
-		journey := steps(t, payload.Events)
-		last := journey[len(journey)-1]
+	for _, session := range mock.History(mock.Month(p)) {
+		journey := steps(t, session.Events())
+
+		// the product the visit ended on: the one it viewed from its section
+		viewed := slices.IndexFunc(journey, func(s step) bool { return s.Name == sesamy.EventNameViewItem })
+		require.GreaterOrEqual(t, viewed, 0)
+		last := journey[viewed]
 		require.NotEmpty(t, last.Items)
+		bought := slices.ContainsFunc(journey, func(s step) bool { return s.Name == sesamy.EventNameAddToCart })
 
 		landing := journey[0]
 		rail := mock.Filter{Category: last.Items[0].Category()}.Apply(landing.Items)
 
 		out = append(out, visitRow{
-			At:         time.UnixMicro(payload.TimestampMicros),
-			Session:    payload.SessionID,
-			Bought:     last.Name == sesamy.EventNameAddToCart,
+			At:         session.Start(),
+			Session:    session.ID(),
+			Bought:     bought,
 			Item:       last.Items[0],
 			Signals:    landing.Signals,
 			Rank:       1 + slices.IndexFunc(landing.Items, func(i mock.Item) bool { return i.ItemID == last.Items[0].ItemID }),

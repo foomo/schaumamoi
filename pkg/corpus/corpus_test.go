@@ -66,7 +66,7 @@ func only(names ...sesamy.EventName) testFilter {
 // kateJourney is the stream the corpus will actually see: heterogeneous GA4 events
 // type-erased to sesamy.Event[any], as sesamy-go hands them downstream.
 func kateJourney() []testEvent {
-	return mock.Journey(mock.PersonaBusinessKate).Events
+	return mock.Journey(mock.PersonaBusinessKate).Events()
 }
 
 // nearestIn is the product of one category that ranks first for a taste: how that
@@ -130,6 +130,14 @@ func assertPerCategory(t *testing.T, aff personalization.Map, want mock.Persona,
 // fields that differ between batches resolved into an envelope.
 func addPayload(p *testCorpus, payload mpv2.Payload[any]) {
 	p.Add(envelopeOf(payload), payload.Events...)
+}
+
+// addSession feeds a visit into the corpus as the client sent it: request by request, each
+// with its own envelope.
+func addSession(p *testCorpus, session mock.Session) {
+	for _, hit := range session {
+		addPayload(p, hit)
+	}
 }
 
 // envelopeOf resolves the fields of an mpv2 envelope that differ between batches.
@@ -235,7 +243,7 @@ func TestAffinityRecoversPersona(t *testing.T) {
 			t.Parallel()
 
 			p := newAffinityCorpus(nil)
-			p.Add(envelope{}, mock.Journey(persona).Events...)
+			p.Add(envelope{}, mock.Journey(persona).Events()...)
 
 			aff := p.Derive(flat)
 			assert.Equal(t, persona.Name, nearestPersona(aff, mock.Personas()).Name)
@@ -262,7 +270,7 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 		t.Run(persona.Name, func(t *testing.T) {
 			t.Parallel()
 
-			events := mock.Journey(persona).Events
+			events := mock.Journey(persona).Events()
 
 			p := newAffinityCorpus(nil)
 			p.Add(envelope{}, events...)
@@ -381,7 +389,7 @@ func TestDeriveIsRepeatable(t *testing.T) {
 func TestAddAfterDeriveDoesNotRedecorate(t *testing.T) {
 	t.Parallel()
 
-	first, second := kateJourney(), mock.BrowseJourney(mock.PersonaCasualLena).Events
+	first, second := kateJourney(), mock.BrowseJourney(mock.PersonaCasualLena).Events()
 
 	p := newAffinityCorpus(nil)
 	p.Add(envelope{}, first...)
@@ -449,17 +457,20 @@ func TestDeriveIsDeterministic(t *testing.T) {
 
 const week = 7 * 24 * time.Hour
 
-// TestStampTimeReadsEnvelope pins where recency comes from: every event of a batch
-// carries the time of the envelope it was added with, and a zero envelope leaves the
-// zero time.
+// TestStampTimeReadsEnvelope pins where recency comes from: every event carries the time
+// of the request it was sent in — a visit's requests follow each other in time, so its
+// events do too — and an event added with a zero envelope carries the zero time.
 func TestStampTimeReadsEnvelope(t *testing.T) {
 	t.Parallel()
 
 	earlier, later := mock.BaseTime.Add(-week), mock.BaseTime
 
 	p := newAffinityCorpus(nil)
-	addPayload(p, mock.Journey(mock.PersonaFestiveSofia, mock.WithTimestamp(earlier)))
-	addPayload(p, mock.BrowseJourney(mock.PersonaBusinessKate, mock.WithTimestamp(later)))
+	visits := []mock.Session{
+		mock.Journey(mock.PersonaFestiveSofia, mock.WithTimestamp(earlier)),
+		mock.BrowseJourney(mock.PersonaBusinessKate, mock.WithTimestamp(later)),
+	}
+	addHistory(p, visits)
 	p.Add(envelope{}, mock.AddToCart(mock.PersonaBusinessKate.TopMatch(mock.Catalog())).AnyEvent())
 
 	stamps := p.Derive(func(events []testDecorated) []time.Time {
@@ -471,11 +482,21 @@ func TestStampTimeReadsEnvelope(t *testing.T) {
 		return out
 	})
 
-	want := append(append(
-		slices.Repeat([]time.Time{earlier}, len(choicesIn(mock.Journey(mock.PersonaFestiveSofia).Events))),
-		slices.Repeat([]time.Time{later}, len(choicesIn(mock.BrowseJourney(mock.PersonaBusinessKate).Events)))...),
-		time.Time{})
+	var want []time.Time
+
+	for _, session := range visits {
+		for _, hit := range session {
+			if choices(envelope{}, hit.Events[0]) {
+				want = append(want, time.UnixMicro(hit.TimestampMicros).UTC())
+			}
+		}
+	}
+
+	want = append(want, time.Time{})
+
 	assert.Equal(t, want, stamps)
+	assert.True(t, stamps[0].After(earlier), "a visit's first choice is sent after its landing page, not with it")
+	assert.True(t, slices.IsSortedFunc(stamps[:len(stamps)-1], func(a, b time.Time) int { return a.Compare(b) }), "events follow each other in time")
 }
 
 // TestDecayHalvesAtHalfLife pins the curve itself on a single purchase: full weight now,
@@ -514,26 +535,26 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 }
 
 // eventsOf is every event of a history, in order.
-func eventsOf(history []mpv2.Payload[any]) []testEvent {
+func eventsOf(history []mock.Session) []testEvent {
 	var out []testEvent
-	for _, payload := range history {
-		out = append(out, payload.Events...)
+	for _, session := range history {
+		out = append(out, session.Events()...)
 	}
 
 	return out
 }
 
-// addHistory feeds a shopper's month into the corpus, one routed batch per visit.
-func addHistory(p *testCorpus, history []mpv2.Payload[any]) {
-	for _, payload := range history {
-		addPayload(p, payload)
+// addHistory feeds a shopper's visits into the corpus, request by request.
+func addHistory(p *testCorpus, history []mock.Session) {
+	for _, session := range history {
+		addSession(p, session)
 	}
 }
 
 // drifted is a month that starts with one taste and settles on another: the first three
 // visits, up to two weeks ago and including the first purchase, are old's; the rest,
 // ending with today's purchase, are recent's.
-func drifted(old, recent mock.Persona) []mpv2.Payload[any] {
+func drifted(old, recent mock.Persona) []mock.Session {
 	visits := mock.Month(recent)
 	for i := range 3 {
 		visits[i].Persona = old
@@ -625,20 +646,23 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 func TestDecayIsRepeatable(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(nil)
-	addPayload(p, mock.Journey(mock.PersonaBusinessKate, mock.WithTimestamp(mock.BaseTime)))
+	visit := mock.Journey(mock.PersonaBusinessKate, mock.WithTimestamp(mock.BaseTime))
+	end := time.UnixMicro(visit[len(visit)-1].TimestampMicros).UTC() // every event is in the past
 
-	now := p.Derive(decayed(mock.BaseTime, week))
+	p := newAffinityCorpus(nil)
+	addSession(p, visit)
+
+	now := p.Derive(decayed(end, week))
 	for range 4 {
-		assert.Equal(t, now, p.Derive(decayed(mock.BaseTime, week)))
+		assert.Equal(t, now, p.Derive(decayed(end, week)))
 	}
 
-	later := p.Derive(decayed(mock.BaseTime.Add(week), week))
+	later := p.Derive(decayed(end.Add(week), week))
 	for dimension, v := range now {
 		assert.InDelta(t, float64(v/2), float64(later[dimension]), 1e-6, dimension)
 	}
 
-	assert.Equal(t, now, p.Derive(decayed(mock.BaseTime, week)), "deriving later modified the corpus")
+	assert.Equal(t, now, p.Derive(decayed(end, week)), "deriving later modified the corpus")
 }
 
 // TestAddWithoutTimeDecaysAway pins what Add documents: an event with no recording time
@@ -753,8 +777,8 @@ func TestStampSessionReadsEnvelope(t *testing.T) {
 	addHistory(p, history)
 
 	want := make([]string, 0, len(history))
-	for _, payload := range history {
-		want = append(want, payload.SessionID)
+	for _, session := range history {
+		want = append(want, session.ID())
 	}
 
 	got := p.Derive(func(events []testDecorated) []string {
@@ -783,14 +807,15 @@ func TestSteadyMonthIsOnePhase(t *testing.T) {
 		t.Run(persona.Name, func(t *testing.T) {
 			t.Parallel()
 
+			history := mock.History(mock.Month(persona))
 			p := newAffinityCorpus(nil)
-			addHistory(p, mock.History(mock.Month(persona)))
+			addHistory(p, history)
 
 			got := p.Derive(phases(phaseThreshold))
 			require.Len(t, got, 1)
 			assert.Equal(t, []string{persona.Name}, phasePersonas(got))
-			assert.Equal(t, mock.BaseTime.Add(-27*mock.Day), got[0].From)
-			assert.Equal(t, mock.BaseTime, got[0].To)
+			assertDuring(t, got[0].From, history[0], "the phase starts in the first visit")
+			assertDuring(t, got[0].To, history[len(history)-1], "the phase ends in the last visit")
 			assert.Len(t, got[0].Sessions, len(mock.Month(persona)))
 		})
 	}
@@ -812,15 +837,16 @@ func TestDriftSplitsIntoPhases(t *testing.T) {
 			t.Run(old.Name+" then "+recent.Name, func(t *testing.T) {
 				t.Parallel()
 
+				history := drifted(old, recent)
 				p := newAffinityCorpus(nil)
-				addHistory(p, drifted(old, recent))
+				addHistory(p, history)
 
 				got := p.Derive(phases(phaseThreshold))
 				require.Len(t, got, 2)
 				assert.Equal(t, []string{old.Name, recent.Name}, phasePersonas(got))
 
-				assert.Equal(t, mock.BaseTime.Add(-14*mock.Day), got[0].To, "the old taste ends with the first purchase")
-				assert.Equal(t, mock.BaseTime.Add(-9*mock.Day), got[1].From, "the new taste starts with the next visit")
+				assertDuring(t, got[0].To, history[2], "the old taste ends in the visit of the first purchase")
+				assertDuring(t, got[1].From, history[3], "the new taste starts in the next visit")
 				assert.Len(t, got[0].Sessions, 3)
 				assert.Len(t, got[1].Sessions, 4)
 			})
@@ -876,7 +902,7 @@ func TestFilterSeesEnvelope(t *testing.T) {
 
 	history := mock.History(visitsOf)
 	for _, i := range []int{2, 3} {
-		history[i].Consent = mock.ConsentDenied()
+		history[i] = history[i].WithConsent(mock.ConsentDenied())
 	}
 
 	all, filtered := newAffinityCorpus(nil), newAffinityCorpus(consented)
@@ -884,9 +910,9 @@ func TestFilterSeesEnvelope(t *testing.T) {
 	addHistory(filtered, history)
 
 	admitted := 0
-	for i, payload := range history {
+	for i, session := range history {
 		if i != 2 && i != 3 {
-			admitted += len(choicesIn(payload.Events))
+			admitted += len(choicesIn(session.Events()))
 		}
 	}
 
@@ -902,4 +928,14 @@ func clone(m personalization.Map) personalization.Map {
 	}
 
 	return out
+}
+
+// assertDuring checks that at falls within a visit: from its first request to its last.
+// A phase starts and ends at choices, which happen during a visit, not at its start.
+func assertDuring(t *testing.T, at time.Time, session mock.Session, msg string) {
+	t.Helper()
+
+	end := time.UnixMicro(session[len(session)-1].TimestampMicros).UTC()
+	assert.False(t, at.Before(session.Start()), "%s: %s is before %s", msg, at, session.Start())
+	assert.False(t, at.After(end), "%s: %s is after %s", msg, at, end)
 }

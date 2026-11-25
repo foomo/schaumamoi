@@ -11,7 +11,6 @@ import (
 	"github.com/foomo/schaumamoi/pkg/internal/report"
 	"github.com/foomo/schaumamoi/pkg/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
-	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,7 +27,7 @@ const (
 
 // history is a shopper whose intent changes every phaseVisits visits, one visit every
 // gapDays days, every third visit converting — the shape TestIntentPicksUpQuickly checks.
-func history(order ...mock.Persona) ([]mock.Visit, []mpv2.Payload[any]) {
+func history(order ...mock.Persona) ([]mock.Visit, []mock.Session) {
 	n := len(order) * phaseVisits
 	visits := make([]mock.Visit, 0, n)
 
@@ -43,6 +42,13 @@ func history(order ...mock.Persona) ([]mock.Visit, []mpv2.Payload[any]) {
 	return visits, mock.History(visits)
 }
 
+// add feeds a visit into the corpus request by request, each under its own envelope.
+func add(c *affinity.Corpus, session mock.Session) {
+	for _, hit := range session {
+		c.Add(affinity.Envelope{At: time.UnixMicro(hit.TimestampMicros).UTC(), Session: hit.SessionID}, hit.Events...)
+	}
+}
+
 // traced is a history run through an affinity corpus and traced choice by choice: every
 // admitted event, which visit it belongs to, and the fade's step after it.
 type traced struct {
@@ -55,13 +61,13 @@ type traced struct {
 func trace(t *testing.T, order ...mock.Persona) traced {
 	t.Helper()
 
-	visits, payloads := history(order...)
+	visits, sessions := history(order...)
 	c := affinity.New(nil)
 	out := traced{visits: visits}
 
-	for v, payload := range payloads {
+	for v, session := range sessions {
 		before := c.Len()
-		c.Add(affinity.Envelope{At: time.UnixMicro(payload.TimestampMicros).UTC(), Session: payload.SessionID}, payload.Events...)
+		add(c, session)
 
 		for range c.Len() - before {
 			out.visitOf = append(out.visitOf, v)
@@ -188,13 +194,13 @@ type comparison struct {
 func compare(t *testing.T, order ...mock.Persona) []comparison {
 	t.Helper()
 
-	visits, payloads := history(order...)
+	visits, sessions := history(order...)
 	c := affinity.New(nil)
-	out := make([]comparison, 0, len(payloads))
+	out := make([]comparison, 0, len(sessions))
 
-	for v, payload := range payloads {
-		at := time.UnixMicro(payload.TimestampMicros).UTC()
-		c.Add(affinity.Envelope{At: at, Session: payload.SessionID}, payload.Events...)
+	for v, session := range sessions {
+		add(c, session)
+		at := time.UnixMicro(session[len(session)-1].TimestampMicros).UTC()
 
 		out = append(out, comparison{
 			Visit:   v + 1,

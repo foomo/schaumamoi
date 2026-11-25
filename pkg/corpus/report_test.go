@@ -86,7 +86,7 @@ func TestReport(t *testing.T) {
 	)
 
 	for _, p := range mock.Personas() {
-		events := mock.Journey(p).Events
+		events := mock.Journey(p).Events()
 		c := newAffinityCorpus(nil)
 		c.Add(envelope{}, events...)
 		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Derive(flat), p, events)})
@@ -126,7 +126,7 @@ func TestReport(t *testing.T) {
 	detourPhases := chips(c.Derive(phases(phaseThreshold)))
 
 	for _, i := range []int{2, 3} {
-		history[i].Consent = mock.ConsentDenied()
+		history[i] = history[i].WithConsent(mock.ConsentDenied())
 	}
 
 	consentedOnly := newAffinityCorpus(consented)

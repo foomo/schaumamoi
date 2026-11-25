@@ -7,7 +7,6 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/mock"
-	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -85,12 +84,12 @@ func readIntents(t *testing.T, visits []mock.Visit) []intentReading {
 	c := newAffinityCorpus(nil)
 	out := make([]intentReading, 0, len(history))
 
-	for i, payload := range history {
+	for i, session := range history {
 		want := visits[i].Persona
-		lists := listingsOf(t, payload)
+		lists := listingsOf(t, session)
 		require.GreaterOrEqual(t, len(lists), 5)
 
-		addPayload(c, payload)
+		addSession(c, session)
 
 		out = append(out, intentReading{
 			Persona: want,
@@ -103,12 +102,12 @@ func readIntents(t *testing.T, visits []mock.Visit) []intentReading {
 	return out
 }
 
-func listingsOf(t *testing.T, payload mpv2.Payload[any]) []mock.ItemListParams {
+func listingsOf(t *testing.T, session mock.Session) []mock.ItemListParams {
 	t.Helper()
 
 	var out []mock.ItemListParams
 
-	for _, e := range payload.Events {
+	for _, e := range session.Events() {
 		if e.Name != sesamy.EventNameViewItemList {
 			continue
 		}
