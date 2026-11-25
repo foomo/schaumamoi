@@ -9,7 +9,7 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
-	"github.com/foomo/schaumamoi/pkg/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/require"
 )

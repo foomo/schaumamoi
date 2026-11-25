@@ -105,7 +105,7 @@ aggregation input:
 
 ## Fixtures
 
-`pkg/mock/testdata` holds each mock rendered as MPv2 wire-format JSON, for testing
+`pkg/internal/mock/testdata` holds each mock rendered as MPv2 wire-format JSON, for testing
 decoding and the pipeline against real bytes:
 
 ```bash

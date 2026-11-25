@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

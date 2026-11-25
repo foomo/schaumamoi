@@ -13,7 +13,7 @@ import (
 
 	"github.com/foomo/gostandards/iso4217"
 	"github.com/foomo/schaumamoi/pkg/affinity"
-	"github.com/foomo/schaumamoi/pkg/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/event/params"

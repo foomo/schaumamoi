@@ -3,7 +3,7 @@ package mock_test
 import (
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/assert"
 )

@@ -11,7 +11,7 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
-	"github.com/foomo/schaumamoi/pkg/mock"
+	"github.com/foomo/schaumamoi/pkg/internal/mock"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 	"github.com/stretchr/testify/require"
@@ -90,7 +90,7 @@ type (
 // TestReport writes testdata/report.html: the category listings, the personas, how each
 // one ranks the whole catalog, the journeys and months generated from those rankings, and the catalog
 // itself — every product and persona shown by its generated image, so the concept can be
-// checked by eye. Open the file in a browser after `go test ./pkg/mock`.
+// checked by eye. Open the file in a browser after `go test ./pkg/internal/mock`.
 func TestReport(t *testing.T) {
 	t.Parallel()
 

@@ -23,7 +23,7 @@ last bits and flip the ranking of near-tied products.
 
 ## Weights per category
 
-How much each part of the vector counts is defined per category (`pkg/mock/weights.go`).
+How much each part of the vector counts is defined per category (`pkg/internal/mock/weights.go`).
 Each department states what it looks at: fashion leads with the occasion, home with how
 a room should feel (cozy, natural, industrial). Each category overrides only where it
 differs. Dresses weigh femininity and romance up and tailoring down, trousers the

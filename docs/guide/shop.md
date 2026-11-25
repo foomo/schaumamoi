@@ -1,9 +1,10 @@
 # The shop
 
-`pkg/mock` generates traffic for a shop with two departments, women's fashion and home
-decoration: a persona browses the fashion categories, opens and buys something it
-likes, and moves on to home decoration — every listing ranked by what the shop has
-learned.
+`pkg/internal/mock` is the shop the tests run on. It is internal: test fixtures for this
+module, free to change, not an API. It generates traffic for a shop with two departments,
+women's fashion and home decoration: a persona browses the fashion categories, opens and
+buys something it likes, and moves on to home decoration — every listing ranked by what
+the shop has learned.
 Four GA4 events — `view_item_list`, `select_item`, `view_item`, `add_to_cart`.
 
 ## Catalog and personas
@@ -150,7 +151,7 @@ the persona of some visits and the shopper wants something else from then on.
 
 ## Images
 
-`pkg/mock/testdata/images` holds an SVG product shot for every dress and pair of
+`pkg/internal/mock/testdata/images` holds an SVG product shot for every dress and pair of
 trousers and every home piece (`dress_01.svg`, `trousers_01.svg`, `home_01.svg` …) and
 an avatar for every persona (`persona_kate.svg` …), drawn by `Item.SVG` and
 `Persona.SVG` and regenerated with the fixtures.

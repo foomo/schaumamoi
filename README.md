@@ -35,7 +35,9 @@ mise run docs:dev    # serve it locally with live reload
 | `pkg/personalization` | the sparse taste vector and its (weighted) score |
 | `pkg/corpus` | a corpus of events: filtered and decorated once, read by any number of derivers |
 | `pkg/affinity` | the corpus that emits a shopper's personalization vector |
-| `pkg/mock` | deterministic GA4 traffic from a two-department shop |
+
+The tests drive them with deterministic GA4 traffic from a two-department shop,
+`pkg/internal/mock`: test fixtures, not a public API.
 
 How they work, with reports computed from the code by the tests, is in the
 [documentation](https://foomo.github.io/schaumamoi/); its sources are in [`docs/`](docs/).
