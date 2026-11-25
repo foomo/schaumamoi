@@ -351,13 +351,19 @@ wears the colour of its top-match product. Change the data and the picture follo
 
 ### Reports
 
-The tests also write two HTML pages for checking the concept by eye. They show every
+The tests also write three HTML pages for checking the concept by eye. They show every
 product and persona by its generated image:
 
 ```bash
-go test ./pkg/mock ./pkg/corpus
-open pkg/mock/testdata/report.html    # listings, personas, rankings, journeys, months, catalog
-open pkg/corpus/testdata/report.html  # what the corpus reads back: sessions, decay, drift, phases, consent
+go test ./pkg/mock ./pkg/corpus ./pkg/affinity
+open pkg/mock/testdata/report.html      # listings, personas, rankings, journeys, months, catalog
+open pkg/corpus/testdata/report.html    # what the corpus reads back: sessions, decay, drift, phases, consent
+open pkg/affinity/testdata/report.html  # how the vector fades and follows a changing intent
 ```
+
+The affinity report charts the fade curve, the change detection choice by choice
+(with the threshold and every collapse), and who the vector reads as through strong
+and gentle changes of intent. It also compares the fade with a flat sum and a decay by
+time. Charts have a hover readout and a table view.
 
 They are deterministic but git-ignored: they're test output, not fixtures.

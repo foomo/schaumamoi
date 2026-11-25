@@ -108,3 +108,25 @@ func TestFadeIsRepeatable(t *testing.T) {
 		assert.Equal(t, want, affinity.DefaultFade.Vector(history))
 	}
 }
+
+// TestTraceEndsOnVector keeps the two views of the loop in step: the last step of a trace
+// is the vector, and a step collapses exactly when its cosine falls below Shift.
+func TestTraceEndsOnVector(t *testing.T) {
+	t.Parallel()
+
+	history := events(append(repeat(personalization.Map{classic: 1, modern: -1}, 7), repeat(personalization.Map{classic: -1, modern: 1, cozy: 0.3}, 4)...)...)
+	steps := affinity.DefaultFade.Trace(history)
+
+	assert.Len(t, steps, len(history))
+	assert.Equal(t, affinity.DefaultFade.Vector(history), steps[len(steps)-1].Vector)
+
+	collapsed := 0
+	for _, s := range steps {
+		assert.Equal(t, s.Cosine < affinity.DefaultFade.Shift, s.Collapsed)
+		if s.Collapsed {
+			collapsed++
+		}
+	}
+
+	assert.Positive(t, collapsed, "the turn from classic to modern is a change of intent")
+}

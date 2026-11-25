@@ -35,7 +35,9 @@ func Write(path, title, body string, data any, funcs template.FuncMap) error {
 		all[name] = fn
 	}
 
-	tmpl, err := template.New("page").Funcs(all).Parse(shell)
+	page := strings.Replace(strings.Replace(shell, "</style>", chartStyle+"</style>", 1), "</body>", chartScript+"</body>", 1)
+
+	tmpl, err := template.New("page").Funcs(all).Parse(page)
 	if err != nil {
 		return fmt.Errorf("parse shell: %w", err)
 	}
@@ -179,6 +181,7 @@ table.taste td.num { width: 44px; text-align: right; font-variant-numeric: tabul
 .bar { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
 .bar.pos { background: var(--pos); }
 .bar.neg { background: var(--neg); }
+.hero { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin-top: 12px; }
 .flow .stage { flex: 1 1 200px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
 .flow .stage.wide { flex-grow: 2; flex-basis: 320px; }

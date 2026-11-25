@@ -41,6 +41,31 @@ var DefaultFade = Fade{PerEvent: 0.95, Window: 1000, Recent: 3, Shift: 0.5, Coll
 
 // Vector is the deriver: the shopper's personalization vector after every admitted event.
 func (f Fade) Vector(events []Decorated) personalization.Map {
+	return f.walk(events, nil)
+}
+
+// Step is the vector after one event, with what the change detection saw: the cosine of
+// the recent contributions against the rest — 1 before there are Recent events to
+// compare — and whether that collapsed the rest.
+type Step struct {
+	Cosine    personalization.Value
+	Collapsed bool
+	Vector    personalization.Map
+}
+
+// Trace is Vector event by event, for looking at how the vector moves: one Step per
+// admitted event, each with its own copy of the vector. It runs the same loop as Vector.
+func (f Fade) Trace(events []Decorated) []Step {
+	out := make([]Step, 0, len(events))
+	f.walk(events, func(cosine personalization.Value, collapsed bool, vector personalization.Map) {
+		out = append(out, Step{Cosine: cosine, Collapsed: collapsed, Vector: clone(vector)})
+	})
+
+	return out
+}
+
+// walk is the one loop behind Vector and Trace; step, if given, sees every event's result.
+func (f Fade) walk(events []Decorated, step func(cosine personalization.Value, collapsed bool, vector personalization.Map)) personalization.Map {
 	if len(events) > f.Window {
 		events = events[len(events)-f.Window:]
 	}
@@ -57,6 +82,10 @@ func (f Fade) Vector(events []Decorated) personalization.Map {
 		}
 
 		if i+1 <= f.Recent {
+			if step != nil {
+				step(1, false, all)
+			}
+
 			continue
 		}
 
@@ -69,10 +98,17 @@ func (f Fade) Vector(events []Decorated) personalization.Map {
 			}
 		}
 
-		if sharedCosine(recent, rest) < f.Shift {
+		cosine := sharedCosine(recent, rest)
+		collapsed := cosine < f.Shift
+
+		if collapsed {
 			for d, v := range rest {
 				all[d] = recent[d] + v*f.Collapse
 			}
+		}
+
+		if step != nil {
+			step(cosine, collapsed, all)
 		}
 	}
 
