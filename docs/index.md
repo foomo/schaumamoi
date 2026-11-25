@@ -5,6 +5,9 @@ hero:
   name: schaumamoi
   text: Event aggregation, metering and analysis
   tagline: Fold GA4 events from foomo/sesamy-go into a shopper's personalization vector — and see it work against a shop full of generated traffic.
+  image:
+    src: /logo.png
+    alt: 'schaumamoi — a Woipertinger in a Bavarian hat reading a ticker tape: "Schau ma moi"'
   actions:
     - theme: brand
       text: Get Started

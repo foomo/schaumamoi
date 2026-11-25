@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/public/logo.png" alt="schaumamoi — a Woipertinger in a Bavarian hat reading a ticker tape: &quot;Schau ma moi&quot;" width="320">
+</p>
+
 # schaumamoi
 
 event aggregation, metering and analysis

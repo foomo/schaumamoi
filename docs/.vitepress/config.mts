@@ -15,6 +15,7 @@ export default defineConfig({
 	},
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
+		logo: '/logo.png',
 		outline: [2, 4],
 		nav: [
 			{ text: 'Guide', link: '/guide/getting-started' },
@@ -73,9 +74,11 @@ export default defineConfig({
 	},
 	head: [
 		['meta', { name: 'theme-color', content: '#ffffff' }],
+		['link', { rel: 'icon', href: '/schaumamoi/logo.png' }],
 		['meta', { name: 'author', content: 'foomo by bestbytes' }],
 		['meta', { property: 'og:title', content: 'foomo/schaumamoi' }],
 		['meta', { property: 'og:description', content: 'Event aggregation, metering and analysis for GA4 event data' }],
+		['meta', { property: 'og:image', content: 'https://foomo.github.io/schaumamoi/logo.png' }],
 		['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
 	],
 })
