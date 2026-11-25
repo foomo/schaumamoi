@@ -228,7 +228,7 @@ func Taste(m personalization.Map) template.HTML {
 
 	var b strings.Builder
 
-	b.WriteString(`<table class="taste">`)
+	b.WriteString(`<table class="taste"><tbody>`)
 
 	for _, d := range dims {
 		v := float64(m[d])
@@ -242,7 +242,7 @@ func Taste(m personalization.Map) template.HTML {
 			template.HTMLEscapeString(string(d)), side, left, width, v)
 	}
 
-	b.WriteString(`</table>`)
+	b.WriteString(`</tbody></table>`)
 
 	return template.HTML(b.String()) //nolint:gosec // built from escaped names and formatted numbers only
 }

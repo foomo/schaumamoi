@@ -64,7 +64,8 @@ half-life), and faded per choice. The flat sum never lets go of the first intent
 as the calendar allows; the fade follows the choices.</p>
 <div class="scroll">
 <table class="data">
-  <tr><th>visit</th><th>shopping</th><th>flat</th><th>decayed by time</th><th>faded per choice</th></tr>
+  <thead><tr><th>visit</th><th>shopping</th><th>flat</th><th>decayed by time</th><th>faded per choice</th></tr></thead>
+  <tbody>
   {{range .Compare}}
   <tr>
     <td>{{.Visit}}</td>
@@ -74,6 +75,7 @@ as the calendar allows; the fade follows the choices.</p>
     <td class="{{if eq .Faded.Name .Shopper.Name}}hit{{else}}miss{{end}}">{{template "who" .Faded}} {{.Faded.Name}}</td>
   </tr>
   {{end}}
+</tbody>
 </table>
 </div>
 {{end}}

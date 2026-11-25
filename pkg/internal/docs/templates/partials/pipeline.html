@@ -45,7 +45,8 @@ affinity corpus filters for the choices it learns from, and drops everything els
 <p class="meta">first request: At {{date .Envelope.At}} · Session <code>{{.Envelope.Session}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
 <div class="scroll">
 <table class="data trace">
-  <tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity filter</th><th>consent filter</th>{{range .Decorators}}<th><code>{{.Name}}</code></th>{{end}}</tr>
+  <thead><tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity filter</th><th>consent filter</th>{{range .Decorators}}<th><code>{{.Name}}</code></th>{{end}}</tr></thead>
+  <tbody>
   {{range .Trace}}
   <tr>
     <td>{{.N}}</td>
@@ -57,6 +58,7 @@ affinity corpus filters for the choices it learns from, and drops everything els
     {{if .Admitted}}{{range .Steps}}<td>{{.Summary}}</td>{{end}}{{else}}<td colspan="{{len $.Decorators}}" class="muted">not admitted — never decorated, never stored</td>{{end}}
   </tr>
   {{end}}
+</tbody>
 </table>
 </div>
 {{end}}

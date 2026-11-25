@@ -248,11 +248,11 @@ func (c Chart) hoverData() hoverData {
 func (c Chart) table() string {
 	var b strings.Builder
 
-	b.WriteString(`<details class="table-view"><summary>Table view</summary><div class="scroll"><table class="data"><tr><th></th>`)
+	b.WriteString(`<details class="table-view"><summary>Table view</summary><div class="scroll"><table class="data"><thead><tr><th></th>`)
 	for _, s := range c.Series {
 		fmt.Fprintf(&b, `<th>%s</th>`, template.HTMLEscapeString(s.Name))
 	}
-	b.WriteString(`</tr>`)
+	b.WriteString(`</tr></thead><tbody>`)
 
 	n := 0
 	for _, s := range c.Series {
@@ -276,7 +276,7 @@ func (c Chart) table() string {
 		b.WriteString(`</tr>`)
 	}
 
-	b.WriteString(`</table></div></details>`)
+	b.WriteString(`</tbody></table></div></details>`)
 
 	return b.String()
 }

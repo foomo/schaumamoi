@@ -57,7 +57,8 @@ the last four another. Summed flat, the old taste too often wins; decayed, the r
 every category the recent half chose from. Phases should recover both, split where the taste changed.</p>
 <div class="scroll">
 <table class="data">
-  <tr><th>Shopped</th><th>Read flat</th><th>Read decayed</th><th>Categories, decayed</th><th>Phases</th></tr>
+  <thead><tr><th>Shopped</th><th>Read flat</th><th>Read decayed</th><th>Categories, decayed</th><th>Phases</th></tr></thead>
+  <tbody>
   {{range .Drifts}}
   <tr>
     <td style="white-space:nowrap"><img class="avatar small" src="{{img .Old.ImagePath}}" alt="{{.Old.Name}}"> → <img class="avatar small" src="{{img .Recent.ImagePath}}" alt="{{.Recent.Name}}"><br><span class="muted">{{.Old.Name}} then {{.Recent.Name}}</span></td>
@@ -67,6 +68,7 @@ every category the recent half chose from. Phases should recover both, split whe
     <td>{{template "phases" .Phases}}</td>
   </tr>
   {{end}}
+</tbody>
 </table>
 </div>
 
