@@ -1,4 +1,3 @@
-{{define "title"}}The corpus{{end}}
 
 {{define "sims"}}<div class="sims">{{range .}}<div class="sim{{if .Best}} best{{end}}"><img class="avatar small" src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><br>{{.Persona.Name}}<br>{{score .Score}}</div>{{end}}</div>{{end}}
 {{define "phases"}}<div class="phases">{{range .}}<div class="phase"><img class="avatar small" src="{{img .Persona.ImagePath}}" alt="{{.Persona.Name}}"><span><b>{{.Persona.Name}}</b><br>{{date .From}} – {{date .To}} · {{.Sessions}} visits</span></div>{{end}}</div>{{end}}

@@ -142,7 +142,7 @@ func TestReport(t *testing.T) {
 		"BaseTime":  mock.BaseTime,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "corpus.html"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "corpus.md"))
 }
 
 // read reads a derived taste the way assertPerCategory does — in every category the

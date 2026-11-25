@@ -1,13 +1,28 @@
 #:schema https://mise.jdx.dev/schema/mise.json
 
+[settings]
+minimum_release_age = "7d"
+
 [tools]
 go = "1.27.1"
+# https://mise-tools.jdx.dev/tools/bun
+bun = "1.4.4"
+# https://mise-tools.jdx.dev/tools/actionlint
+actionlint = "1.7.12"
+
+[tasks."docs:generate"]
+description = "Run the tests, which write the reports into docs/reports"
+# -count=1: a cached test run would skip writing its pages
+run = "go test -count=1 ./..."
 
 [tasks.docs]
-description = "Build the documentation site from the tests into build/site, ready for GitHub Pages"
-run = [
-  "rm -rf build/site",
-  # -count=1: a cached test run would skip writing its pages
-  "go test -count=1 ./...",
-  "test -f build/site/index.html",
-]
+description = "Build the documentation site into docs/.vitepress/dist"
+depends = ["docs:generate"]
+dir = "docs"
+run = ["bun install --frozen-lockfile", "bun run build"]
+
+[tasks."docs:dev"]
+description = "Serve the documentation site with live reload"
+depends = ["docs:generate"]
+dir = "docs"
+run = ["bun install --frozen-lockfile", "bun run dev"]

@@ -260,7 +260,7 @@ func TestReport(t *testing.T) {
 		"Compare":        compare(t, k, s, l, m),
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "affinity.html"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "affinity.md"))
 }
 
 func cosine(a, b personalization.Map) personalization.Value {

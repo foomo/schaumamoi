@@ -1,13 +1,17 @@
-// Package docs renders the documentation site the tests write: a set of static pages
+// Package docs renders the pages the tests contribute to the documentation site: pages
 // that show what the mock shop generates, what the corpus reads back from it, and how
 // the personalization vector behaves — every product and persona by its image, every
 // claim next to the test that checks it.
 //
-// The tests compute; this package presents. Each package's TestReport hands a page its
-// data with Page, and the page's template, the shared layout, styles and scripts all
-// live here, under templates/. The site is test output, not a fixture: it is
-// deterministic, but nothing asserts on it, and it is not kept in version control.
-// `mise run docs` builds it into build/site, ready to publish as a GitHub Pages site.
+// The site itself is a VitePress site in docs/, like the other foomo projects': guides
+// written by hand, and a Reports section these pages fill. The tests compute; this
+// package presents. Each package's TestReport hands its page the data with Page, which
+// renders the page's template — templates/<name>.html, inside templates/page.md — into
+// docs/reports/<name>.md. Styles and the chart hover live in the VitePress theme.
+//
+// The generated pages are test output, not sources: they are deterministic, but nothing
+// asserts on them, and they are not kept in version control. `mise run docs` generates
+// them and builds the site.
 package docs
 
 import (
@@ -16,73 +20,59 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"io/fs"
 	"math"
 	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
+	texttemplate "text/template"
 	"time"
 
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
 
-// SiteEnv names the environment variable that overrides where the site is written.
-const SiteEnv = "SCHAUMAMOI_SITE"
+// DocsEnv names the environment variable that overrides where the VitePress site lives.
+const DocsEnv = "SCHAUMAMOI_DOCS"
 
 //go:embed templates
 var files embed.FS
 
-// PageInfo is one page of the site, as the header and the index list it.
+// PageInfo is one generated page: its name, which is its file name in docs/reports,
+// its title, and a line on what it shows.
 type PageInfo struct {
 	Name, Title, Summary string
-	Sections             []Section
 }
 
-// Section is a section of a page: its heading, and the anchor it is linked by.
-type Section struct {
-	Title, Anchor string
-}
-
-// File is the page's file name in the site.
-func (p PageInfo) File() string { return p.Name + ".html" }
-
-// Pages are the site's pages, in the order the header and the index show them.
+// Pages are the generated pages, in the order the site's Reports section lists them.
 var Pages = []PageInfo{
 	{
-		Name: "index", Title: "Overview",
-		Summary: "What schaumamoi does, and where each part of it is documented.",
-	},
-	{
 		Name: "mock", Title: "The shop",
-		Summary:  "The generated traffic: catalog and category tree, personas and their taste, how they browse and choose, and how the shop ranks for them.",
-		Sections: []Section{{"Listings", "listings"}, {"Personas", "personas"}, {"Rankings", "rankings"}, {"Journeys", "journeys"}, {"Months", "months"}, {"Final ranking", "final"}, {"Catalog", "catalog"}},
+		Summary: "The generated traffic: catalog and category tree, personas and their taste, how they browse and choose, and how the shop ranks for them.",
 	},
 	{
 		Name: "corpus", Title: "The corpus",
-		Summary:  "What the corpus reads back from that traffic: how it is set up, and how it reads sessions, months, drifts, changing intents, detours and consent.",
-		Sections: []Section{{"How the corpus works", "pipeline"}, {"One session", "session"}, {"Steady month", "month"}, {"Drift", "drift"}, {"Changing intent", "intent"}, {"Detour", "detour"}, {"Consent", "consent"}},
+		Summary: "What the corpus reads back from that traffic: how it is set up, and how it reads sessions, months, drifts, changing intents, detours and consent.",
 	},
 	{
 		Name: "affinity", Title: "The vector",
-		Summary:  "How the personalization vector fades and follows a shopper whose intent changes — and how that compares to a flat sum and a decay by time.",
-		Sections: []Section{{"The fade", "fade"}, {"Strong changes", "strong"}, {"A gentle change", "gentle"}, {"Against flat and time decay", "compare"}},
+		Summary: "How the personalization vector fades and follows a shopper whose intent changes — and how that compares to a flat sum and a decay by time.",
 	},
 }
 
-// Dir is where the site is written: SCHAUMAMOI_SITE if set, else build/site at the root
+// Dir is the VitePress site's directory: SCHAUMAMOI_DOCS if set, else docs/ at the root
 // of the module the tests run in.
 func Dir() string {
-	if dir := os.Getenv(SiteEnv); dir != "" {
+	if dir := os.Getenv(DocsEnv); dir != "" {
 		return dir
 	}
 
 	root, err := moduleRoot()
 	if err != nil {
-		return filepath.Join("build", "site")
+		return "docs"
 	}
 
-	return filepath.Join(root, "build", "site")
+	return filepath.Join(root, "docs")
 }
 
 // moduleRoot walks up from the working directory — a package directory, under go test —
@@ -107,10 +97,15 @@ func moduleRoot() (string, error) {
 	}
 }
 
-// Page renders templates/<name>.html inside the layout against data and writes it to
-// <name>.html in the site, along with the shared assets. funcs adds helpers for this
-// one page to the shared ones below.
+// Page renders templates/<name>.html inside templates/page.md against data and writes it
+// to docs/reports/<name>.md. funcs adds helpers for this one page to the shared ones.
 func Page(name string, data any, funcs template.FuncMap) error {
+	i := slices.IndexFunc(Pages, func(p PageInfo) bool { return p.Name == name })
+	if i < 0 {
+		return fmt.Errorf("no page %q in docs.Pages", name)
+	}
+
+	info := Pages[i]
 	all := template.FuncMap{
 		"taste":   Taste,
 		"score":   Score,
@@ -119,64 +114,72 @@ func Page(name string, data any, funcs template.FuncMap) error {
 		"plusOne": func(i int) int { return i + 1 },
 		"pct":     func(v float64) string { return fmt.Sprintf("%.0f%%", v) },
 		"num":     func(v float64) string { return fmt.Sprintf("%.1f", v) },
-		// img resolves an image path from mock.Item.ImagePath or Persona.ImagePath: the
-		// site keeps the images at the same relative path as the mock package does.
-		"img":   func(path string) string { return path },
-		"pages": func() []PageInfo { return Pages },
-		"page":  func() string { return name },
+		// img resolves an image path from mock.Item.ImagePath or Persona.ImagePath to the
+		// image next to the page. The ./ matters: VitePress resolves image paths as imports,
+		// and without it images/x.svg reads as a package.
+		"img":  func(path string) string { return "./" + path },
+		"page": func() PageInfo { return info },
 	}
 	for k, fn := range funcs {
 		all[k] = fn
 	}
 
-	tmpl, err := template.New("layout.html").Funcs(all).ParseFS(files, "templates/layout.html", "templates/partials/*.html", "templates/"+name+".html")
+	body, err := template.New(name+".html").Funcs(all).ParseFS(files, "templates/partials/*.html", "templates/"+name+".html")
 	if err != nil {
 		return fmt.Errorf("parse %s: %w", name, err)
 	}
 
-	var b strings.Builder
-	if err := tmpl.Execute(&b, data); err != nil {
+	var html strings.Builder
+	if err := body.ExecuteTemplate(&html, "body", data); err != nil {
 		return fmt.Errorf("render %s: %w", name, err)
 	}
 
-	if err := writeAssets(); err != nil {
-		return err
-	}
-
-	return write(name+".html", []byte(b.String()))
-}
-
-// Image writes an image into the site at path, relative to the site root.
-func Image(path string, content []byte) error {
-	return write(path, content)
-}
-
-// writeAssets copies the shared styles and scripts into the site, and marks it as a plain
-// static site for GitHub Pages.
-func writeAssets() error {
-	err := fs.WalkDir(files, "templates/assets", func(path string, d fs.DirEntry, err error) error {
-		if err != nil || d.IsDir() {
-			return err
-		}
-
-		content, err := files.ReadFile(path)
-		if err != nil {
-			return err
-		}
-
-		return write(strings.TrimPrefix(path, "templates/"), content)
-	})
+	// the page around it is Markdown with YAML front matter, not HTML: text/template, so
+	// titles and descriptions are not HTML-escaped. The body above is html/template's.
+	page, err := texttemplate.New("page.md").ParseFS(files, "templates/page.md")
 	if err != nil {
-		return err
+		return fmt.Errorf("parse page.md: %w", err)
 	}
 
-	return write(".nojekyll", nil)
+	var md strings.Builder
+	if err := page.Execute(&md, map[string]any{"Page": info, "Body": flatten(html.String())}); err != nil {
+		return fmt.Errorf("render %s: %w", name, err)
+	}
+
+	return write(filepath.Join("reports", name+".md"), []byte(md.String()))
 }
 
-// write writes a file into the site atomically: the package tests run in parallel and
-// may write the same asset at once, and a reader must never see half of one.
+// leadingSpace is the indentation of a line.
+var leadingSpace = regexp.MustCompile(`(?m)^[ \t]+`)
+
+// flatten makes rendered HTML safe to embed in Markdown: in Markdown a blank line ends an
+// HTML block, and an indented line inside one can turn into a code block. Without either,
+// the whole page stays one block of raw HTML. Nothing in the pages is whitespace-sensitive.
+func flatten(html string) string {
+	html = leadingSpace.ReplaceAllString(html, "")
+
+	lines := strings.Split(html, "\n")
+	out := lines[:0]
+
+	for _, l := range lines {
+		if strings.TrimSpace(l) != "" {
+			out = append(out, l)
+		}
+	}
+
+	return strings.Join(out, "\n")
+}
+
+// Image writes an image next to the generated pages, at path relative to them — where the
+// pages' relative image paths point. VitePress bundles them like any other page asset.
+func Image(path string, content []byte) error {
+	return write(filepath.Join("reports", filepath.FromSlash(path)), content)
+}
+
+// write writes a file under the site's directory atomically: the package tests run in
+// parallel and may write the same file at once, and a reader must never see half of one.
 func write(path string, content []byte) error {
-	target := filepath.Join(Dir(), filepath.FromSlash(path))
+	target := filepath.Join(Dir(), path)
 	if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
 		return err
 	}

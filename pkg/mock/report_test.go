@@ -134,7 +134,7 @@ func TestReport(t *testing.T) {
 		"BaseTime": mock.BaseTime,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "mock.html"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "mock.md"))
 }
 
 // final reads the listing of all products that events end on. The scores come from
