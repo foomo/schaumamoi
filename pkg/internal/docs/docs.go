@@ -1,5 +1,5 @@
 // Package docs renders the pages the tests contribute to the documentation site: pages
-// that show what the mock shop generates, what the corpus reads back from it, and how
+// that show what the mock shop generates, what the distillery makes of it, and how
 // the personalization vector behaves — every product and persona by its image, every
 // claim next to the test that checks it.
 //
@@ -63,8 +63,8 @@ var Pages = []PageInfo{
 		Summary: "Each persona taken through the shop: its journey step by step, its month of visits, and the shop's final ranking for it.",
 	},
 	{
-		Name: "corpus", Title: "The corpus",
-		Summary: "What the corpus reads back from the shoppers' traffic: how it is set up, and how it reads sessions, months, drifts, detours and consent.",
+		Name: "distillery", Title: "The distillery",
+		Summary: "What the distillery makes of the shoppers' traffic: how a still is set up, and what it distills from sessions, months, drifts, detours and consent.",
 	},
 	{
 		Name: "affinity", Title: "The vector",

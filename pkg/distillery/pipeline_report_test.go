@@ -1,4 +1,4 @@
-package corpus_test
+package distillery_test
 
 import (
 	"cmp"
@@ -13,26 +13,26 @@ import (
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
 
-// The pipeline section of the corpus report: how the corpus is set up and what it does
-// to one batch. The decorator chain is read off affinityDecorators and the trace is run
+// The pipeline section of the still report: how the still is set up and what it does
+// to one batch. The infuser chain is read off affinityInfusers and the trace is run
 // through it, so both stay true to the code; only the one-line docs are written here,
-// and a decorator without one fails the report.
+// and an infuser without one fails the report.
 
 // stage is one named step of the pipeline with a line saying what it does.
 type stage struct {
 	Name, Doc string
 }
 
-// decoratorDocs says what each decorator in the affinity chain contributes.
-var decoratorDocs = map[string]string{
-	"StampTime":     "copies the batch's time off the envelope, so a deriver can decay by age",
-	"StampSession":  "copies the session id off the envelope, so a deriver can window by visit",
+// infuserDocs says what each infuser in the affinity chain contributes.
+var infuserDocs = map[string]string{
+	"StampTime":     "copies the batch's time off the envelope, so a recipe can decay by age",
+	"StampSession":  "copies the session id off the envelope, so a recipe can window by visit",
 	"AddAttractors": "sums the attractors of the items the event carries into one Map, whatever their category",
 	"WeighByIntent": "scales that by how deliberate the choice is — select and view 1, the cart 3",
 }
 
-// derivers are the questions the tests ask of one corpus, in the order the report uses them.
-var derivers = []stage{
+// recipes are the questions the tests ask of one still, in the order the report uses them.
+var recipes = []stage{
 	{"Fade.Vector", "the personalization vector the shop ranks every listing with: faded per event, collapsing its past on a strong change of intent"},
 	{"Flat", "taste, summed in full"},
 	{"Decayed", "taste, every event halved per half-life of age"},
@@ -41,55 +41,55 @@ var derivers = []stage{
 	{"funnel", "events counted by name — a question that ignores taste altogether"},
 }
 
-// traceStep is what one decorator did to one event's decoration.
+// traceStep is what one infuser did to one event's infusion.
 type traceStep struct {
 	Summary string
 }
 
 // traceRow is one event of the traced batch on its way through the chain.
 type traceRow struct {
-	N        int
-	Event    string
-	Subject  string
-	Items    int
-	Admitted bool
-	Consent  bool
-	Steps    []traceStep
+	N       int
+	Event   string
+	Subject string
+	Items   int
+	Kept    bool
+	Consent bool
+	Steps   []traceStep
 }
 
-// pipelineSection is the data behind the section: the chain, the derivers, and a batch
+// pipelineSection is the data behind the section: the chain, the recipes, and a batch
 // traced through it.
 type pipelineSection struct {
-	Decorators []stage
-	Derivers   []stage
-	Batch      string
-	Envelope   envelope
-	Trace      []traceRow
+	Infusers []stage
+	Recipes  []stage
+	Batch    string
+	Envelope envelope
+	Trace    []traceRow
 }
 
 // funcName is a function's own name, without its package — how the report labels a
-// decorator it read off the chain.
+// infuser it read off the chain.
 func funcName(fn any) string {
 	name := runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()
 
 	return name[strings.LastIndex(name, ".")+1:]
 }
 
-// pipeline builds the section from affinityDecorators, tracing a visit through it
+// pipeline builds the section from affinityInfusers, tracing a visit through it
 // request by request, each under its own envelope. It returns an error naming any
-// decorator the docs do not cover.
+// infuser the docs do not cover.
 func pipeline(label string, session wire.Session) (pipelineSection, error) {
-	s := pipelineSection{Derivers: derivers, Batch: label, Envelope: envelopeOf(session[0])}
+	s := pipelineSection{Recipes: recipes, Batch: label, Envelope: envelopeOf(session[0])}
 
-	for _, d := range affinityDecorators {
+	for _, d := range affinityInfusers {
 		name := funcName(d)
 
-		doc, ok := decoratorDocs[name]
+		doc, ok := infuserDocs[name]
 		if !ok {
-			return s, fmt.Errorf("decorator %s has no doc in decoratorDocs", name)
+			return s, fmt.Errorf("infuser %s has no doc in infuserDocs", name)
 		}
 
-		s.Decorators = append(s.Decorators, stage{Name: name, Doc: doc})
+		s.Infusers = append(s.Infusers, stage{Name: name, Doc: doc})
 	}
 
 	for n, hit := range session {
@@ -98,7 +98,7 @@ func pipeline(label string, session wire.Session) (pipelineSection, error) {
 		var p shop.ItemListParams // every event here carries its items under "items"
 		_ = e.DecodeParams(&p)
 
-		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Admitted: choices(env, e), Consent: consented(env, e)}
+		row := traceRow{N: n + 1, Event: string(e.Name), Items: len(p.Items), Kept: choices(env, e), Consent: consented(env, e)}
 
 		switch {
 		case p.ItemListID != "" && len(p.Items) != 1:
@@ -107,16 +107,16 @@ func pipeline(label string, session wire.Session) (pipelineSection, error) {
 			row.Subject = p.Items[0].ItemName
 		}
 
-		// a dropped event never reaches the decorators
-		var d decoration
-		for _, decorate := range affinityDecorators {
-			if !row.Admitted {
+		// a dropped event never reaches the infusers
+		var d infusion
+		for _, infuse := range affinityInfusers {
+			if !row.Kept {
 				break
 			}
 
 			before := d
-			d = decorate(env, e, d)
-			row.Steps = append(row.Steps, traceStep{Summary: summarize(funcName(decorate), e, before, d)})
+			d = infuse(env, e, d)
+			row.Steps = append(row.Steps, traceStep{Summary: summarize(funcName(infuse), e, before, d)})
 		}
 
 		s.Trace = append(s.Trace, row)
@@ -125,8 +125,8 @@ func pipeline(label string, session wire.Session) (pipelineSection, error) {
 	return s, nil
 }
 
-// summarize says what one decorator changed, in the terms of that decorator.
-func summarize(name string, e testEvent, before, after decoration) string {
+// summarize says what one infuser changed, in the terms of that infuser.
+func summarize(name string, e testEvent, before, after infusion) string {
 	switch name {
 	case "StampTime":
 		return after.At.UTC().Format("Mon 2 Jan 15:04")

@@ -31,7 +31,7 @@ differs. Dresses weigh femininity and romance up and tailoring down, trousers th
 reverse. Cushions are about comfort and texture, lamps about industrial, modern or
 classic design, vases about colour, material and statement. Every product is scored
 with its own category's weights (`catalog.Score`): by the shop when it ranks, by the
-personas when they choose, and by the corpus when it reads a category. A category's
+personas when they choose, and by the distillery's recipes when they read a category. A category's
 weights are a complete statement (anything they don't name counts for nothing, and a
 test keeps every dimension its products carry named). They're scaled to average 1, so
 they set emphasis rather than scale, and a listing that mixes categories still ranks on

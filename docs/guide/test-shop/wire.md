@@ -68,7 +68,7 @@ shopper.Journey(persona.Kate,
 visit as the client sends it, one envelope per event, with `Events()`, `Start()` and
 `ID()` to read it back.
 
-Three properties the mocks guarantee, because they are what makes the corpus usable as
+Three properties the mocks guarantee, because they are what makes the traffic usable as
 aggregation input:
 
 - **A listing is its filter's output.** Items come from `Filter.Apply`, never

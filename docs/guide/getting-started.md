@@ -34,7 +34,7 @@ mise run docs:dev    # generate the reports and serve the site with live reload
 | Package | What it does |
 |---|---|
 | `pkg/personalization` | the sparse taste vector: `Map`, `Score`, `WeightedScore` — see [Personalization](/guide/personalization) |
-| `pkg/corpus` | a corpus of events: filtered and decorated once on arrival, read by any number of derivers — see [The corpus](/guide/corpus) |
-| `pkg/affinity` | the corpus that emits a shopper's personalization vector — see [The vector](/guide/vector) |
+| `pkg/distillery` | a still per user: fed events from a stream or a replay, cut and infused once on arrival, distilled by any number of recipes — see [The distillery](/guide/distillery) |
+| `pkg/affinity` | the still that distills a shopper's personalization vector — see [The vector](/guide/vector) |
 | `pkg/internal/mock` | the test shop: deterministic GA4 traffic from two departments, in `catalog`, `persona`, `shop`, `shopper` and `wire` — see [The test shop](/guide/test-shop/) |
 | `pkg/internal/docs` | the templates the tests render their reports with — see [Documentation](/guide/documentation) |

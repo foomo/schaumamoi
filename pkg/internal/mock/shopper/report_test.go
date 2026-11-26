@@ -99,9 +99,9 @@ func TestReport(t *testing.T) {
 }
 
 // final reads the listing of all products that events end on. The scores come from
-// replaying the events into the shopper's corpus, as TestListingsAreSortedByWhatWasLearned
-// does, on top of whatever the corpus already holds.
-func final(t *testing.T, p persona.Persona, label string, events []sesamy.Event[any], c *affinity.Corpus) finalRanking {
+// replaying the events into the shopper's still, as TestListingsAreSortedByWhatWasLearned
+// does, on top of whatever the still already holds.
+func final(t *testing.T, p persona.Persona, label string, events []sesamy.Event[any], c *affinity.Still) finalRanking {
 	t.Helper()
 
 	var (
@@ -128,7 +128,7 @@ func final(t *testing.T, p persona.Persona, label string, events []sesamy.Event[
 }
 
 // finalOfMonth is the final ranking of the last visit of the persona's month, with the
-// shopper's corpus carried through every visit before it.
+// shopper's still carried through every visit before it.
 func finalOfMonth(t *testing.T, p persona.Persona) finalRanking {
 	t.Helper()
 

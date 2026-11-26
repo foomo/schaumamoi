@@ -321,21 +321,21 @@ func TestHistoryLearns(t *testing.T) {
 	}
 }
 
-// replayListings feeds events in order into a shopper's affinity corpus, as the shop
+// replayListings feeds events in order into a shopper's affinity still, as the shop
 // does, and calls check with every listing and the vector it should have been ranked by:
-// what the corpus emitted just before it. Hand it the same corpus for every visit of a
+// what the still distilled just before it. Hand it the same still for every visit of a
 // history and the vector carries over, as it does in the shop.
-func replayListings(t *testing.T, c *affinity.Corpus, events []sesamy.Event[any], check func(shop.ItemListParams, shop.Profile)) {
+func replayListings(t *testing.T, c *affinity.Still, events []sesamy.Event[any], check func(shop.ItemListParams, shop.Profile)) {
 	t.Helper()
 
 	for _, e := range events {
 		if e.Name == sesamy.EventNameViewItemList {
 			var p shop.ItemListParams
 			require.NoError(t, e.DecodeParams(&p))
-			check(p, shop.Profile{Taste: c.Derive(affinity.DefaultFade.Vector), Signals: c.Len()})
+			check(p, shop.Profile{Taste: c.Distill(affinity.DefaultFade.Vector), Signals: c.Len()})
 		}
 
-		c.Add(affinity.Envelope{}, e)
+		c.Feed(affinity.Envelope{}, e)
 	}
 }
 

@@ -7,13 +7,13 @@ import (
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
 
-// Fade derives the shopper's personalization vector with recency counted in events, not
+// Fade distills the shopper's personalization vector with recency counted in events, not
 // in time: what matters is how much the shopper has done since, not how long ago it was.
 // A shopper who comes back after three weeks is not a stranger.
 //
 // Three rules, applied in event order:
 //
-//   - Every admitted event fades everything before it by PerEvent: the vector is an
+//   - Every kept event fades everything before it by PerEvent: the vector is an
 //     exponentially weighted sum of the contributions, the newest counting most.
 //   - Only the last Window events count at all. With a PerEvent below 1 the tail is
 //     tiny long before the window ends; the window bounds the work and makes the cut
@@ -39,8 +39,8 @@ type Fade struct {
 // of 1000 events is far beyond what the mock data reach.
 var DefaultFade = Fade{PerEvent: 0.95, Window: 1000, Recent: 3, Shift: 0.5, Collapse: 0.2}
 
-// Vector is the deriver: the shopper's personalization vector after every admitted event.
-func (f Fade) Vector(events []Decorated) personalization.Map {
+// Vector is the recipe: the shopper's personalization vector after every kept event.
+func (f Fade) Vector(events []Infused) personalization.Map {
 	return f.walk(events, nil)
 }
 
@@ -54,8 +54,8 @@ type Step struct {
 }
 
 // Trace is Vector event by event, for looking at how the vector moves: one Step per
-// admitted event, each with its own copy of the vector. It runs the same loop as Vector.
-func (f Fade) Trace(events []Decorated) []Step {
+// kept event, each with its own copy of the vector. It runs the same loop as Vector.
+func (f Fade) Trace(events []Infused) []Step {
 	out := make([]Step, 0, len(events))
 	f.walk(events, func(cosine personalization.Value, collapsed bool, vector personalization.Map) {
 		out = append(out, Step{Cosine: cosine, Collapsed: collapsed, Vector: clone(vector)})
@@ -65,7 +65,7 @@ func (f Fade) Trace(events []Decorated) []Step {
 }
 
 // walk is the one loop behind Vector and Trace; step, if given, sees every event's result.
-func (f Fade) walk(events []Decorated, step func(cosine personalization.Value, collapsed bool, vector personalization.Map)) personalization.Map {
+func (f Fade) walk(events []Infused, step func(cosine personalization.Value, collapsed bool, vector personalization.Map)) personalization.Map {
 	if len(events) > f.Window {
 		events = events[len(events)-f.Window:]
 	}
@@ -77,7 +77,7 @@ func (f Fade) walk(events []Decorated, step func(cosine personalization.Value, c
 			all[d] = v * f.PerEvent
 		}
 
-		for d, v := range e.Decoration.Affinity {
+		for d, v := range e.Infusion.Affinity {
 			all[d] += v
 		}
 
@@ -116,12 +116,12 @@ func (f Fade) walk(events []Decorated, step func(cosine personalization.Value, c
 }
 
 // recent is the faded sum of the last few contributions, as they stand in the vector.
-func (f Fade) recent(events []Decorated) personalization.Map {
+func (f Fade) recent(events []Infused) personalization.Map {
 	out := personalization.Map{}
 
 	for i, e := range events {
 		w := personalization.Value(math.Pow(float64(f.PerEvent), float64(len(events)-1-i)))
-		for d, v := range e.Decoration.Affinity {
+		for d, v := range e.Infusion.Affinity {
 			out[d] += v * w
 		}
 	}

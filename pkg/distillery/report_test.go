@@ -1,4 +1,4 @@
-package corpus_test
+package distillery_test
 
 import (
 	"path/filepath"
@@ -16,14 +16,14 @@ import (
 )
 
 type (
-	// similarity is how close a derived affinity sits to one persona.
+	// similarity is how close a distilled affinity sits to one persona.
 	similarity struct {
 		Persona persona.Persona
 		Score   personalization.Value
 		Best    bool
 	}
 
-	// categoryReading is a derived taste read in one category the shopper chose from: the
+	// categoryReading is a distilled taste read in one category the shopper chose from: the
 	// product the taste ranks first there, the persona's own favourite, and whether the
 	// persona likes the first — within persona.GoodEnough of its favourite.
 	categoryReading struct {
@@ -33,7 +33,7 @@ type (
 		OK       bool
 	}
 
-	// reading is what one derive made of a corpus: the taste, its similarity to every
+	// reading is what one distill made of a still: the taste, its similarity to every
 	// persona, and the reading in each category the shopper chose from.
 	reading struct {
 		Affinity   personalization.Map
@@ -69,11 +69,11 @@ type (
 	}
 )
 
-// TestReport writes testdata/report.html: what the corpus recovers from generated
+// TestReport writes testdata/report.html: what the still recovers from generated
 // traffic, shown with the mock images. A single session, a steady month, every drift
 // between two personas read flat and with decay and cut into phases, a detour, and the
-// consent filter — each beside the persona that actually produced it, so a misreading
-// is visible at a glance. Open it in a browser after `go test ./pkg/corpus`.
+// consent cut — each beside the persona that actually produced it, so a misreading
+// is visible at a glance. Open it in a browser after `go test ./pkg/distillery`.
 func TestReport(t *testing.T) {
 	t.Parallel()
 
@@ -85,14 +85,14 @@ func TestReport(t *testing.T) {
 
 	for _, p := range persona.All() {
 		events := shopper.Journey(p).Events()
-		c := newAffinityCorpus(nil)
-		c.Add(envelope{}, events...)
-		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Derive(flat), p, events)})
+		c := newAffinityStill(nil)
+		c.Feed(envelope{}, events...)
+		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Distill(flat), p, events)})
 
 		month := shopper.History(shopper.Month(p))
-		c = newAffinityCorpus(nil)
+		c = newAffinityStill(nil)
 		addHistory(c, month)
-		months = append(months, monthRow{Persona: p, Read: read(t, c.Derive(decayed(wire.BaseTime, week)), p, eventsOf(month)), Phases: chips(c.Derive(phases(phaseThreshold)))})
+		months = append(months, monthRow{Persona: p, Read: read(t, c.Distill(decayed(wire.BaseTime, week)), p, eventsOf(month)), Phases: chips(c.Distill(phases(phaseThreshold)))})
 	}
 
 	for _, old := range persona.All() {
@@ -102,14 +102,14 @@ func TestReport(t *testing.T) {
 			}
 
 			history := drifted(old, recent)
-			c := newAffinityCorpus(nil)
+			c := newAffinityStill(nil)
 			addHistory(c, history)
 			drifts = append(drifts, driftRow{
 				Old:     old,
 				Recent:  recent,
-				Flat:    read(t, c.Derive(flat), recent, eventsOf(history[3:])),
-				Decayed: read(t, c.Derive(decayed(wire.BaseTime, week)), recent, eventsOf(history[3:])),
-				Phases:  chips(c.Derive(phases(phaseThreshold))),
+				Flat:    read(t, c.Distill(flat), recent, eventsOf(history[3:])),
+				Decayed: read(t, c.Distill(decayed(wire.BaseTime, week)), recent, eventsOf(history[3:])),
+				Phases:  chips(c.Distill(phases(phaseThreshold))),
 			})
 		}
 	}
@@ -119,36 +119,36 @@ func TestReport(t *testing.T) {
 	detour[3].Persona = persona.Sofia
 	history := shopper.History(detour)
 
-	c := newAffinityCorpus(nil)
+	c := newAffinityStill(nil)
 	addHistory(c, history)
-	detourPhases := chips(c.Derive(phases(phaseThreshold)))
+	detourPhases := chips(c.Distill(phases(phaseThreshold)))
 
 	for _, i := range []int{2, 3} {
 		history[i] = history[i].WithConsent(wire.ConsentDenied())
 	}
 
-	consentedOnly := newAffinityCorpus(consented)
+	consentedOnly := newAffinityStill(consented)
 	addHistory(consentedOnly, history)
 
 	third := shopper.History(shopper.Month(persona.Kate))[2]
 	pipe, err := pipeline("Kate's third visit of her month, two weeks before BaseTime: the shop knows two visits of hers by then, and this one ends in the cart", third)
 	require.NoError(t, err)
 
-	require.NoError(t, docs.Page("corpus", map[string]any{
+	require.NoError(t, docs.Page("distillery", map[string]any{
 		"Pipeline":  pipe,
 		"Sessions":  sessions,
 		"Months":    months,
 		"Drifts":    drifts,
 		"Detour":    detourPhases,
-		"Consented": chips(consentedOnly.Derive(phases(phaseThreshold))),
+		"Consented": chips(consentedOnly.Distill(phases(phaseThreshold))),
 		"Threshold": phaseThreshold,
 		"BaseTime":  wire.BaseTime,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "corpus.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "distillery.md"))
 }
 
-// read reads a derived taste the way assertPerCategory does — in every category the
+// read reads a distilled taste the way assertPerCategory does — in every category the
 // shopper chose from, against the persona that should have produced it — but records the
 // outcome instead of failing on it.
 func read(t *testing.T, aff personalization.Map, want persona.Persona, events []testEvent) reading {

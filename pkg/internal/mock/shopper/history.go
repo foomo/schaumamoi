@@ -47,7 +47,7 @@ func Month(p persona.Persona) []Visit {
 // pace the shopper takes. Time and session id are set after opts, so an option cannot
 // break the schedule.
 //
-// The visits are one shopper's, so the shopper's corpus carries over: the first visit
+// The visits are one shopper's, so the shopper's still carries over: the first visit
 // starts neutral and every later one is ranked by the vector of everything before it,
 // whichever persona happened to be shopping.
 func History(visits []Visit, opts ...wire.Option) []wire.Session {

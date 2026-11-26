@@ -29,15 +29,15 @@ items that contradict the facets it claims.
 ## Ranking by what was learned
 
 Every listing is ranked by a `shop.Profile`: the shopper's personalization vector as the
-affinity corpus emits it from their events so far, and how many events went into it.
+affinity still distills from their events so far, and how many events went into it.
 The shop keeps no learner of its own. A shopper with no events has a neutral profile,
 under which every product scores the same, so a first listing comes in catalog order.
 
 ```go
-c := affinity.New(nil)                 // one corpus per shopper
-c.Add(envelope, events...)             // their events so far
+c := affinity.New(nil)                 // one still per shopper
+c.Feed(envelope, events...)            // their events so far
 profile := shop.Profile{
-    Taste:   c.Derive(affinity.DefaultFade.Vector),
+    Taste:   c.Distill(affinity.DefaultFade.Vector),
     Signals: c.Len(),
 }
 

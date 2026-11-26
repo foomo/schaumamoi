@@ -48,7 +48,7 @@ func anyEvents(in ...sesamy.AnyEvent) []sesamy.Event[any] {
 //
 // Two tastes are at work. The persona's decides what the shopper picks; the shop never
 // sees it. Every listing is ranked by the shopper's personalization vector instead, which
-// the affinity corpus emits from the shopper's events so far — so a Journey's first
+// the affinity still distills from the shopper's events so far — so a Journey's first
 // listing, with no events yet, is in catalog order, the section is ranked by three picks,
 // and the closing look at the department by everything the visit has shown.
 //
@@ -72,12 +72,12 @@ func BrowseJourney(p persona.Persona, opts ...wire.Option) wire.Session {
 	return s.session(opts...)
 }
 
-// shopper is one shopper as the shop sees them: the affinity corpus their events go into
+// shopper is one shopper as the shop sees them: the affinity still their events go into
 // as they happen, the envelope of the request in progress — its time moves on with every
 // event — and the visit's events so far, each with when it was sent and the engagement
 // time since the one before.
 type shopper struct {
-	corpus  *affinity.Corpus
+	still   *affinity.Still
 	env     affinity.Envelope
 	events  []sesamy.AnyEvent
 	sent    []time.Time
@@ -87,7 +87,7 @@ type shopper struct {
 // newShopper is a shopper with no history, about to start a visit at the time and with
 // the session id opts resolve to.
 func newShopper(opts ...wire.Option) *shopper {
-	s := &shopper{corpus: affinity.New(nil)}
+	s := &shopper{still: affinity.New(nil)}
 	s.start(wire.NewContext(opts...))
 
 	return s
@@ -100,7 +100,7 @@ func (s *shopper) start(c wire.Context) {
 }
 
 // emit sends events of the visit, one request each: the clock moves on by the time the
-// shopper takes after the previous event, and the event goes into the shopper's corpus
+// shopper takes after the previous event, and the event goes into the shopper's still
 // at that time straight away, so the next listing is ranked with it.
 func (s *shopper) emit(events ...sesamy.AnyEvent) {
 	for _, e := range events {
@@ -111,7 +111,7 @@ func (s *shopper) emit(events ...sesamy.AnyEvent) {
 		}
 
 		s.events, s.sent, s.engaged = append(s.events, e), append(s.sent, s.env.At), append(s.engaged, engaged)
-		s.corpus.Add(s.env, e.AnyEvent())
+		s.still.Feed(s.env, e.AnyEvent())
 	}
 }
 
@@ -128,9 +128,9 @@ func (s *shopper) session(opts ...wire.Option) wire.Session {
 }
 
 // profile is what the shop ranks the next listing with: the personalization vector the
-// corpus emits for the shopper now, and how many events went into it.
+// still distills for the shopper now, and how many events went into it.
 func (s *shopper) profile() shop.Profile {
-	return shop.Profile{Taste: s.corpus.Derive(affinity.DefaultFade.Vector), Signals: s.corpus.Len()}
+	return shop.Profile{Taste: s.still.Distill(affinity.DefaultFade.Vector), Signals: s.still.Len()}
 }
 
 // stop is one listing on the route: the filter as the shop ranked it, and what the
@@ -143,7 +143,7 @@ type stop struct {
 // route is the way every visit browses: the department, the trousers, the dresses, and
 // back to the department narrowed to the persona's occasion. Each listing is ranked by
 // the shopper's vector as it stands when the shopper gets there, and the shopper opens
-// what it chooses from it — which goes into the corpus before the next listing.
+// what it chooses from it — which goes into the still before the next listing.
 func route(p persona.Persona, s *shopper) []stop {
 	out := make([]stop, 0, 4)
 

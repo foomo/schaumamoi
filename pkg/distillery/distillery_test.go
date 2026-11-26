@@ -1,4 +1,4 @@
-package corpus_test
+package distillery_test
 
 import (
 	"math"
@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/foomo/schaumamoi/pkg/affinity"
-	"github.com/foomo/schaumamoi/pkg/corpus"
+	"github.com/foomo/schaumamoi/pkg/distillery"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
@@ -20,32 +20,32 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// The corpus under test is the affinity corpus the shop ranks with (pkg/affinity). The
+// The still under test is the affinity still the shop ranks with (pkg/affinity). The
 // short names below are the tests' own for its parts, so the tests read as they always
-// did: what is admitted, how it is decorated, and what is derived.
+// did: what is kept, how it is infused, and what is distilled.
 type (
-	envelope   = affinity.Envelope
-	decoration = affinity.Decoration
+	envelope = affinity.Envelope
+	infusion = affinity.Infusion
 
-	testEvent     = sesamy.Event[any]
-	testDecorated = affinity.Decorated
-	testDecorator = affinity.Decorator
-	testFilter    = affinity.Filter
-	testConfig    = corpus.Config[envelope, any, decoration]
-	testCorpus    = affinity.Corpus
+	testEvent   = sesamy.Event[any]
+	testInfused = affinity.Infused
+	testInfuser = affinity.Infuser
+	testCut     = affinity.Cut
+	testConfig  = distillery.Config[envelope, any, infusion]
+	testStill   = affinity.Still
 )
 
 var (
-	stampTime          = affinity.StampTime
-	stampSession       = affinity.StampSession
-	addAttractors      = affinity.AddAttractors
-	weighByIntent      = affinity.WeighByIntent
-	affinityDecorators = affinity.Decorators
-	intentWeight       = affinity.Weights
-	choices            = affinity.Choices
-	newAffinityCorpus  = affinity.New
-	flat               = affinity.Flat
-	decayed            = affinity.Decayed
+	stampTime        = affinity.StampTime
+	stampSession     = affinity.StampSession
+	addAttractors    = affinity.AddAttractors
+	weighByIntent    = affinity.WeighByIntent
+	affinityInfusers = affinity.Infusers
+	intentWeight     = affinity.Weights
+	choices          = affinity.Choices
+	newAffinityStill = affinity.New
+	flat             = affinity.Flat
+	decayed          = affinity.Decayed
 )
 
 // itemsParams is the one thing every ecommerce event has in common. Decoding into
@@ -55,7 +55,7 @@ type itemsParams struct {
 	Items []catalog.Item `json:"items"`
 }
 
-func only(names ...sesamy.EventName) testFilter {
+func only(names ...sesamy.EventName) testCut {
 	return func(_ envelope, e testEvent) bool {
 		for _, name := range names {
 			if e.Name == name {
@@ -67,7 +67,7 @@ func only(names ...sesamy.EventName) testFilter {
 	}
 }
 
-// kateJourney is the stream the corpus will actually see: heterogeneous GA4 events
+// kateJourney is the stream the still will actually see: heterogeneous GA4 events
 // type-erased to sesamy.Event[any], as sesamy-go hands them downstream.
 func kateJourney() []testEvent {
 	return shopper.Journey(persona.Kate).Events()
@@ -76,7 +76,7 @@ func kateJourney() []testEvent {
 // nearestIn is the product of one category that ranks first for a taste: how that
 // category's listing would open for it. It ranks with the shop's own scorer, catalog.Score —
 // the taste weighed by the category's weights — through Persona.TopMatch. With listings
-// filtered out and choices weighed as the shop weighs them, a flat affinity is the shop's
+// cut and choices weighed as the shop weighs them, a flat affinity is the shop's
 // profile, so this is exactly the listing the shop would show. Cosine stays for comparing a taste with a persona, where the
 // magnitude must not count; for ranking it disagrees with the shop on near ties — the
 // sequin flares and the velvet palazzo, for Sofia.
@@ -110,12 +110,12 @@ func touchedCategories(t *testing.T, events []testEvent) []string {
 	return out
 }
 
-// assertPerCategory reads a derived taste against the persona that produced the events,
+// assertPerCategory reads a distilled taste against the persona that produced the events,
 // one category at a time, in every category the shopper chose from: there, the product
 // the taste ranks first must be one the persona likes — within persona.GoodEnough of its
 // favourite in that category. Not the favourite itself: the shopper does not always open
-// its favourite, and the corpus can only know what it did open. Categories the shopper
-// was only offered are not asserted — the corpus has nothing of theirs to go on.
+// its favourite, and the still can only know what it did open. Categories the shopper
+// was only offered are not asserted — the still has nothing of theirs to go on.
 func assertPerCategory(t *testing.T, aff personalization.Map, want persona.Persona, events []testEvent) {
 	t.Helper()
 
@@ -130,15 +130,15 @@ func assertPerCategory(t *testing.T, aff personalization.Map, want persona.Perso
 	}
 }
 
-// addPayload is how a routed batch reaches the corpus: its events, with the envelope
+// addPayload is how a routed batch reaches the still: its events, with the envelope
 // fields that differ between batches resolved into an envelope.
-func addPayload(p *testCorpus, payload mpv2.Payload[any]) {
-	p.Add(envelopeOf(payload), payload.Events...)
+func addPayload(p *testStill, payload mpv2.Payload[any]) {
+	p.Feed(envelopeOf(payload), payload.Events...)
 }
 
-// addSession feeds a visit into the corpus as the client sent it: request by request, each
+// addSession feeds a visit into the still as the client sent it: request by request, each
 // with its own envelope.
-func addSession(p *testCorpus, session wire.Session) {
+func addSession(p *testStill, session wire.Session) {
 	for _, hit := range session {
 		addPayload(p, hit)
 	}
@@ -159,8 +159,8 @@ func personalizationGranted(c *mpv2.ConsentData) bool {
 	return c != nil && c.PersonalizationStorage != nil && *c.PersonalizationStorage == mpv2.ConsentGranted
 }
 
-// funnel counts admitted events by name — a domain state that says nothing about taste.
-func funnel(events []testDecorated) map[sesamy.EventName]int {
+// funnel counts kept events by name — a domain state that says nothing about taste.
+func funnel(events []testInfused) map[sesamy.EventName]int {
 	out := map[sesamy.EventName]int{}
 	for _, e := range events {
 		out[e.Event.Name]++
@@ -246,10 +246,10 @@ func TestAffinityRecoversPersona(t *testing.T) {
 		t.Run(who.Name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityCorpus(nil)
-			p.Add(envelope{}, shopper.Journey(who).Events()...)
+			p := newAffinityStill(nil)
+			p.Feed(envelope{}, shopper.Journey(who).Events()...)
 
-			aff := p.Derive(flat)
+			aff := p.Distill(flat)
 			assert.Equal(t, who.Name, nearestPersona(aff, persona.All()).Name)
 
 			own := cosine(aff, who.Affinity)
@@ -266,7 +266,7 @@ func TestAffinityRecoversPersona(t *testing.T) {
 
 // TestAffinityNearestItemIsPurchase measures the other distance, per category: in every
 // category the shopper chose from — dresses, trousers, and one in home decoration — the
-// product the derived taste ranks first is one the persona likes.
+// product the distilled taste ranks first is one the persona likes.
 func TestAffinityNearestItemIsPurchase(t *testing.T) {
 	t.Parallel()
 
@@ -276,39 +276,39 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 
 			events := shopper.Journey(who).Events()
 
-			p := newAffinityCorpus(nil)
-			p.Add(envelope{}, events...)
+			p := newAffinityStill(nil)
+			p.Feed(envelope{}, events...)
 
-			got := p.Derive(flat)
+			got := p.Distill(flat)
 			assertPerCategory(t, got, who, events)
 
 		})
 	}
 }
 
-// TestAddAppliesFilter pins the affinity corpus's positive filter: of a whole journey it
-// admits only the choices — no listing gets in — and those alone say who the shopper is.
-// A filter handed to newAffinityCorpus narrows that further, never widens it.
-func TestAddAppliesFilter(t *testing.T) {
+// TestFeedAppliesCut pins the affinity still's positive cut: of a whole journey it
+// keeps only the choices — no listing gets in — and those alone say who the shopper is.
+// A cut handed to newAffinityStill narrows that further, never widens it.
+func TestFeedAppliesCut(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(nil)
-	p.Add(envelope{}, kateJourney()...)
+	p := newAffinityStill(nil)
+	p.Feed(envelope{}, kateJourney()...)
 
 	assert.Equal(t, 10, p.Len())
 	assert.Equal(t, map[sesamy.EventName]int{
 		sesamy.EventNameSelectItem: 7,
 		sesamy.EventNameViewItem:   2,
 		sesamy.EventNameAddToCart:  1,
-	}, p.Derive(funnel))
-	assert.Equal(t, persona.Kate.Name, nearestPersona(p.Derive(flat), persona.All()).Name)
+	}, p.Distill(funnel))
+	assert.Equal(t, persona.Kate.Name, nearestPersona(p.Distill(flat), persona.All()).Name)
 
-	carts := newAffinityCorpus(only(sesamy.EventNameAddToCart, sesamy.EventNameViewItemList))
-	carts.Add(envelope{}, kateJourney()...)
-	assert.Equal(t, map[sesamy.EventName]int{sesamy.EventNameAddToCart: 1}, carts.Derive(funnel), "an extra filter cannot let listings back in")
+	carts := newAffinityStill(only(sesamy.EventNameAddToCart, sesamy.EventNameViewItemList))
+	carts.Feed(envelope{}, kateJourney()...)
+	assert.Equal(t, map[sesamy.EventName]int{sesamy.EventNameAddToCart: 1}, carts.Distill(funnel), "an extra cut cannot let listings back in")
 }
 
-// choicesIn is what the affinity corpus admits of events: the choices, in order.
+// choicesIn is what the affinity still keeps of events: the choices, in order.
 func choicesIn(events []testEvent) []testEvent {
 	var out []testEvent
 
@@ -321,36 +321,36 @@ func choicesIn(events []testEvent) []testEvent {
 	return out
 }
 
-// TestAddWithoutFilterAdmitsEverything pins the zero-value config: a corpus that
-// only collects must not have to write an admit-everything filter, and must not panic.
-func TestAddWithoutFilterAdmitsEverything(t *testing.T) {
+// TestFeedWithoutCutKeepsEverything pins the zero-value config: a still that
+// only collects must not have to write a keep-everything cut, and must not panic.
+func TestFeedWithoutCutKeepsEverything(t *testing.T) {
 	t.Parallel()
 
 	events := kateJourney()
 
-	p := corpus.New(testConfig{})
-	require.NotPanics(t, func() { p.Add(envelope{}, events...) })
+	p := distillery.New(testConfig{})
+	require.NotPanics(t, func() { p.Feed(envelope{}, events...) })
 
 	assert.Equal(t, len(events), p.Len())
-	assert.Empty(t, p.Derive(flat), "no decorators, no decoration")
+	assert.Empty(t, p.Distill(flat), "no infusers, no infusion")
 }
 
-// TestDecoratorsFoldInOrder uses the fact that the affinity decorators do not commute:
+// TestInfusersFoldInOrder uses the fact that the affinity infusers do not commute:
 // weighting before anything has been collected scales an empty map.
-func TestDecoratorsFoldInOrder(t *testing.T) {
+func TestInfusersFoldInOrder(t *testing.T) {
 	t.Parallel()
 
 	pick := persona.Kate.TopMatch(catalog.All())
 	cart := []testEvent{shop.AddToCart(pick).AnyEvent()}
 
-	derive := func(decorators ...testDecorator) personalization.Map {
-		p := corpus.New(testConfig{Decorators: decorators})
-		p.Add(envelope{}, cart...)
+	distill := func(infusers ...testInfuser) personalization.Map {
+		p := distillery.New(testConfig{Infusers: infusers})
+		p.Feed(envelope{}, cart...)
 
-		return p.Derive(flat)
+		return p.Distill(flat)
 	}
 
-	inOrder, reversed := derive(addAttractors, weighByIntent), derive(weighByIntent, addAttractors)
+	inOrder, reversed := distill(addAttractors, weighByIntent), distill(weighByIntent, addAttractors)
 
 	require.NotEmpty(t, pick.Attractor)
 	for dimension, v := range pick.Attractor {
@@ -359,103 +359,103 @@ func TestDecoratorsFoldInOrder(t *testing.T) {
 	}
 }
 
-// TestDeriveIsRepeatable is the regression. Decoration happens once, on arrival, so
-// deriving state is a pure read: the affinity must not drift with the number of derives,
-// and deriving must not write through into the decorations it was handed.
-func TestDeriveIsRepeatable(t *testing.T) {
+// TestDistillIsRepeatable is the regression. Infusion happens once, on arrival, so
+// distilling state is a pure read: the affinity must not drift with the number of distills,
+// and distilling must not write through into the infusions it was handed.
+func TestDistillIsRepeatable(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(nil)
-	p.Add(envelope{}, kateJourney()...)
+	p := newAffinityStill(nil)
+	p.Feed(envelope{}, kateJourney()...)
 
-	decorations := func(events []testDecorated) []personalization.Map {
+	infusions := func(events []testInfused) []personalization.Map {
 		out := make([]personalization.Map, 0, len(events))
 		for _, e := range events {
-			out = append(out, clone(e.Decoration.Affinity))
+			out = append(out, clone(e.Infusion.Affinity))
 		}
 
 		return out
 	}
 
-	before := p.Derive(decorations)
-	first := p.Derive(flat)
+	before := p.Distill(infusions)
+	first := p.Distill(flat)
 
 	require.NotEmpty(t, first)
 	for i := range 4 {
-		assert.Equal(t, first, p.Derive(flat), "derive %d", i+2)
+		assert.Equal(t, first, p.Distill(flat), "distill %d", i+2)
 	}
-	assert.Equal(t, before, p.Derive(decorations), "deriving modified the corpus")
+	assert.Equal(t, before, p.Distill(infusions), "distilling modified the still")
 }
 
-// TestAddAfterDeriveDoesNotRedecorate is the other half of the regression: a later
-// batch must not drag the decorators back over events that were already folded. Intent scales,
-// so an event decorated twice would carry its weight squared.
-func TestAddAfterDeriveDoesNotRedecorate(t *testing.T) {
+// TestFeedAfterDistillDoesNotReinfuse is the other half of the regression: a later
+// batch must not drag the infusers back over events that were already folded. Intent scales,
+// so an event infused twice would carry its weight squared.
+func TestFeedAfterDistillDoesNotReinfuse(t *testing.T) {
 	t.Parallel()
 
 	first, second := kateJourney(), shopper.BrowseJourney(persona.Lena).Events()
 
-	p := newAffinityCorpus(nil)
-	p.Add(envelope{}, first...)
-	require.NotEmpty(t, p.Derive(flat))
-	p.Add(envelope{}, second...)
+	p := newAffinityStill(nil)
+	p.Feed(envelope{}, first...)
+	require.NotEmpty(t, p.Distill(flat))
+	p.Feed(envelope{}, second...)
 
-	got := p.Derive(func(events []testDecorated) []personalization.Map {
+	got := p.Distill(func(events []testInfused) []personalization.Map {
 		out := make([]personalization.Map, 0, len(events))
 		for _, e := range events {
-			out = append(out, e.Decoration.Affinity)
+			out = append(out, e.Infusion.Affinity)
 		}
 
 		return out
 	})
 
-	// Stated per event against a corpus that saw only that event, so a doubled first
+	// Stated per event against a still that saw only that event, so a doubled first
 	// batch cannot hide behind anything in the second.
 	all := choicesIn(append(append([]testEvent{}, first...), second...))
 	require.Len(t, got, len(all))
 	for i, e := range all {
-		fresh := newAffinityCorpus(nil)
-		fresh.Add(envelope{}, e)
+		fresh := newAffinityStill(nil)
+		fresh.Feed(envelope{}, e)
 
-		assert.Equal(t, fresh.Derive(flat), got[i], "event %d (%s)", i, e.Name)
+		assert.Equal(t, fresh.Distill(flat), got[i], "event %d (%s)", i, e.Name)
 	}
 }
 
-// TestOneCorpusManyQuestions is what moving DomainState off the corpus buys: derivers
+// TestOneStillManyRecipes is what moving Spirit off the still buys: recipes
 // of unrelated types over a single ingest.
-func TestOneCorpusManyQuestions(t *testing.T) {
+func TestOneStillManyRecipes(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(nil)
-	p.Add(envelope{}, kateJourney()...)
+	p := newAffinityStill(nil)
+	p.Feed(envelope{}, kateJourney()...)
 
 	assert.Equal(t, map[sesamy.EventName]int{
 		sesamy.EventNameSelectItem: 7,
 		sesamy.EventNameViewItem:   2,
 		sesamy.EventNameAddToCart:  1,
-	}, p.Derive(funnel))
+	}, p.Distill(funnel))
 
-	assert.Equal(t, persona.Kate.Name, p.Derive(func(events []testDecorated) persona.Persona {
+	assert.Equal(t, persona.Kate.Name, p.Distill(func(events []testInfused) persona.Persona {
 		return nearestPersona(flat(events), persona.All())
 	}).Name)
 }
 
-// TestDeriveIsDeterministic pins the float summation: the same corpus must give a
-// bit-identical affinity every time, and so must a second corpus fed the same stream,
+// TestDistillIsDeterministic pins the float summation: the same still must give a
+// bit-identical affinity every time, and so must a second still fed the same stream,
 // for the reason Map.Score sorts its dimensions.
-func TestDeriveIsDeterministic(t *testing.T) {
+func TestDistillIsDeterministic(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(nil)
-	p.Add(envelope{}, kateJourney()...)
+	p := newAffinityStill(nil)
+	p.Feed(envelope{}, kateJourney()...)
 
-	want := p.Derive(flat)
+	want := p.Distill(flat)
 	for range 8 {
-		assert.Equal(t, want, p.Derive(flat))
+		assert.Equal(t, want, p.Distill(flat))
 
-		again := newAffinityCorpus(nil)
-		again.Add(envelope{}, kateJourney()...)
-		assert.Equal(t, want, again.Derive(flat))
+		again := newAffinityStill(nil)
+		again.Feed(envelope{}, kateJourney()...)
+		assert.Equal(t, want, again.Distill(flat))
 	}
 }
 
@@ -469,18 +469,18 @@ func TestStampTimeReadsEnvelope(t *testing.T) {
 
 	earlier, later := wire.BaseTime.Add(-week), wire.BaseTime
 
-	p := newAffinityCorpus(nil)
+	p := newAffinityStill(nil)
 	visits := []wire.Session{
 		shopper.Journey(persona.Sofia, wire.WithTimestamp(earlier)),
 		shopper.BrowseJourney(persona.Kate, wire.WithTimestamp(later)),
 	}
 	addHistory(p, visits)
-	p.Add(envelope{}, shop.AddToCart(persona.Kate.TopMatch(catalog.All())).AnyEvent())
+	p.Feed(envelope{}, shop.AddToCart(persona.Kate.TopMatch(catalog.All())).AnyEvent())
 
-	stamps := p.Derive(func(events []testDecorated) []time.Time {
+	stamps := p.Distill(func(events []testInfused) []time.Time {
 		out := make([]time.Time, 0, len(events))
 		for _, e := range events {
-			out = append(out, e.Decoration.At)
+			out = append(out, e.Infusion.At)
 		}
 
 		return out
@@ -524,11 +524,11 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityCorpus(nil)
-			p.Add(envelope{At: wire.BaseTime.Add(-tt.age)}, cart)
+			p := newAffinityStill(nil)
+			p.Feed(envelope{At: wire.BaseTime.Add(-tt.age)}, cart)
 
-			full := p.Derive(flat)
-			got := p.Derive(decayed(wire.BaseTime, week))
+			full := p.Distill(flat)
+			got := p.Distill(decayed(wire.BaseTime, week))
 
 			require.NotEmpty(t, full)
 			for dimension, v := range full {
@@ -548,8 +548,8 @@ func eventsOf(history []wire.Session) []testEvent {
 	return out
 }
 
-// addHistory feeds a shopper's visits into the corpus, request by request.
-func addHistory(p *testCorpus, history []wire.Session) {
+// addHistory feeds a shopper's visits into the still, request by request.
+func addHistory(p *testStill, history []wire.Session) {
 	for _, session := range history {
 		addSession(p, session)
 	}
@@ -568,7 +568,7 @@ func drifted(old, recent persona.Persona) []wire.Session {
 }
 
 // TestMonthRecoversPersona is TestAffinityRecoversPersona over a month of visits rather
-// than a single session, derived with decay: a steady taste must still come out as
+// than a single session, distilled with decay: a steady taste must still come out as
 // itself, and read per category as in TestAffinityNearestItemIsPurchase.
 func TestMonthRecoversPersona(t *testing.T) {
 	t.Parallel()
@@ -578,10 +578,10 @@ func TestMonthRecoversPersona(t *testing.T) {
 			t.Parallel()
 
 			history := shopper.History(shopper.Month(who))
-			p := newAffinityCorpus(nil)
+			p := newAffinityStill(nil)
 			addHistory(p, history)
 
-			got := p.Derive(decayed(wire.BaseTime, week))
+			got := p.Distill(decayed(wire.BaseTime, week))
 			assert.Equal(t, who.Name, nearestPersona(got, persona.All()).Name)
 			assertPerCategory(t, got, who, eventsOf(history))
 		})
@@ -605,10 +605,10 @@ func TestDecayFollowsRecentTaste(t *testing.T) {
 				t.Parallel()
 
 				history := drifted(old, recent)
-				p := newAffinityCorpus(nil)
+				p := newAffinityStill(nil)
 				addHistory(p, history)
 
-				got := p.Derive(decayed(wire.BaseTime, week))
+				got := p.Distill(decayed(wire.BaseTime, week))
 				assert.Equal(t, recent.Name, nearestPersona(got, persona.All()).Name)
 				assertPerCategory(t, got, recent, eventsOf(history[3:])) // the recent half
 			})
@@ -637,48 +637,48 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			p := newAffinityCorpus(nil)
+			p := newAffinityStill(nil)
 			addHistory(p, drifted(tt.old, tt.recent))
 
-			assert.Equal(t, tt.flat.Name, nearestPersona(p.Derive(flat), persona.All()).Name)
+			assert.Equal(t, tt.flat.Name, nearestPersona(p.Distill(flat), persona.All()).Name)
 		})
 	}
 }
 
 // TestDecayIsRepeatable keeps decay a pure read: the same now gives a bit-identical
-// state, and moving now forward only ever fades the corpus, never rewrites it.
+// state, and moving now forward only ever fades the still, never rewrites it.
 func TestDecayIsRepeatable(t *testing.T) {
 	t.Parallel()
 
 	visit := shopper.Journey(persona.Kate, wire.WithTimestamp(wire.BaseTime))
 	end := time.UnixMicro(visit[len(visit)-1].TimestampMicros).UTC() // every event is in the past
 
-	p := newAffinityCorpus(nil)
+	p := newAffinityStill(nil)
 	addSession(p, visit)
 
-	now := p.Derive(decayed(end, week))
+	now := p.Distill(decayed(end, week))
 	for range 4 {
-		assert.Equal(t, now, p.Derive(decayed(end, week)))
+		assert.Equal(t, now, p.Distill(decayed(end, week)))
 	}
 
-	later := p.Derive(decayed(end.Add(week), week))
+	later := p.Distill(decayed(end.Add(week), week))
 	for dimension, v := range now {
 		assert.InDelta(t, float64(v/2), float64(later[dimension]), 1e-6, dimension)
 	}
 
-	assert.Equal(t, now, p.Derive(decayed(end, week)), "deriving later modified the corpus")
+	assert.Equal(t, now, p.Distill(decayed(end, week)), "distilling later modified the still")
 }
 
-// TestAddWithoutTimeDecaysAway pins what Add documents: an event with no recording time
-// is infinitely old to a time-aware deriver, and contributes nothing once decayed.
-func TestAddWithoutTimeDecaysAway(t *testing.T) {
+// TestFeedWithoutTimeDecaysAway pins what Feed documents: an event with no recording time
+// is infinitely old to a time-aware recipe, and contributes nothing once decayed.
+func TestFeedWithoutTimeDecaysAway(t *testing.T) {
 	t.Parallel()
 
-	p := newAffinityCorpus(nil)
-	p.Add(envelope{}, kateJourney()...)
+	p := newAffinityStill(nil)
+	p.Feed(envelope{}, kateJourney()...)
 
-	require.NotEmpty(t, p.Derive(flat))
-	for dimension, v := range p.Derive(decayed(wire.BaseTime, week)) {
+	require.NotEmpty(t, p.Distill(flat))
+	for dimension, v := range p.Distill(decayed(wire.BaseTime, week)) {
 		assert.Zero(t, v, dimension)
 	}
 }
@@ -686,7 +686,7 @@ func TestAddWithoutTimeDecaysAway(t *testing.T) {
 // --- taste phases -----------------------------------------------------------------
 //
 // A phase is a window of a history in which the shopper's taste holds steady. The
-// session decorator is what makes it identifiable: it lets the deriver see where one
+// session infuser is what makes it identifiable: it lets the recipe see where one
 // visit ends and the next begins, and a visit is the unit taste is judged in — a single
 // event is too small, a whole month too large.
 
@@ -707,19 +707,19 @@ type window struct {
 	Affinity personalization.Map
 }
 
-// sessionWindows groups the corpus into one window per session, in order. Events arrive in
+// sessionWindows groups the still into one window per session, in order. Events arrive in
 // order and a session's events arrive together, so a change of session opens a new window.
-func sessionWindows(events []testDecorated) []window {
+func sessionWindows(events []testInfused) []window {
 	var out []window
 
 	for i, e := range events {
-		if i == 0 || e.Decoration.Session != events[i-1].Decoration.Session {
-			out = append(out, window{From: e.Decoration.At, Sessions: []string{e.Decoration.Session}, Affinity: personalization.Map{}})
+		if i == 0 || e.Infusion.Session != events[i-1].Infusion.Session {
+			out = append(out, window{From: e.Infusion.At, Sessions: []string{e.Infusion.Session}, Affinity: personalization.Map{}})
 		}
 
 		v := &out[len(out)-1]
-		v.To = e.Decoration.At
-		for dimension, w := range e.Decoration.Affinity {
+		v.To = e.Infusion.At
+		for dimension, w := range e.Infusion.Affinity {
 			v.Affinity[dimension] += w
 		}
 	}
@@ -733,8 +733,8 @@ func sessionWindows(events []testDecorated) []window {
 //
 // Phases are contiguous. A shopper who drifts away and comes back gets three windows,
 // not two — the return is news about when the taste held, which a merge would lose.
-func phases(threshold personalization.Value) corpus.StateDeriver[any, decoration, []window] {
-	return func(events []testDecorated) []window {
+func phases(threshold personalization.Value) distillery.Recipe[any, infusion, []window] {
+	return func(events []testInfused) []window {
 		var out []window
 
 		for _, v := range sessionWindows(events) {
@@ -777,7 +777,7 @@ func TestStampSessionReadsEnvelope(t *testing.T) {
 
 	history := shopper.History(shopper.Month(persona.Kate))
 
-	p := newAffinityCorpus(nil)
+	p := newAffinityStill(nil)
 	addHistory(p, history)
 
 	want := make([]string, 0, len(history))
@@ -785,7 +785,7 @@ func TestStampSessionReadsEnvelope(t *testing.T) {
 		want = append(want, session.ID())
 	}
 
-	got := p.Derive(func(events []testDecorated) []string {
+	got := p.Distill(func(events []testInfused) []string {
 		var out []string
 		for _, v := range sessionWindows(events) {
 			out = append(out, v.Sessions...)
@@ -795,9 +795,9 @@ func TestStampSessionReadsEnvelope(t *testing.T) {
 	})
 	assert.Equal(t, want, got)
 
-	bare := newAffinityCorpus(nil)
-	bare.Add(envelope{}, kateJourney()...)
-	assert.Equal(t, []string{""}, bare.Derive(func(events []testDecorated) []string {
+	bare := newAffinityStill(nil)
+	bare.Feed(envelope{}, kateJourney()...)
+	assert.Equal(t, []string{""}, bare.Distill(func(events []testInfused) []string {
 		return sessionWindows(events)[0].Sessions
 	}))
 }
@@ -812,10 +812,10 @@ func TestSteadyMonthIsOnePhase(t *testing.T) {
 			t.Parallel()
 
 			history := shopper.History(shopper.Month(who))
-			p := newAffinityCorpus(nil)
+			p := newAffinityStill(nil)
 			addHistory(p, history)
 
-			got := p.Derive(phases(phaseThreshold))
+			got := p.Distill(phases(phaseThreshold))
 			require.Len(t, got, 1)
 			assert.Equal(t, []string{who.Name}, phasePersonas(got))
 			assertDuring(t, got[0].From, history[0], "the phase starts in the first visit")
@@ -842,10 +842,10 @@ func TestDriftSplitsIntoPhases(t *testing.T) {
 				t.Parallel()
 
 				history := drifted(old, recent)
-				p := newAffinityCorpus(nil)
+				p := newAffinityStill(nil)
 				addHistory(p, history)
 
-				got := p.Derive(phases(phaseThreshold))
+				got := p.Distill(phases(phaseThreshold))
 				require.Len(t, got, 2)
 				assert.Equal(t, []string{old.Name, recent.Name}, phasePersonas(got))
 
@@ -868,36 +868,36 @@ func TestReturningTasteIsANewPhase(t *testing.T) {
 	visitsOf[2].Persona = persona.Sofia
 	visitsOf[3].Persona = persona.Sofia
 
-	p := newAffinityCorpus(nil)
+	p := newAffinityStill(nil)
 	addHistory(p, shopper.History(visitsOf))
 
-	got := p.Derive(phases(phaseThreshold))
+	got := p.Distill(phases(phaseThreshold))
 	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(got))
 }
 
-// TestPhasesNeedSessions shows the decorator doing the work: the same drifted month
-// through decorators without it is one undivided visit, so there is nothing to split.
+// TestPhasesNeedSessions shows the infuser doing the work: the same drifted month
+// through infusers without it is one undivided visit, so there is nothing to split.
 func TestPhasesNeedSessions(t *testing.T) {
 	t.Parallel()
 
-	p := corpus.New(testConfig{Decorators: []testDecorator{stampTime, addAttractors, weighByIntent}})
+	p := distillery.New(testConfig{Infusers: []testInfuser{stampTime, addAttractors, weighByIntent}})
 	addHistory(p, drifted(persona.Sofia, persona.Kate))
 
-	assert.Len(t, p.Derive(phases(phaseThreshold)), 1)
+	assert.Len(t, p.Distill(phases(phaseThreshold)), 1)
 }
 
 // consented keeps only events from batches whose shopper consented to personalization.
-// It is a filter by where an event came from rather than by what it is, which only the
+// It is a cut by where an event came from rather than by what it is, which only the
 // envelope can answer.
 func consented(env envelope, _ testEvent) bool {
 	return env.Personalization
 }
 
-// TestFilterSeesEnvelope is why the filter gets the envelope too. Sofia shops twice
-// without consent in the middle of Kate's month; a personalization corpus must never
-// see those visits, so the month reads as Kate's in one unbroken phase — where, admitted,
+// TestCutSeesEnvelope is why the cut gets the envelope too. Sofia shops twice
+// without consent in the middle of Kate's month; a personalization still must never
+// see those visits, so the month reads as Kate's in one unbroken phase — where, kept,
 // the same visits would split it.
-func TestFilterSeesEnvelope(t *testing.T) {
+func TestCutSeesEnvelope(t *testing.T) {
 	t.Parallel()
 
 	visitsOf := shopper.Month(persona.Kate)
@@ -909,20 +909,20 @@ func TestFilterSeesEnvelope(t *testing.T) {
 		history[i] = history[i].WithConsent(wire.ConsentDenied())
 	}
 
-	all, filtered := newAffinityCorpus(nil), newAffinityCorpus(consented)
+	all, consentCut := newAffinityStill(nil), newAffinityStill(consented)
 	addHistory(all, history)
-	addHistory(filtered, history)
+	addHistory(consentCut, history)
 
-	admitted := 0
+	kept := 0
 	for i, session := range history {
 		if i != 2 && i != 3 {
-			admitted += len(choicesIn(session.Events()))
+			kept += len(choicesIn(session.Events()))
 		}
 	}
 
-	assert.Equal(t, admitted, filtered.Len())
-	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(all.Derive(phases(phaseThreshold))))
-	assert.Equal(t, []string{"Kate"}, phasePersonas(filtered.Derive(phases(phaseThreshold))))
+	assert.Equal(t, kept, consentCut.Len())
+	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(all.Distill(phases(phaseThreshold))))
+	assert.Equal(t, []string{"Kate"}, phasePersonas(consentCut.Distill(phases(phaseThreshold))))
 }
 
 func clone(m personalization.Map) personalization.Map {

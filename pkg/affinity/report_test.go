@@ -38,20 +38,20 @@ func history(order ...persona.Persona) ([]shopper.Visit, []wire.Session) {
 	return visits, shopper.History(visits)
 }
 
-// add feeds a visit into the corpus request by request, each under its own envelope.
-func add(c *affinity.Corpus, session wire.Session) {
+// add feeds a visit into the still request by request, each under its own envelope.
+func add(c *affinity.Still, session wire.Session) {
 	for _, hit := range session {
-		c.Add(affinity.Envelope{At: time.UnixMicro(hit.TimestampMicros).UTC(), Session: hit.SessionID}, hit.Events...)
+		c.Feed(affinity.Envelope{At: time.UnixMicro(hit.TimestampMicros).UTC(), Session: hit.SessionID}, hit.Events...)
 	}
 }
 
-// traced is a history run through an affinity corpus and traced choice by choice: every
-// admitted event, which visit it belongs to, and the fade's step after it.
+// traced is a history run through an affinity still and traced choice by choice: every
+// kept event, which visit it belongs to, and the fade's step after it.
 type traced struct {
 	visits  []shopper.Visit
 	visitOf []int
 	steps   []affinity.Step
-	events  []affinity.Decorated
+	events  []affinity.Infused
 }
 
 func trace(t *testing.T, order ...persona.Persona) traced {
@@ -70,7 +70,7 @@ func trace(t *testing.T, order ...persona.Persona) traced {
 		}
 	}
 
-	out.events = c.Derive(func(events []affinity.Decorated) []affinity.Decorated { return events })
+	out.events = c.Distill(func(events []affinity.Infused) []affinity.Infused { return events })
 	out.steps = affinity.DefaultFade.Trace(out.events)
 	require.Len(t, out.steps, len(out.events))
 
@@ -177,7 +177,7 @@ func (tr traced) collapses() int {
 	return n
 }
 
-// comparison is how three readings of the same corpus read each visit: summed flat,
+// comparison is how three readings of the same still read each visit: summed flat,
 // decayed by time, and faded per event.
 type comparison struct {
 	Visit   int
@@ -201,9 +201,9 @@ func compare(t *testing.T, order ...persona.Persona) []comparison {
 		out = append(out, comparison{
 			Visit:   v + 1,
 			Shopper: visits[v].Persona,
-			Flat:    nearestPersona(c.Derive(affinity.Flat)),
-			Decayed: nearestPersona(c.Derive(affinity.Decayed(at, 7*24*time.Hour))),
-			Faded:   nearestPersona(c.Derive(affinity.DefaultFade.Vector)),
+			Flat:    nearestPersona(c.Distill(affinity.Flat)),
+			Decayed: nearestPersona(c.Distill(affinity.Decayed(at, 7*24*time.Hour))),
+			Faded:   nearestPersona(c.Distill(affinity.DefaultFade.Vector)),
 		})
 	}
 

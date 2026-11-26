@@ -14,11 +14,11 @@ const (
 	cozy    personalization.Dimension = "cozy"
 )
 
-// events builds decorated events from their contributions, in order.
-func events(contributions ...personalization.Map) []affinity.Decorated {
-	out := make([]affinity.Decorated, 0, len(contributions))
+// events builds infused events from their contributions, in order.
+func events(contributions ...personalization.Map) []affinity.Infused {
+	out := make([]affinity.Infused, 0, len(contributions))
 	for _, c := range contributions {
-		out = append(out, affinity.Decorated{Decoration: affinity.Decoration{Affinity: c}})
+		out = append(out, affinity.Infused{Infusion: affinity.Infusion{Affinity: c}})
 	}
 
 	return out

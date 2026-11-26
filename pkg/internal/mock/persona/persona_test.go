@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestPersonaTopMatch is what keeps the corpus worth generating: four different tastes
+// TestPersonaTopMatch is what keeps the generated traffic worth having: four different tastes
 // must reach four different products. Kate and Mira both dress for business, so occasion
 // alone must not decide the outcome; and the categories compete, each scored with its own
 // weights, so three of the four end up in trousers — Kate because the trouser weights

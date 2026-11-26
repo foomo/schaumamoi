@@ -1,7 +1,7 @@
 # The vector
 
-The vector the shop ranks with is `affinity.Fade.Vector`, derived from the shopper's
-choices (selections, views and carts; listings never enter the corpus). Recency is
+The vector the shop ranks with is `affinity.Fade.Vector`, distilled from the shopper's
+choices (selections, views and carts; listings never get past the cut). Recency is
 counted in events, not time: a shopper who comes back after three weeks is not a
 stranger. Three rules, applied in event order:
 
@@ -16,7 +16,7 @@ stranger. Three rules, applied in event order:
 `TestIntentPicksUpQuickly` checks this on long histories (a visit every two days, the
 intent changing every six visits, every direction of change between the personas):
 
-- **Strong change** to a taste that doesn't overlap the old one: the corpus reads it on
+- **Strong change** to a taste that doesn't overlap the old one: the still reads it on
   the first visit, and the shop serves it by the second.
 - **Gentle change** between overlapping tastes (Mira and Lena are both minimal and
   modern): the vector only fades into it, within three or four visits.

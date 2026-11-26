@@ -3,7 +3,7 @@
 The tests run against a shop: `pkg/internal/mock` generates deterministic GA4 traffic
 from a shop with two departments, women's fashion and home decoration. Personas with a
 hidden taste browse it, open and buy what they like, request by request, while the shop
-ranks every listing with the personalization vector the affinity corpus emits from what
+ranks every listing with the personalization vector the affinity still distills from what
 they did.
 
 It is internal: test fixtures for this module, free to change, not an API. But it is
@@ -35,8 +35,8 @@ mock     → all of them: the fixtures
 
 The imports carry the shop's one rule: **the shop never sees a
 persona.** `shop` imports the catalog and nothing that knows a shopper's taste. It
-ranks every listing by a `shop.Profile`, the vector an affinity corpus
-(`pkg/affinity`) emits from the shopper's events so far. Only `shopper` brings a
+ranks every listing by a `shop.Profile`, the vector an affinity still
+(`pkg/affinity`) distills from the shopper's events so far. Only `shopper` brings a
 persona and the shop together. The persona decides what gets picked, and the shop has
 to learn it from the picks.
 
@@ -44,6 +44,7 @@ to learn it from the picks.
 
 ```go
 import (
+    "github.com/foomo/schaumamoi/pkg/affinity"
     "github.com/foomo/schaumamoi/pkg/internal/mock/persona"
     "github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 )
@@ -51,5 +52,6 @@ import (
 visit := shopper.Journey(persona.Sofia)              // wire.Session: one request per event
 month := shopper.History(shopper.Month(persona.Kate)) // []wire.Session, 7 visits
 
-corpus.Add(envelope, visit.Events()...)
+still := affinity.New(nil)                          // the shopper's still
+still.Feed(envelope, visit.Events()...)
 ```

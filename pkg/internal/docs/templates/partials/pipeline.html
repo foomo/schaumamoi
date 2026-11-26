@@ -1,8 +1,8 @@
 {{define "pipeline"}}
-<h2 id="pipeline">How the corpus works</h2>
-<p class="note">The corpus is set up once, with a filter and a chain of decorators, and then only ever does two things:
-<code>Add</code> a batch, which filters and decorates each event exactly once as it arrives, and <code>Derive</code>, which hands
-the decorated events to a deriver and returns whatever state it builds — a pure read, as often as you like. The decorators
+<h2 id="pipeline">How the still works</h2>
+<p class="note">A still is set up once, with a cut and a chain of infusers, and then only ever does two things:
+<code>Feed</code> it a batch, which cuts and infuses each event exactly once as it arrives, and <code>Distill</code> it with a
+recipe, which hands the infused events to the recipe and returns whatever spirit it makes — a pure read, as often as you like. The infusers
 below are read off the chain the tests use, in order.</p>
 <div class="flow">
   <div class="stage">
@@ -12,40 +12,40 @@ below are read off the chain the tests use, in order.</p>
   </div>
   <div class="arrow">→</div>
   <div class="stage">
-    <h4>2 · Filter</h4>
-    <p><code>Config.Filter</code> admits or drops each event. It sees the envelope, so it can drop by where an event came from as
+    <h4>2 · Cut</h4>
+    <p><code>Config.Cut</code> keeps or cuts each event. It sees the envelope, so it can cut by where an event came from as
     well as by what it is.</p>
-    <p class="meta">affinity corpus: admits selections, views and carts — nothing else, no listings · consent corpus: those, and only from batches with personalization consent</p>
+    <p class="meta">affinity still: keeps selections, views and carts — nothing else, no listings · consent still: those, and only from batches with personalization consent</p>
   </div>
   <div class="arrow">→</div>
   <div class="stage wide">
-    <h4>3 · Decorators, in order, once per event</h4>
-    <ol>{{range .Decorators}}<li><code>{{.Name}}</code> — {{.Doc}}</li>{{end}}</ol>
+    <h4>3 · Infusers, in order, once per event</h4>
+    <ol>{{range .Infusers}}<li><code>{{.Name}}</code> — {{.Doc}}</li>{{end}}</ol>
     <p class="meta">each starts from what the one before returned; the envelope is dropped after this step</p>
   </div>
   <div class="arrow">→</div>
   <div class="stage">
-    <h4>4 · The corpus</h4>
-    <p>Admitted events with their decoration, in arrival order: <code>DecoratedEvent{Event, Decoration}</code>, where the
-    decoration is <code>At · Session · Affinity</code>. Never rewritten.</p>
+    <h4>4 · The still</h4>
+    <p>Kept events with their infusion, in arrival order: <code>Infused{Event, Infusion}</code>, where the
+    infusion is <code>At · Session · Affinity</code>. Never rewritten.</p>
   </div>
   <div class="arrow">→</div>
   <div class="stage">
-    <h4>5 · Derivers</h4>
-    <ul>{{range .Derivers}}<li><code>{{.Name}}</code> — {{.Doc}}</li>{{end}}</ul>
+    <h4>5 · Recipes</h4>
+    <ul>{{range .Recipes}}<li><code>{{.Name}}</code> — {{.Doc}}</li>{{end}}</ul>
     <p class="meta">anything relative to now, like decay, happens here and nowhere earlier</p>
   </div>
 </div>
 
 <h3 style="margin-top:20px">One visit, request by request</h3>
-<p class="note">{{.Batch}}, run through the chain above one decorator at a time. Each column is what that decorator made
+<p class="note">{{.Batch}}, run through the chain above one infuser at a time. Each column is what that infuser made
 of the event: the envelope stamped on, the taste its items carry — one Map, dresses, trousers and lamps alike — and
 finally the weight it is scaled by: a selection in full, the cart three times over. Listings never get that far: the
-affinity corpus filters for the choices it learns from, and drops everything else at the door.</p>
+affinity still keeps only the choices it learns from, and cuts everything else at the door.</p>
 <p class="meta">first request: At {{date .Envelope.At}} · Session <code>{{.Envelope.Session}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
 <div class="scroll">
 <table class="data trace">
-  <thead><tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity filter</th><th>consent filter</th>{{range .Decorators}}<th><code>{{.Name}}</code></th>{{end}}</tr></thead>
+  <thead><tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity cut</th><th>consent cut</th>{{range .Infusers}}<th><code>{{.Name}}</code></th>{{end}}</tr></thead>
   <tbody>
   {{range .Trace}}
   <tr>
@@ -53,9 +53,9 @@ affinity corpus filters for the choices it learns from, and drops everything els
     <td><code>{{.Event}}</code></td>
     <td>{{.Subject}}</td>
     <td>{{.Items}}</td>
-    <td>{{if .Admitted}}admit{{else}}<span class="muted">drop</span>{{end}}</td>
-    <td>{{if .Consent}}admit{{else}}drop{{end}}</td>
-    {{if .Admitted}}{{range .Steps}}<td>{{.Summary}}</td>{{end}}{{else}}<td colspan="{{len $.Decorators}}" class="muted">not admitted — never decorated, never stored</td>{{end}}
+    <td>{{if .Kept}}keep{{else}}<span class="muted">cut</span>{{end}}</td>
+    <td>{{if .Consent}}keep{{else}}cut{{end}}</td>
+    {{if .Kept}}{{range .Steps}}<td>{{.Summary}}</td>{{end}}{{else}}<td colspan="{{len $.Infusers}}" class="muted">not kept — never infused, never stored</td>{{end}}
   </tr>
   {{end}}
 </tbody>

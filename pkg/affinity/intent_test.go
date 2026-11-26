@@ -51,11 +51,11 @@ type intentReading struct {
 	Persona persona.Persona
 	Landing bool // the visit's first listing opens on something the intent likes
 	Closing bool // so does its closing look at the department
-	Vector  bool // after the visit, the emitted vector reads as the intent's who
+	Vector  bool // after the visit, the distilled vector reads as the intent's persona
 }
 
 // readIntents runs a history with the given order of intents (see history) through the
-// shop and the shop's own affinity corpus, and reads every visit against the persona that
+// shop and the shop's own affinity still, and reads every visit against the persona that
 // made it.
 func readIntents(t *testing.T, order []persona.Persona) []intentReading {
 	t.Helper()
@@ -75,7 +75,7 @@ func readIntents(t *testing.T, order []persona.Persona) []intentReading {
 			Persona: want,
 			Landing: want.Likes(lists[0].Items[0], lists[0].Items),
 			Closing: want.Likes(lists[4].Items[0], lists[4].Items),
-			Vector:  nearestPersona(c.Derive(affinity.DefaultFade.Vector)).Name == want.Name,
+			Vector:  nearestPersona(c.Distill(affinity.DefaultFade.Vector)).Name == want.Name,
 		})
 	}
 

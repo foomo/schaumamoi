@@ -3,7 +3,7 @@
 `pkg/internal/mock/shopper` takes a [persona](./personas) through [the shop](./shop):
 the only package that knows both. The persona picks; the shop ranks every listing with
 the vector the shopper's events add up to at that moment. Each event goes into the
-shopper's affinity corpus (`pkg/affinity`) as it happens, so the next listing is
+shopper's affinity still (`pkg/affinity`) as it happens, so the next listing is
 already ranked with it. The [shoppers report](/reports/shoppers) shows every journey
 step by step, every month, and the shop's final rankings.
 
@@ -37,8 +37,8 @@ is ranked with one more pick. Every visit closes back on the top-level departmen
 ranked by all the visit has shown, and ends on the listing of all products, without
 another click: the shop's whole ranking for this shopper, across both departments. Read
 per category, in every category the shopper chose from, that category's first product
-is one the persona likes. A test replays each journey's own events into a fresh corpus
-and checks every listing's order against the vector it emits.
+is one the persona likes. A test replays each journey's own events into a fresh still
+and checks every listing's order against the vector it distills.
 
 Nothing is hardcoded per persona: the occasion comes from the persona's strongest
 occasion dimension and the product from its highest affinity score. Change a persona's
@@ -70,7 +70,7 @@ shopper.History(shopper.Month(persona.Kate))  // []wire.Session, 7 visits
 ```
 
 `Month` spans the four weeks up to `wire.BaseTime`, mostly browsing, converting twice.
-The shopper's corpus carries over from visit to visit, the way a shop recognises a
+The shopper's still carries over from visit to visit, the way a shop recognises a
 returning client. The persona is set per `shopper.Visit`, so the intent can change
 within one history: overwrite the persona of some visits and the shopper wants
 something else from then on. That is what [The vector](../vector) is tested with.

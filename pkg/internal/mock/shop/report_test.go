@@ -47,9 +47,9 @@ func TestReport(t *testing.T) {
 
 	for _, p := range persona.All() {
 		c := affinity.New(nil)
-		c.Add(affinity.Envelope{}, shopper.Journey(p).Events()...)
+		c.Feed(affinity.Envelope{}, shopper.Journey(p).Events()...)
 
-		f := shop.CategoryFilter.Personalize(shop.Profile{Taste: c.Derive(affinity.DefaultFade.Vector), Signals: c.Len()})
+		f := shop.CategoryFilter.Personalize(shop.Profile{Taste: c.Distill(affinity.DefaultFade.Vector), Signals: c.Len()})
 		after = append(after, learned{Who: p, Signals: c.Len(), Items: f.Apply(catalog.All())})
 	}
 

@@ -13,7 +13,7 @@
 //     and the GA4 events it reports. The shop never sees a persona, and it does not
 //     import the persona package.
 //   - shopper: a persona going through the shop: journeys and histories, with every
-//     event fed into an affinity corpus whose vector ranks the next listing.
+//     event fed into an affinity still whose vector ranks the next listing.
 //   - wire: the Measurement Protocol envelope, and a visit as requests on the wire.
 //
 // This package holds what is built from all of them: the wire-format fixtures in

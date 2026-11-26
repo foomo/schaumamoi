@@ -7,7 +7,7 @@ tests generate.
 ## Reports from the tests
 
 Each package's `TestReport` computes its page from the real code (the shop's traffic,
-the corpus's readings, the vector's fading) and hands the data to `pkg/internal/docs`.
+what the distillery distills, the vector's fading) and hands the data to `pkg/internal/docs`.
 That package renders the page's template (`templates/<name>.html`, wrapped in
 `templates/page.md`) into `docs/reports/<name>.md`, and writes the product and persona
 images next to them, to `docs/reports/images`.
@@ -18,7 +18,7 @@ images next to them, to `docs/reports/images`.
 | [The personas](/reports/personas) | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
 | [The shop](/reports/shop) | every listing as a new shopper sees it, and ranked by what one visit taught the shop |
 | [The shoppers](/reports/shoppers) | journeys step by step, months of visits, and the shop's final rankings |
-| [The corpus](/reports/corpus) | how the corpus works, and what it reads back: sessions, months, drift, detour, consent |
+| [The distillery](/reports/distillery) | how a still works, and what it distills: sessions, months, drift, detour, consent |
 | [The vector](/reports/affinity) | how the personalization vector fades and follows a changing intent (visit by visit, as `TestIntentPicksUpQuickly` checks it), against a flat sum and a decay by time |
 
 The generated pages are git-ignored. They are test output, deterministic but rebuilt

@@ -17,7 +17,7 @@ const (
 	SortPriceDesc = "price_desc"
 
 	// SortAffinity ranks by how well each item matches the shopper's vector, as the
-	// affinity corpus emits it into Filter.Profile. A neutral one scores everything the
+	// affinity still distills it into Filter.Profile. A neutral one scores everything the
 	// same, which leaves the catalog order.
 	SortAffinity = "affinity"
 )
@@ -43,7 +43,7 @@ type Filter struct {
 }
 
 // Apply returns the subset of items the filter selects, in the filter's sort order.
-// Listings are always derived through this, never hand-picked, so a fixture cannot
+// Listings are always produced through this, never hand-picked, so a fixture cannot
 // report items that contradict its own facets.
 func (f Filter) Apply(items []catalog.Item) []catalog.Item {
 	out := make([]catalog.Item, 0, len(items))
