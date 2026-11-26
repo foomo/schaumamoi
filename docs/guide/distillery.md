@@ -91,7 +91,7 @@ DrawOff: func(env affinity.Envelope) affinity.Rule {
 
     return r.Any(
         r.KeepLast(affinity.DefaultKeep),
-        r.All(browsing, r.OlderThan(env.At, 14*24*time.Hour)),
+        r.All(browsing, r.OlderThan(env.Stamped().At, 14*24*time.Hour)),
     )
 },
 ```
@@ -131,6 +131,12 @@ how far their visits get) go under `stills/`, next to `affinity`.
 `pkg/distillery/stills/affinity` is the still the shop uses: a fixed setup on top of
 `pkg/distillery`.
 
+- **Envelope:** the sesamy-go envelope itself. `affinity.Envelope` is `mpv2.Payload[any]`
+  as a type of its own, so a payload off the stream converts for free,
+  `still.Feed(affinity.Envelope(payload), payload.Events...)`, and nothing in it is lost.
+  It adds the two readings the still needs: `Stamped()` (`timestamp_micros` and
+  `session_id`) and `Personalization()` (whether the consent grants personalization
+  storage).
 - **Cut:** it keeps only a shopper's choices (`select_item`, `view_item`,
   `add_to_cart`), never listings. Listings are what the shop offered, not what the
   shopper chose.

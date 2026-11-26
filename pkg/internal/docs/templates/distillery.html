@@ -74,7 +74,7 @@ every category the recent half chose from. Phases should recover both, split whe
 
 <h2 id="drawoff">Drawing off</h2>
 <p class="note">Four of the drifts above, fed into two stills: one holds everything, the other has a standing draw-off,
-<code>affinity.Rules.OlderThan(env.At, {{.DrawOffAge}} days)</code>, run after every feed against the time of the batch. By the
+<code>affinity.Rules.OlderThan(env.Stamped().At, {{.DrawOffAge}} days)</code>, run after every feed against the time of the batch. By the
 end of the month the old taste has been drawn off: summed flat, the still that holds everything misreads some of them as
 the old shopper (red), the bounded one reads every one as the recent shopper, and only the recent phase is left.</p>
 <div class="scroll">

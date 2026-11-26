@@ -62,7 +62,7 @@ output included:
 still := affinity.New(nil)
 for _, visit := range month {
     for _, request := range visit {
-        still.Feed(affinity.Envelope{At: …, Session: request.SessionID}, request.Events...)
+        still.Feed(affinity.Envelope(request), request.Events...) // a sesamy-go payload, as it comes
     }
 }
 

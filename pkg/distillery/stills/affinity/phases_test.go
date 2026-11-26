@@ -130,7 +130,7 @@ func TestPhasesNeedSessions(t *testing.T) {
 	t.Parallel()
 
 	timeOnly := func(env affinity.Envelope, _ sesamy.Event[any], d affinity.Infusion) affinity.Infusion {
-		d.At = env.At
+		d.At = env.Stamped().At
 
 		return d
 	}
@@ -141,7 +141,7 @@ func TestPhasesNeedSessions(t *testing.T) {
 	})
 	for _, session := range drifted(persona.Sofia, persona.Kate) {
 		for _, hit := range session {
-			c.Feed(affinity.Envelope{At: time.UnixMicro(hit.TimestampMicros).UTC(), Session: hit.SessionID}, hit.Events...)
+			c.Feed(affinity.Envelope(hit), hit.Events...)
 		}
 	}
 

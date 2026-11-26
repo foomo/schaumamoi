@@ -53,6 +53,8 @@ import (
 visit := shopper.Journey(persona.Sofia)              // wire.Session: one request per event
 month := shopper.History(shopper.Month(persona.Kate)) // []wire.Session, 7 visits
 
-still := affinity.New(nil)                          // the shopper's still
-still.Feed(envelope, visit.Events()...)
+still := affinity.New(nil) // the shopper's still
+for _, request := range visit {
+    still.Feed(affinity.Envelope(request), request.Events...) // each request as sent
+}
 ```

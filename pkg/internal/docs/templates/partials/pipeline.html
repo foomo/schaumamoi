@@ -49,7 +49,7 @@ below are read off the chain the tests use, in order.</p>
 of the event: the envelope stamped on, the taste its items carry — one Map, dresses, trousers and lamps alike — and
 finally the weight it is scaled by: a selection in full, the cart three times over. Listings never get that far: the
 affinity still keeps only the choices it learns from, and cuts everything else at the door.</p>
-<p class="meta">first request: At {{date .Envelope.At}} · Session <code>{{.Envelope.Session}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
+<p class="meta">first request: At {{date .Envelope.Stamped.At}} · Session <code>{{.Envelope.SessionID}}</code> · personalization consent {{if .Envelope.Personalization}}granted{{else}}not granted{{end}}</p>
 <div class="scroll">
 <table class="data trace">
   <thead><tr><th>#</th><th>event</th><th>list / item</th><th>items</th><th>affinity cut</th><th>consent cut</th>{{range .Infusers}}<th><code>{{.Name}}</code></th>{{end}}</tr></thead>

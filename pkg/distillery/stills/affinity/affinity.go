@@ -16,17 +16,17 @@ import (
 	"github.com/foomo/schaumamoi/pkg/distillery"
 	"github.com/foomo/schaumamoi/pkg/distillery/stamp"
 	"github.com/foomo/schaumamoi/pkg/personalization"
+	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 )
 
 type (
-	// Envelope is what the routing stage knows about a batch beyond its events.
-	Envelope struct {
-		At      time.Time
-		Session string
-		// Personalization is whether the shopper consented to personalization storage.
-		Personalization bool
-	}
+	// Envelope is the Measurement Protocol envelope a batch arrived in, as sesamy-go
+	// decodes it: an mpv2.Payload, whose events are the batch. A payload off a JetStream
+	// stream or a database converts for free — affinity.Envelope(payload) — and nothing
+	// in it is lost on the way in; Stamped and Personalization are the readings the still
+	// needs.
+	Envelope mpv2.Payload[any]
 
 	// Infusion is what the still keeps of each kept event: its contribution to
 	// taste — the attractors of the items it carries, weighted by how deliberate the
@@ -91,9 +91,21 @@ func New(cut Cut) *Still {
 	})
 }
 
-// Stamped is the envelope's stamp: when the batch was recorded, and in which session.
+// Stamped is the envelope's stamp: when the batch was recorded (its timestamp_micros,
+// the zero time if it has none) and in which session.
 func (e Envelope) Stamped() stamp.Stamp {
-	return stamp.Stamp{At: e.At, Session: e.Session}
+	var at time.Time
+	if e.TimestampMicros != 0 {
+		at = time.UnixMicro(e.TimestampMicros).UTC()
+	}
+
+	return stamp.Stamp{At: at, Session: e.SessionID}
+}
+
+// Personalization is whether the shopper consented to personalization storage: granted
+// explicitly in the envelope's consent. No consent data means no consent.
+func (e Envelope) Personalization() bool {
+	return e.Consent != nil && e.Consent.PersonalizationStorage != nil && *e.Consent.PersonalizationStorage == mpv2.ConsentGranted
 }
 
 // Stamp copies the envelope's time and session onto the choice. The event itself carries

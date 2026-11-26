@@ -61,7 +61,7 @@ func TestOlderThan(t *testing.T) {
 
 	still := affinity.New(nil)
 	for i := range 4 {
-		still.Feed(affinity.Envelope{At: start.Add(time.Duration(i) * 7 * day), Session: "s"}, choice(sesamy.EventNameViewItem))
+		still.Feed(affinity.Envelope{TimestampMicros: start.Add(time.Duration(i) * 7 * day).UnixMicro(), SessionID: "s"}, choice(sesamy.EventNameViewItem))
 	}
 
 	still.Feed(affinity.Envelope{}, choice(sesamy.EventNameViewItem)) // no time: infinitely old
@@ -77,7 +77,7 @@ func TestInSession(t *testing.T) {
 
 	still := affinity.New(nil)
 	for _, session := range []string{"a", "b", "a", "c"} {
-		still.Feed(affinity.Envelope{At: start, Session: session}, choice(sesamy.EventNameSelectItem))
+		still.Feed(affinity.Envelope{TimestampMicros: start.UnixMicro(), SessionID: session}, choice(sesamy.EventNameSelectItem))
 	}
 
 	assert.Equal(t, 2, still.DrawOff(affinity.Rules.InSession("a")))
@@ -97,16 +97,16 @@ func TestSelectivePolicy(t *testing.T) {
 		DrawOff: func(env affinity.Envelope) affinity.Rule {
 			return affinity.Rules.Any(
 				affinity.Rules.KeepLast(affinity.DefaultKeep),
-				affinity.Rules.All(browsing, affinity.Rules.OlderThan(env.At, 14*day)),
+				affinity.Rules.All(browsing, affinity.Rules.OlderThan(env.Stamped().At, 14*day)),
 			)
 		},
 	})
 
 	for i, name := range []sesamy.EventName{sesamy.EventNameSelectItem, sesamy.EventNameAddToCart, sesamy.EventNameViewItem} {
-		still.Feed(affinity.Envelope{At: start.Add(time.Duration(i) * day), Session: "early"}, choice(name))
+		still.Feed(affinity.Envelope{TimestampMicros: start.Add(time.Duration(i) * day).UnixMicro(), SessionID: "early"}, choice(name))
 	}
 
-	still.Feed(affinity.Envelope{At: start.Add(20 * day), Session: "late"}, choice(sesamy.EventNameViewItem))
+	still.Feed(affinity.Envelope{TimestampMicros: start.Add(20 * day).UnixMicro(), SessionID: "late"}, choice(sesamy.EventNameViewItem))
 
 	assert.Equal(t, []string{"add_to_cart@02 early", "view_item@21 late"}, kept(still), "the early browsing is drawn off, the cart stays")
 }

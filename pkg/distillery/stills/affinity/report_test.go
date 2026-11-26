@@ -41,7 +41,7 @@ func history(order ...persona.Persona) ([]shopper.Visit, []wire.Session) {
 // add feeds a visit into the still request by request, each under its own envelope.
 func add(c *affinity.Still, session wire.Session) {
 	for _, hit := range session {
-		c.Feed(affinity.Envelope{At: time.UnixMicro(hit.TimestampMicros).UTC(), Session: hit.SessionID}, hit.Events...)
+		c.Feed(affinity.Envelope(hit), hit.Events...)
 	}
 }
 

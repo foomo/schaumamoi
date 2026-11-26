@@ -73,15 +73,16 @@ func BrowseJourney(p persona.Persona, opts ...wire.Option) wire.Session {
 }
 
 // shopper is one shopper as the shop sees them: the affinity still their events go into
-// as they happen, the envelope of the request in progress — its time moves on with every
-// event — and the visit's events so far, each with when it was sent and the engagement
-// time since the one before.
+// as they happen, the visit's session and clock — the clock moves on with every event —
+// and the visit's events so far, each with when it was sent and the engagement time
+// since the one before.
 type shopper struct {
-	still   *affinity.Still
-	env     affinity.Envelope
-	events  []sesamy.AnyEvent
-	sent    []time.Time
-	engaged []time.Duration
+	still     *affinity.Still
+	sessionID string
+	at        time.Time
+	events    []sesamy.AnyEvent
+	sent      []time.Time
+	engaged   []time.Duration
 }
 
 // newShopper is a shopper with no history, about to start a visit at the time and with
@@ -95,7 +96,7 @@ func newShopper(opts ...wire.Option) *shopper {
 
 // start begins a visit: no events yet, the clock at the visit's start.
 func (s *shopper) start(c wire.Context) {
-	s.env = affinity.Envelope{At: time.UnixMicro(c.TimestampMicros).UTC(), Session: c.SessionID, Personalization: true}
+	s.sessionID, s.at = c.SessionID, time.UnixMicro(c.TimestampMicros).UTC()
 	s.events, s.sent, s.engaged = nil, nil, nil
 }
 
@@ -106,12 +107,14 @@ func (s *shopper) emit(events ...sesamy.AnyEvent) {
 	for _, e := range events {
 		engaged := firstEngagement
 		if n := len(s.events); n > 0 {
-			engaged = gap(s.events[n-1].AnyEvent().Name, s.env.Session+"#"+strconv.Itoa(n))
-			s.env.At = s.env.At.Add(engaged)
+			engaged = gap(s.events[n-1].AnyEvent().Name, s.sessionID+"#"+strconv.Itoa(n))
+			s.at = s.at.Add(engaged)
 		}
 
-		s.events, s.sent, s.engaged = append(s.events, e), append(s.sent, s.env.At), append(s.engaged, engaged)
-		s.still.Feed(s.env, e.AnyEvent())
+		s.events, s.sent, s.engaged = append(s.events, e), append(s.sent, s.at), append(s.engaged, engaged)
+
+		// the request as the client sends it, consented: what the shop learns from
+		s.still.Feed(affinity.Envelope{TimestampMicros: s.at.UnixMicro(), SessionID: s.sessionID, Consent: wire.ConsentGranted()}, e.AnyEvent())
 	}
 }
 
@@ -120,7 +123,7 @@ func (s *shopper) emit(events ...sesamy.AnyEvent) {
 func (s *shopper) session(opts ...wire.Option) wire.Session {
 	out := make(wire.Session, 0, len(s.events))
 	for i, e := range s.events {
-		hit := append(slices.Clone(opts), wire.WithTimestamp(s.sent[i]), wire.WithSessionID(s.env.Session), wire.WithEngagementTime(s.engaged[i]))
+		hit := append(slices.Clone(opts), wire.WithTimestamp(s.sent[i]), wire.WithSessionID(s.sessionID), wire.WithEngagementTime(s.engaged[i]))
 		out = append(out, wire.Payload(anyEvents(e), hit...))
 	}
 

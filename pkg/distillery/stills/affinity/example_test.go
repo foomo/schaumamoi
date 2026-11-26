@@ -2,7 +2,6 @@ package affinity_test
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
@@ -18,7 +17,7 @@ func Example() {
 	month := shopper.History(shopper.Month(persona.Kate))
 	for _, visit := range month {
 		for _, request := range visit {
-			env := affinity.Envelope{At: time.UnixMicro(request.TimestampMicros).UTC(), Session: request.SessionID}
+			env := affinity.Envelope(request) // a sesamy-go payload, as it comes off the stream
 			still.Feed(env, request.Events...)
 		}
 	}

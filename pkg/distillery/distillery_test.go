@@ -144,17 +144,7 @@ func addSession(p *testStill, session wire.Session) {
 
 // envelopeOf resolves the fields of an mpv2 envelope that differ between batches.
 func envelopeOf(payload mpv2.Payload[any]) envelope {
-	return envelope{
-		At:              time.UnixMicro(payload.TimestampMicros).UTC(),
-		Session:         payload.SessionID,
-		Personalization: personalizationGranted(payload.Consent),
-	}
-}
-
-// personalizationGranted reads personalization consent off an envelope. No consent block means no
-// decision was made, which is not consent.
-func personalizationGranted(c *mpv2.ConsentData) bool {
-	return c != nil && c.PersonalizationStorage != nil && *c.PersonalizationStorage == mpv2.ConsentGranted
+	return envelope(payload)
 }
 
 // funnel counts kept events by name — a domain state that says nothing about taste.
@@ -512,7 +502,7 @@ func TestDecayHalvesAtHalfLife(t *testing.T) {
 			t.Parallel()
 
 			p := newAffinityStill(nil)
-			p.Feed(envelope{At: wire.BaseTime.Add(-tt.age)}, cart)
+			p.Feed(envelope{TimestampMicros: wire.BaseTime.Add(-tt.age).UnixMicro()}, cart)
 
 			full := p.Distill(flat)
 			got := p.Distill(decayed(wire.BaseTime, week))
@@ -725,7 +715,7 @@ func TestStampReadsEnvelopeSession(t *testing.T) {
 // It is a cut by where an event came from rather than by what it is, which only the
 // envelope can answer.
 func consented(env envelope, _ testEvent) bool {
-	return env.Personalization
+	return env.Personalization()
 }
 
 // TestCutSeesEnvelope is why the cut gets the envelope too. Sofia shops twice
