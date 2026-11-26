@@ -27,7 +27,7 @@ description param, and shop copy in every line item of every event is payload no
 consumer reads. It exists to make Go-side output analyzable — a ranking or a failing
 assertion reads as dresses rather than as `DRESS_07`:
 
-```
+```text
 ranked for Mira, 41 year old architect, business wear but strictly contemporary:
   1. Grid Cigarette Trousers  Slim black cigarette trousers with a sharp crease and
                               nothing else — modern, minimal, a little severe.

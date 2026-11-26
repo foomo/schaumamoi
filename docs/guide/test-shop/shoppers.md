@@ -16,16 +16,16 @@ shopper.BrowseJourney(persona.Lena) // browses and leaves
 
 A journey crosses the rails before it decides:
 
-```
-womens-fashion → select
-  → womens-fashion/trousers → select
-  → womens-fashion/dresses → select
-  → womens-fashion (narrowed to the persona's occasion) → select
-  → view → add to cart
-  → womens-fashion (back to the top, ranked by everything learned) → select
-  → home-decoration → select
-  → home-decoration/<category of that pick> → select → view
-  → all-products (the shop's final ranking, everything learned)
+```mermaid
+flowchart TD
+  a["womens-fashion"] -- select --> b["womens-fashion/trousers"]
+  b -- select --> c["womens-fashion/dresses"]
+  c -- select --> d["womens-fashion<br/>narrowed to the persona's occasion"]
+  d -- select --> e["view, add to cart"]
+  e --> f["womens-fashion<br/>back to the top, ranked by everything learned"]
+  f -- select --> g["home-decoration"]
+  g -- select --> h["home-decoration/‹category of that pick›"]
+  h -- "select, view" --> i["all-products<br/>the shop's final ranking, everything learned"]
 ```
 
 Every listing but the last is followed by a `select_item` carrying its list id: what

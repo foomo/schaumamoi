@@ -13,10 +13,14 @@ them: a taste vector, a funnel, the phases of a history.
 | **distill** | a recipe reduces the infused events to a state of its own type | `Still.Distill(recipe)` |
 | **draw off** | what the still should no longer hold is drawn off, by a rule | `Config.DrawOff`, `Still.DrawOff(rule)` |
 
-```
- JetStream stream ─┐                                         ┌─▶ distill(recipe) ─▶ a state
-                   ├─▶ feed ─▶ cut ─▶ infuse ─▶  one still  ─┼─▶ distill(recipe) ─▶ another
- database replay ──┘                           per user      └─▶ draw off(rule)
+```mermaid
+flowchart LR
+  js[JetStream stream] --> feed
+  db[(database replay)] --> feed
+  feed --> cut --> infuse --> still[("one still<br/>per user")]
+  still -- "distill(recipe)" --> s1([a state])
+  still -- "distill(recipe)" --> s2([another state])
+  still -. "draw off(rule)" .-> off[drawn off]
 ```
 
 ```go
@@ -97,14 +101,24 @@ what it cuts never gets in.
 
 ## Where things live
 
+```mermaid
+flowchart TD
+  subgraph distillery["pkg/distillery: Still, Rules"]
+    stamp["stamp<br/>time and session: Infuse, Rules.OlderThan, Rules.InSession"]
+    subgraph stills["stills/"]
+      affinity["affinity<br/>the taste still the shop ranks with"]
+    end
+    subgraph recipes["recipes/"]
+      visits["visits<br/>visits and phases, for any stamped still"]
+    end
+  end
+  affinity --> stamp
+  affinity --> visits
+  visits --> stamp
 ```
-pkg/distillery/            Still: Feed, Cut, Infuse, Distill, DrawOff; Rule and its combinators
-  stamp/                  time and session, shared: the Stamp infuser, OlderThan, InSession
-  stills/
-    affinity/             the taste still the shop ranks with
-  recipes/
-    visits/               visits and phases, for any stamped still
-```
+
+The arrows are imports. `pkg/distillery` itself, the `Still` with `Feed`, `Cut`,
+`Infuse`, `Distill`, `DrawOff` and `Rules`, imports none of them.
 
 A package under `stills/` is one still's setup: its `Infusion`, its cut and infusers,
 `New`, and the recipes and rules that read what it infuses. A package under `recipes/`

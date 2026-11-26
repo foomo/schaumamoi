@@ -1,7 +1,9 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+// withMermaid renders ```mermaid blocks as diagrams, in the light or dark theme the page is in
+export default withMermaid(defineConfig({
 	title: 'schaumamoi',
 	description: 'Distill GA4 events into per-user state: feed, cut, infuse, distill, draw off',
 	lang: 'en-US',
@@ -94,4 +96,4 @@ export default defineConfig({
 		['meta', { property: 'og:image', content: 'https://foomo.github.io/schaumamoi/logo.png' }],
 		['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
 	],
-})
+}))

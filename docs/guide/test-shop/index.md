@@ -24,21 +24,22 @@ so it is split the way a real shop is, and these pages follow that split.
 
 ## Who knows what
 
-```
-catalog  → taste
-persona  → catalog, taste
-shop     → catalog                     (and nothing that knows a persona)
-shopper  → persona, shop, wire, pkg/distillery/stills/affinity
-wire     → (sesamy-go only)
-mock     → all of them: the fixtures
+```mermaid
+flowchart TD
+  mock["mock<br/>the fixtures"] --> shopper & wire & shop & persona & catalog
+  shopper --> persona & shop & wire
+  shopper --> affinity["pkg/distillery/stills/affinity"]
+  persona --> catalog & taste
+  shop --> catalog
+  catalog --> taste
 ```
 
-The imports carry the shop's one rule: **the shop never sees a
-persona.** `shop` imports the catalog and nothing that knows a shopper's taste. It
-ranks every listing by a `shop.Profile`, the vector an affinity still
-(`pkg/distillery/stills/affinity`) distills from the shopper's events so far. Only
-`shopper` brings a persona and the shop together. The persona decides what gets
-picked, and the shop has to learn it from the picks.
+The arrows are imports (`wire` needs nothing but sesamy-go), and they carry the shop's
+one rule: **the shop never sees a persona.** `shop` imports the catalog and nothing that
+knows a shopper's taste. It ranks every listing by a `shop.Profile`, the vector an
+affinity still (`pkg/distillery/stills/affinity`) distills from the shopper's events so
+far. Only `shopper` brings a persona and the shop together. The persona decides what
+gets picked, and the shop has to learn it from the picks.
 
 ## In a test
 

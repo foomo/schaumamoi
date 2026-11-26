@@ -9,7 +9,9 @@
   },
   "devDependencies": {
     "@catppuccin/vitepress": "0.1.4",
-    "vitepress": "1.6.4"
+    "mermaid": "11.4.1",
+    "vitepress": "1.6.4",
+    "vitepress-plugin-mermaid": "2.0.17"
   },
   "overrides": {
     "vite": "6.4.5",
