@@ -47,27 +47,27 @@ type PageInfo struct {
 // Pages are the generated pages, in the order the site's Reports section lists them.
 var Pages = []PageInfo{
 	{
-		Name: "catalog", Title: "The catalog",
+		Name: "catalog", Title: "Catalog",
 		Summary: "What the test shop sells: the category tree, the dimensions each department speaks, the weights every category scores with, and every product with its copy and attractor.",
 	},
 	{
-		Name: "personas", Title: "The personas",
+		Name: "personas", Title: "Personas",
 		Summary: "The four shoppers the traffic is generated for: their taste, their favourite in every category, how they choose, and how each ranks the whole catalog.",
 	},
 	{
-		Name: "shop", Title: "The shop",
+		Name: "shop", Title: "Shop",
 		Summary: "The listings the shop renders, filtered out of the catalog and ranked by nothing but what a shopper has done.",
 	},
 	{
-		Name: "shoppers", Title: "The shoppers",
+		Name: "shoppers", Title: "Shoppers",
 		Summary: "Each persona taken through the shop: its journey step by step, its month of visits, and the shop's final ranking for it.",
 	},
 	{
-		Name: "distillery", Title: "The distillery",
+		Name: "distillery", Title: "Distillery",
 		Summary: "What the distillery makes of the shoppers' traffic: how a still is set up, and what it distills from sessions, months, drifts, detours and consent.",
 	},
 	{
-		Name: "affinity", Title: "The vector",
+		Name: "affinity", Title: "Affinity vector",
 		Summary: "How the personalization vector fades and follows a shopper whose intent changes — checked visit by visit on long histories — and how that compares to a flat sum and a decay by time.",
 	},
 }

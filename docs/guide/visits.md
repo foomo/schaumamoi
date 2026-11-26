@@ -36,7 +36,7 @@ not two: the return is news about when the taste held, which a merge would lose.
 Unlike decay, which only answers "who now", phases recover who the shopper was, and
 when.
 
-## The threshold
+## Threshold
 
 `affinity.Phases` judges each visit by the taste its choices add up to, with
 `affinity.DefaultPhaseThreshold`, 0.9. Across every persona pair of the test shop, a

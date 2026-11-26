@@ -73,4 +73,4 @@ shopper.History(shopper.Month(persona.Kate))  // []wire.Session, 7 visits
 The shopper's still carries over from visit to visit, the way a shop recognises a
 returning client. The persona is set per `shopper.Visit`, so the intent can change
 within one history: overwrite the persona of some visits and the shopper wants
-something else from then on. That is what [The vector](../vector) is tested with.
+something else from then on. That is what the [affinity vector](../vector) is tested with.

@@ -18,7 +18,7 @@ catalog.Dresses()         // one category
 The [catalog report](/reports/catalog) shows every product with its picture, copy and
 attractor.
 
-## The category tree
+## Category tree
 
 | Department | Category | Items |
 |---|---|---|
@@ -36,7 +36,7 @@ facets back out of the path rather than storing them twice.
 
 Categories are where products are offered: entry points to browse and choose from, not
 a signal about the shopper. What the shopper selects, views and buys is the signal.
-How the shop lists them is [The shop](./shop)'s business.
+How the shop lists them is the [shop](./shop)'s business.
 
 ## Dimensions
 

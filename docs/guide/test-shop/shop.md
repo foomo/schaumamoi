@@ -1,4 +1,4 @@
-# The shop
+# Shop
 
 `pkg/internal/mock/shop` is the shop's side of the traffic: the listings it renders,
 and the GA4 events reporting them — `view_item_list`, `select_item`, `view_item`,

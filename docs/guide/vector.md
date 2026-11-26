@@ -1,4 +1,4 @@
-# The vector
+# Affinity vector
 
 The vector the shop ranks with is `affinity.Fade.Vector`, distilled from the shopper's
 choices (selections, views and carts; listings never get past the cut). Recency is
@@ -26,7 +26,7 @@ intent changing every six visits, every direction of change between the personas
 
 With the per-event fade alone, strong changes take as long as gentle ones. With no fade
 at all, which was the shop's old behaviour, the shop stops following new intents once
-the history is long enough. [The vector](/reports/affinity) report charts the fade and every collapse choice by
+the history is long enough. The [affinity vector report](/reports/affinity) charts the fade and every collapse choice by
 choice, and [Changing intent](/reports/affinity#intent) shows the test's histories visit
 by visit.
 

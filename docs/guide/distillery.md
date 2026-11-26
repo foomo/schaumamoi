@@ -1,4 +1,4 @@
-# The distillery
+# Distillery
 
 GA4 events reach schaumamoi from a stream (NATS JetStream) or as a replay from a
 database. `pkg/distillery` is the step in between: per user, it takes the events in,
@@ -126,7 +126,7 @@ holds recipes that work on any still whose infusion meets their constraint, such
 `visits` on any stamped still. New stills (what a shopper was shown, what they are worth,
 how far their visits get) go under `stills/`, next to `affinity`.
 
-## The affinity still
+## Affinity still
 
 `pkg/distillery/stills/affinity` is the still the shop uses: a fixed setup on top of
 `pkg/distillery`.
@@ -150,5 +150,5 @@ how far their visits get) go under `stills/`, next to `affinity`.
 - **Draw off:** it holds the newest `DefaultKeep` (1000) choices, and draws off the rest
   after every feed.
 
-[The distillery](/reports/distillery) report draws this setup from the code and traces
+The [distillery report](/reports/distillery) draws this setup from the code and traces
 one visit through it, request by request.

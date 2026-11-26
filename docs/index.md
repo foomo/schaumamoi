@@ -82,11 +82,11 @@ The [Reports](/reports/catalog) are written by the test suite: every page is com
 the real code on every run, every product and persona shown by its image, every claim
 next to the test that checks it.
 
-- [The catalog](/reports/catalog), [the personas](/reports/personas), [the shop](/reports/shop)
-  and [the shoppers](/reports/shoppers): the test shop, package by package
-- [The distillery](/reports/distillery): how a still works, what it distills from the
+- [Catalog](/reports/catalog), [Personas](/reports/personas), [Shop](/reports/shop)
+  and [Shoppers](/reports/shoppers): the test shop, package by package
+- [Distillery](/reports/distillery): how a still works, what it distills from the
   traffic, and what drawing off does to it
-- [The vector](/reports/affinity): how the personalization vector fades and follows a
+- [Affinity vector](/reports/affinity): how the personalization vector fades and follows a
   changing intent
 
 *Schau ma moi*: Bavarian for "let's have a look". Or, at a distillery, a taste.

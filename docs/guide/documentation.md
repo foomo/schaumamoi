@@ -14,12 +14,12 @@ images next to them, to `docs/reports/images`.
 
 | Report | What it shows |
 |---|---|
-| [The catalog](/reports/catalog) | the category tree, the dimensions and weights, every product with its copy and attractor |
-| [The personas](/reports/personas) | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
-| [The shop](/reports/shop) | every listing as a new shopper sees it, and ranked by what one visit taught the shop |
-| [The shoppers](/reports/shoppers) | journeys step by step, months of visits, and the shop's final rankings |
-| [The distillery](/reports/distillery) | how a still works, and what it distills: sessions, months, drift, detour, consent |
-| [The vector](/reports/affinity) | how the personalization vector fades and follows a changing intent (visit by visit, as `TestIntentPicksUpQuickly` checks it), against a flat sum and a decay by time |
+| [Catalog](/reports/catalog) | the category tree, the dimensions and weights, every product with its copy and attractor |
+| [Personas](/reports/personas) | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
+| [Shop](/reports/shop) | every listing as a new shopper sees it, and ranked by what one visit taught the shop |
+| [Shoppers](/reports/shoppers) | journeys step by step, months of visits, and the shop's final rankings |
+| [Distillery](/reports/distillery) | how a still works, and what it distills: sessions, months, drift, detour, consent |
+| [Affinity vector](/reports/affinity) | how the personalization vector fades and follows a changing intent (visit by visit, as `TestIntentPicksUpQuickly` checks it), against a flat sum and a decay by time |
 
 The generated pages are git-ignored. They are test output, deterministic but rebuilt
 on every run, so they never go stale in version control.

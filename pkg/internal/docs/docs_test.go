@@ -35,7 +35,7 @@ func TestPageIsVitePressMarkdown(t *testing.T) {
 	require.NoError(t, err)
 
 	md := string(raw)
-	assert.True(t, strings.HasPrefix(md, "---\ntitle: \"The vector\"\n"), "front matter first, values quoted for YAML")
+	assert.True(t, strings.HasPrefix(md, "---\ntitle: \"Affinity vector\"\n"), "front matter first, values quoted for YAML")
 	assert.Contains(t, md, "pageClass: report-page")
 
 	_, body, found := strings.Cut(md, `<div class="report" v-pre>`+"\n")
