@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/foomo/schaumamoi/pkg/distillery"
+	"github.com/foomo/schaumamoi/pkg/distillery/stamp"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 )
@@ -29,15 +30,17 @@ type (
 
 	// Infusion is what the still keeps of each kept event: its contribution to
 	// taste — the attractors of the items it carries, weighted by how deliberate the
-	// choice is — and, copied off the envelope, when and in which session it happened.
+	// choice is — and, copied off the envelope, when and in which session it happened. The
+	// stamp is embedded, so Infusion is stamp.Stamped and the shared rules and recipes
+	// read it.
 	//
 	// The taste is one Map for everything the shopper touches, whatever the category: an
 	// item only carries the dimensions that describe it, so categories need no handling
 	// of their own here. How much each dimension counts in a category is the scorer's
 	// business, not the still's.
 	Infusion struct {
-		At       time.Time
-		Session  string
+		stamp.Stamp
+
 		Affinity personalization.Map
 	}
 
@@ -70,7 +73,7 @@ func Choices(_ Envelope, e sesamy.Event[any]) bool {
 }
 
 // Infusers is the chain every kept event is folded through, in order.
-var Infusers = []Infuser{StampTime, StampSession, AddAttractors, WeighByIntent}
+var Infusers = []Infuser{Stamp, AddAttractors, WeighByIntent}
 
 // New is an affinity still: its cut is Choices, narrowed further by cut if one is given —
 // a consent cut, say. A cut can only narrow what Choices keeps, never widen it. It
@@ -88,18 +91,15 @@ func New(cut Cut) *Still {
 	})
 }
 
-// StampTime and StampSession copy the envelope's time and session onto the event. The
-// event itself carries neither, and the still keeps the infusion, not the envelope.
-func StampTime(env Envelope, _ sesamy.Event[any], d Infusion) Infusion {
-	d.At = env.At
-
-	return d
+// Stamped is the envelope's stamp: when the batch was recorded, and in which session.
+func (e Envelope) Stamped() stamp.Stamp {
+	return stamp.Stamp{At: e.At, Session: e.Session}
 }
 
-func StampSession(env Envelope, _ sesamy.Event[any], d Infusion) Infusion {
-	d.Session = env.Session
-
-	return d
+// Stamp copies the envelope's time and session onto the choice. The event itself carries
+// neither, and the still keeps the infusion, not the envelope.
+func Stamp(env Envelope, e sesamy.Event[any], d Infusion) Infusion {
+	return stamp.Infuse(env, e, d)
 }
 
 // items is the one thing every choice carries: items, each with its attractor. Decoding

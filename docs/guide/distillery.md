@@ -65,9 +65,11 @@ Every rule in a composition sees each event's position as it was before the draw
 began, so the result doesn't depend on the order of the rules. What remains keeps its
 arrival order, and drawing off never rewrites a slice a recipe was handed earlier.
 
-Time and session live in the infusion, which only the setup knows how to read, so the
-affinity still brings its own rules: `OlderThan(now, age)` and `InSession(id)`. A
-policy that forgets browsing after two weeks but keeps what went into the cart:
+Time and session are shared by every still: `pkg/distillery/stamp` has the `Stamp` an
+infusion embeds, the infuser `stamp.Infuse` that copies it off the envelope, and the rules
+`stamp.OlderThan(now, age)` and `stamp.InSession(id)`. The affinity still offers them
+typed, as `affinity.OlderThan` and `affinity.InSession`. A policy that forgets browsing
+after two weeks but keeps what went into the cart:
 
 ```go
 DrawOff: func(env affinity.Envelope) affinity.Rule {
@@ -90,9 +92,9 @@ what it cuts never gets in.
 - **Cut:** it keeps only a shopper's choices (`select_item`, `view_item`,
   `add_to_cart`), never listings. Listings are what the shop offered, not what the
   shopper chose.
-- **Infusers:** they stamp each choice's time and session, sum the attractors of its
-  items into one taste map, and weigh it by intent: a selection or view counts once, a
-  cart three times.
+- **Infusers:** `Stamp` copies each choice's time and session off the envelope (the
+  shared `stamp.Infuse`), `AddAttractors` sums the attractors of its items into one taste
+  map, and `WeighByIntent` weighs it: a selection or view counts once, a cart three times.
 - **Recipes:** `Flat` sums everything, `Decayed` fades by time, and `Fade.Vector`
   fades per choice. `Fade.Vector` is [the personalization vector](/guide/vector) the
   shop ranks every listing with.

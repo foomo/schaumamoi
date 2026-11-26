@@ -36,8 +36,6 @@ type (
 )
 
 var (
-	stampTime        = affinity.StampTime
-	stampSession     = affinity.StampSession
 	addAttractors    = affinity.AddAttractors
 	weighByIntent    = affinity.WeighByIntent
 	affinityInfusers = affinity.Infusers
@@ -461,10 +459,10 @@ func TestDistillIsDeterministic(t *testing.T) {
 
 const week = 7 * 24 * time.Hour
 
-// TestStampTimeReadsEnvelope pins where recency comes from: every event carries the time
+// TestStampReadsEnvelopeTime pins where recency comes from: every event carries the time
 // of the request it was sent in — a visit's requests follow each other in time, so its
 // events do too — and an event added with a zero envelope carries the zero time.
-func TestStampTimeReadsEnvelope(t *testing.T) {
+func TestStampReadsEnvelopeTime(t *testing.T) {
 	t.Parallel()
 
 	earlier, later := wire.BaseTime.Add(-week), wire.BaseTime
@@ -769,10 +767,10 @@ func phasePersonas(ps []window) []string {
 	return out
 }
 
-// TestStampSessionReadsEnvelope pins where the session comes from: the envelope, not
+// TestStampReadsEnvelopeSession pins where the session comes from: the envelope, not
 // the event. Every event of a visit carries that visit's session id, and an
 // event added with a zero envelope carries none.
-func TestStampSessionReadsEnvelope(t *testing.T) {
+func TestStampReadsEnvelopeSession(t *testing.T) {
 	t.Parallel()
 
 	history := shopper.History(shopper.Month(persona.Kate))
@@ -875,12 +873,19 @@ func TestReturningTasteIsANewPhase(t *testing.T) {
 	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(got))
 }
 
-// TestPhasesNeedSessions shows the infuser doing the work: the same drifted month
-// through infusers without it is one undivided visit, so there is nothing to split.
+// TestPhasesNeedSessions shows the session stamp doing the work: the same drifted month
+// stamped with its time but not its session is one undivided visit, nothing to split.
 func TestPhasesNeedSessions(t *testing.T) {
 	t.Parallel()
 
-	p := distillery.New(testConfig{Infusers: []testInfuser{stampTime, addAttractors, weighByIntent}})
+	// the time only: Stamp without its session
+	timeOnly := func(env envelope, _ testEvent, d infusion) infusion {
+		d.At = env.At
+
+		return d
+	}
+
+	p := distillery.New(testConfig{Infusers: []testInfuser{timeOnly, addAttractors, weighByIntent}})
 	addHistory(p, drifted(persona.Sofia, persona.Kate))
 
 	assert.Len(t, p.Distill(phases(phaseThreshold)), 1)

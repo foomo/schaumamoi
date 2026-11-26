@@ -26,8 +26,7 @@ type stage struct {
 
 // infuserDocs says what each infuser in the affinity chain contributes.
 var infuserDocs = map[string]string{
-	"StampTime":     "copies the batch's time off the envelope, so a recipe can decay by age",
-	"StampSession":  "copies the session id off the envelope, so a recipe can window by visit",
+	"Stamp":         "copies the batch's time and session off the envelope, so a recipe can decay by age and group by visit",
 	"AddAttractors": "sums the attractors of the items the event carries into one Map, whatever their category",
 	"WeighByIntent": "scales that by how deliberate the choice is — select and view 1, the cart 3",
 }
@@ -130,10 +129,8 @@ func pipeline(label string, session wire.Session) (pipelineSection, error) {
 // summarize says what one infuser changed, in the terms of that infuser.
 func summarize(name string, e testEvent, before, after infusion) string {
 	switch name {
-	case "StampTime":
-		return after.At.UTC().Format("Mon 2 Jan 15:04")
-	case "StampSession":
-		return after.Session
+	case "Stamp":
+		return after.At.UTC().Format("Mon 2 Jan 15:04") + " · " + after.Session
 	case "AddAttractors":
 		return fmt.Sprintf("%d dimensions · %s", len(after.Affinity), strongest(after.Affinity, 2))
 	case "WeighByIntent":

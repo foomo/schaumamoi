@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/foomo/schaumamoi/pkg/distillery"
+	"github.com/foomo/schaumamoi/pkg/distillery/stamp"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 )
 
@@ -20,22 +21,12 @@ func KeepLast(n int) Rule { return distillery.KeepLast[any, Infusion](n) }
 // may forget sooner than carts.
 func Named(names ...sesamy.EventName) Rule { return distillery.Named[any, Infusion](names...) }
 
-// OlderThan draws off the choices made more than age before now. Now is handed in, not
-// read off the clock: as the standing policy it is the time of the batch being fed. A
-// choice without a time counts as infinitely old — it would weigh nothing when decayed
-// either.
+// OlderThan draws off the choices made more than age before now: stamp.OlderThan for an
+// affinity still. A choice without a time counts as infinitely old.
 func OlderThan(now time.Time, age time.Duration) Rule {
-	cutoff := now.Add(-age)
-
-	return distillery.Where(func(e Infused) bool {
-		return e.Infusion.At.IsZero() || e.Infusion.At.Before(cutoff)
-	})
+	return stamp.OlderThan[any, Infusion](now, age)
 }
 
 // InSession draws off the choices of one session: a visit the shopper asked to have
-// forgotten.
-func InSession(id string) Rule {
-	return distillery.Where(func(e Infused) bool {
-		return e.Infusion.Session == id
-	})
-}
+// forgotten. It is stamp.InSession for an affinity still.
+func InSession(id string) Rule { return stamp.InSession[any, Infusion](id) }
