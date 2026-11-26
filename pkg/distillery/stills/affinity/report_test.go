@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/foomo/schaumamoi/pkg/affinity"
+	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"

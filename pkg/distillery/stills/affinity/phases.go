@@ -1,8 +1,8 @@
 package affinity
 
 import (
+	"github.com/foomo/schaumamoi/pkg/distillery/recipes/visits"
 	"github.com/foomo/schaumamoi/pkg/personalization"
-	"github.com/foomo/schaumamoi/pkg/visits"
 )
 
 // DefaultPhaseThreshold is the similarity a visit's taste must reach against the phase

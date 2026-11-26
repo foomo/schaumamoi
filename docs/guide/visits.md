@@ -1,7 +1,7 @@
 # Visits and phases
 
-`pkg/visits` reads a still visit by visit. It is a package of recipes, not a still of its
-own: it works on any still whose infusion is stamped (see
+`pkg/distillery/recipes/visits` reads a still visit by visit. It is a package of
+recipes, not a still of its own: it works on any still whose infusion is stamped (see
 [drawing off](/guide/distillery#drawing-off) for `stamp`), whatever else the infusion
 holds.
 

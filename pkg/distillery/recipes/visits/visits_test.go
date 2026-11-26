@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/foomo/schaumamoi/pkg/distillery"
+	"github.com/foomo/schaumamoi/pkg/distillery/recipes/visits"
 	"github.com/foomo/schaumamoi/pkg/distillery/stamp"
 	"github.com/foomo/schaumamoi/pkg/personalization"
-	"github.com/foomo/schaumamoi/pkg/visits"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -28,7 +28,7 @@ so it is split the way a real shop is, and these pages follow that split.
 catalog  → taste
 persona  → catalog, taste
 shop     → catalog                     (and nothing that knows a persona)
-shopper  → persona, shop, wire, pkg/affinity
+shopper  → persona, shop, wire, pkg/distillery/stills/affinity
 wire     → (sesamy-go only)
 mock     → all of them: the fixtures
 ```
@@ -36,15 +36,15 @@ mock     → all of them: the fixtures
 The imports carry the shop's one rule: **the shop never sees a
 persona.** `shop` imports the catalog and nothing that knows a shopper's taste. It
 ranks every listing by a `shop.Profile`, the vector an affinity still
-(`pkg/affinity`) distills from the shopper's events so far. Only `shopper` brings a
-persona and the shop together. The persona decides what gets picked, and the shop has
-to learn it from the picks.
+(`pkg/distillery/stills/affinity`) distills from the shopper's events so far. Only
+`shopper` brings a persona and the shop together. The persona decides what gets
+picked, and the shop has to learn it from the picks.
 
 ## In a test
 
 ```go
 import (
-    "github.com/foomo/schaumamoi/pkg/affinity"
+    "github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
     "github.com/foomo/schaumamoi/pkg/internal/mock/persona"
     "github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 )

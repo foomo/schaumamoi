@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/affinity"
+	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"

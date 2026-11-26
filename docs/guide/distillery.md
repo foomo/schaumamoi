@@ -85,9 +85,27 @@ DrawOff: func(env affinity.Envelope) affinity.Rule {
 The cut, by contrast, never forgets by time: it judges each event once, on its own, and
 what it cuts never gets in.
 
+## Where things live
+
+```
+pkg/distillery/            Still: Feed, Cut, Infuse, Distill, DrawOff; Rule and its combinators
+  stamp/                  time and session, shared: the Stamp infuser, OlderThan, InSession
+  stills/
+    affinity/             the taste still the shop ranks with
+  recipes/
+    visits/               visits and phases, for any stamped still
+```
+
+A package under `stills/` is one still's setup: its `Infusion`, its cut and infusers,
+`New`, and the recipes and rules that read what it infuses. A package under `recipes/`
+holds recipes that work on any still whose infusion meets their constraint, such as
+`visits` on any stamped still. New stills (what a shopper was shown, what they are worth,
+how far their visits get) go under `stills/`, next to `affinity`.
+
 ## The affinity still
 
-`pkg/affinity` is the still the shop uses: a fixed setup on top of `pkg/distillery`.
+`pkg/distillery/stills/affinity` is the still the shop uses: a fixed setup on top of
+`pkg/distillery`.
 
 - **Cut:** it keeps only a shopper's choices (`select_item`, `view_item`,
   `add_to_cart`), never listings. Listings are what the shop offered, not what the

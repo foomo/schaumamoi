@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/affinity"
+	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"

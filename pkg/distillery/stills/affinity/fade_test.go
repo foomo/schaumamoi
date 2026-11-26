@@ -3,7 +3,7 @@ package affinity_test
 import (
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/affinity"
+	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/assert"
 )

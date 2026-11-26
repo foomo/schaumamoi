@@ -5,22 +5,22 @@ import (
 	"testing"
 	"time"
 
-	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/distillery"
+	"github.com/foomo/schaumamoi/pkg/distillery/recipes/visits"
+	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
-	"github.com/foomo/schaumamoi/pkg/visits"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-// The still under test is the affinity still the shop ranks with (pkg/affinity). The
+// The still under test is the affinity still the shop ranks with (pkg/distillery/stills/affinity). The
 // short names below are the tests' own for its parts, so the tests read as they always
 // did: what is kept, how it is infused, and what is distilled.
 type (

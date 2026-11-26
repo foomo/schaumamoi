@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/foomo/schaumamoi/pkg/affinity"
+	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/assert"
