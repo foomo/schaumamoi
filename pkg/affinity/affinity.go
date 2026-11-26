@@ -46,6 +46,7 @@ type (
 	Cut           = distillery.Cut[Envelope, any]
 	Infuser       = distillery.Infuser[Envelope, any, Infusion]
 	Recipe[S any] = distillery.Recipe[any, Infusion, S]
+	Rule          = distillery.Rule[any, Infusion]
 )
 
 // Weights is how much a choice says about taste: selecting and viewing a product are
@@ -72,14 +73,19 @@ func Choices(_ Envelope, e sesamy.Event[any]) bool {
 var Infusers = []Infuser{StampTime, StampSession, AddAttractors, WeighByIntent}
 
 // New is an affinity still: its cut is Choices, narrowed further by cut if one is given —
-// a consent cut, say. A cut can only narrow what Choices keeps, never widen it.
+// a consent cut, say. A cut can only narrow what Choices keeps, never widen it. It
+// holds the newest DefaultKeep choices: older ones are drawn off after every feed.
 func New(cut Cut) *Still {
 	keep := Choices
 	if cut != nil {
 		keep = func(env Envelope, e sesamy.Event[any]) bool { return Choices(env, e) && cut(env, e) }
 	}
 
-	return distillery.New(distillery.Config[Envelope, any, Infusion]{Cut: keep, Infusers: Infusers})
+	return distillery.New(distillery.Config[Envelope, any, Infusion]{
+		Cut:      keep,
+		Infusers: Infusers,
+		DrawOff:  func(Envelope) Rule { return KeepLast(DefaultKeep) },
+	})
 }
 
 // StampTime and StampSession copy the envelope's time and session onto the event. The

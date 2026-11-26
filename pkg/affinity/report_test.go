@@ -248,6 +248,7 @@ func TestReport(t *testing.T) {
 
 	require.NoError(t, docs.Page("affinity", map[string]any{
 		"Fade":           f,
+		"Keep":           affinity.DefaultKeep,
 		"HalfLife":       math.Log(0.5) / math.Log(float64(f.PerEvent)),
 		"AfterVisit":     100 * math.Pow(float64(f.PerEvent), 10),
 		"AfterWeek":      100 * math.Pow(float64(f.PerEvent), 35),

@@ -34,7 +34,7 @@ func repeat(m personalization.Map, n int) []personalization.Map {
 }
 
 // noShift is a fade without change detection: a cosine never falls below -2.
-var noShift = affinity.Fade{PerEvent: 0.5, Window: 100, Recent: 2, Shift: -2, Collapse: 0}
+var noShift = affinity.Fade{PerEvent: 0.5, Recent: 2, Shift: -2, Collapse: 0}
 
 func TestFadePerEvent(t *testing.T) {
 	t.Parallel()
@@ -45,16 +45,6 @@ func TestFadePerEvent(t *testing.T) {
 	assert.InDelta(t, 1.75, float64(got[classic]), 1e-6)
 }
 
-func TestFadeWindow(t *testing.T) {
-	t.Parallel()
-
-	f := noShift
-	f.PerEvent, f.Window = 1, 2
-
-	got := f.Vector(events(personalization.Map{classic: 1}, personalization.Map{classic: 1}, personalization.Map{classic: 1}))
-	assert.InDelta(t, 2, float64(got[classic]), 1e-6, "only the last two events count")
-}
-
 // TestFadeCollapsesOnAStrongChange: after a long run of one taste, recent picks pointing
 // the opposite way collapse the old vector, so the new taste leads at once.
 func TestFadeCollapsesOnAStrongChange(t *testing.T) {
@@ -63,7 +53,7 @@ func TestFadeCollapsesOnAStrongChange(t *testing.T) {
 	old, recent := personalization.Map{classic: 1, modern: -1}, personalization.Map{classic: -1, modern: 1}
 	history := events(append(repeat(old, 10), repeat(recent, 3)...)...)
 
-	f := affinity.Fade{PerEvent: 0.95, Window: 100, Recent: 3, Shift: 0.5, Collapse: 0.2}
+	f := affinity.Fade{PerEvent: 0.95, Recent: 3, Shift: 0.5, Collapse: 0.2}
 	assert.Greater(t, f.Vector(history)[modern], personalization.Value(0), "with change detection the new taste leads")
 
 	f.Shift = -2
@@ -78,7 +68,7 @@ func TestFadeKeepsTasteOnAGentleChange(t *testing.T) {
 	old, recent := personalization.Map{classic: 1, modern: 0.2}, personalization.Map{classic: 0.6, modern: 0.4}
 	history := events(append(repeat(old, 10), repeat(recent, 3)...)...)
 
-	with := affinity.Fade{PerEvent: 0.95, Window: 100, Recent: 3, Shift: 0.5, Collapse: 0.2}
+	with := affinity.Fade{PerEvent: 0.95, Recent: 3, Shift: 0.5, Collapse: 0.2}
 	without := with
 	without.Shift = -2
 
@@ -94,7 +84,7 @@ func TestFadeKeepsTasteInANewCategory(t *testing.T) {
 	clothes, cushions := personalization.Map{classic: 1}, personalization.Map{cozy: 1}
 	history := events(append(repeat(clothes, 10), repeat(cushions, 3)...)...)
 
-	f := affinity.Fade{PerEvent: 1, Window: 100, Recent: 3, Shift: 0.5, Collapse: 0}
+	f := affinity.Fade{PerEvent: 1, Recent: 3, Shift: 0.5, Collapse: 0}
 	assert.InDelta(t, 10, float64(f.Vector(history)[classic]), 1e-6)
 }
 

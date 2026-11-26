@@ -12,8 +12,8 @@ fades, when the change detection steps in, and what the vector reads as along th
 
 <h2 id="fade">The fade</h2>
 <p class="note">Every choice fades everything before it by the same factor, so recency is counted in choices, not in
-time: a shopper who comes back after three weeks is not a stranger. Only the last {{.Fade.Window}} choices count at all,
-far beyond what the mock data reach. A visit has about ten choices.</p>
+time: a shopper who comes back after three weeks is not a stranger. The still holds only the newest {{.Keep}} choices,
+drawing off the rest, far beyond what the mock data reach. A visit has about ten choices.</p>
 <div class="grid">
   <div class="card"><div class="meta">factor per choice</div><div class="hero">{{.Fade.PerEvent}}</div></div>
   <div class="card"><div class="meta">choices until a choice counts half</div><div class="hero">{{num .HalfLife}}</div></div>

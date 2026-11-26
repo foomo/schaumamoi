@@ -11,13 +11,10 @@ import (
 // in time: what matters is how much the shopper has done since, not how long ago it was.
 // A shopper who comes back after three weeks is not a stranger.
 //
-// Three rules, applied in event order:
+// Two rules, applied in event order:
 //
 //   - Every kept event fades everything before it by PerEvent: the vector is an
 //     exponentially weighted sum of the contributions, the newest counting most.
-//   - Only the last Window events count at all. With a PerEvent below 1 the tail is
-//     tiny long before the window ends; the window bounds the work and makes the cut
-//     explicit.
 //   - A strong change of intent forgets faster. After each event the last Recent
 //     contributions are compared with the rest of the vector. When they point clearly
 //     elsewhere — a cosine below Shift, over the dimensions both name — the shopper is
@@ -28,16 +25,15 @@ import (
 // category, not a new intent, and must not wipe the taste the two share.
 type Fade struct {
 	PerEvent personalization.Value
-	Window   int
 	Recent   int
 	Shift    personalization.Value
 	Collapse personalization.Value
 }
 
 // DefaultFade is the fade the shop ranks with. A visit has about ten choices, so a
-// PerEvent of 0.95 keeps roughly 60% of the vector from one visit to the next. The window
-// of 1000 events is far beyond what the mock data reach.
-var DefaultFade = Fade{PerEvent: 0.95, Window: 1000, Recent: 3, Shift: 0.5, Collapse: 0.2}
+// PerEvent of 0.95 keeps roughly 60% of the vector from one visit to the next. How many
+// events there are to fade is the still's business: it holds the newest DefaultKeep.
+var DefaultFade = Fade{PerEvent: 0.95, Recent: 3, Shift: 0.5, Collapse: 0.2}
 
 // Vector is the recipe: the shopper's personalization vector after every kept event.
 func (f Fade) Vector(events []Infused) personalization.Map {
@@ -66,10 +62,6 @@ func (f Fade) Trace(events []Infused) []Step {
 
 // walk is the one loop behind Vector and Trace; step, if given, sees every event's result.
 func (f Fade) walk(events []Infused, step func(cosine personalization.Value, collapsed bool, vector personalization.Map)) personalization.Map {
-	if len(events) > f.Window {
-		events = events[len(events)-f.Window:]
-	}
-
 	all := personalization.Map{}
 
 	for i, e := range events {

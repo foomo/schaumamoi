@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/foomo/schaumamoi/pkg/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
@@ -61,6 +62,7 @@ type traceRow struct {
 // traced through it.
 type pipelineSection struct {
 	Infusers []stage
+	Keep     int
 	Recipes  []stage
 	Batch    string
 	Envelope envelope
@@ -79,7 +81,7 @@ func funcName(fn any) string {
 // request by request, each under its own envelope. It returns an error naming any
 // infuser the docs do not cover.
 func pipeline(label string, session wire.Session) (pipelineSection, error) {
-	s := pipelineSection{Recipes: recipes, Batch: label, Envelope: envelopeOf(session[0])}
+	s := pipelineSection{Recipes: recipes, Keep: affinity.DefaultKeep, Batch: label, Envelope: envelopeOf(session[0])}
 
 	for _, d := range affinityInfusers {
 		name := funcName(d)

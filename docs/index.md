@@ -24,7 +24,7 @@ features:
     details: Shoppers and products live in one sparse space of taste dimensions. A product names only what describes it, so taste carries between categories through what they share — and each category weighs the dimensions it looks at.
     link: /guide/personalization
   - title: A distillery for events
-    details: Events are fed in from a stream or a replay, cut and infused once on arrival, and distilled by any number of recipes. The affinity still keeps a shopper's choices and distills their personalization vector.
+    details: Events are fed in from a stream or a replay, cut and infused once on arrival, drawn off again by composable rules, and distilled by any number of recipes. The affinity still keeps a shopper's choices and distills their personalization vector.
     link: /guide/distillery
   - title: A vector that follows intent
     details: The vector fades per choice and lets go of the past when the shopper's intent changes — picked up on the first visit for a strong change, tested on long histories.

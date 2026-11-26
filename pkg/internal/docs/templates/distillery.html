@@ -14,7 +14,7 @@ must be one the persona likes —
 within 80% of its favourite there. Shoppers do not always open their favourite, so the favourite is shown where they differ.
 Home decoration is reached only through the dimensions it shares with fashion, and through the shopper's home picks.
 Decay uses a one-week half-life at BaseTime, {{date .BaseTime}}; phases split below a similarity of {{score .Threshold}}.</p>
-<nav><a href="#pipeline">How the still works</a><a href="#session">One session</a><a href="#month">Steady month</a><a href="#drift">Drift</a><a href="#detour">Detour</a><a href="#consent">Consent</a></nav>
+<nav><a href="#pipeline">How the still works</a><a href="#session">One session</a><a href="#month">Steady month</a><a href="#drift">Drift</a><a href="#drawoff">Drawing off</a><a href="#detour">Detour</a><a href="#consent">Consent</a></nav>
 
 {{template "pipeline" .Pipeline}}
 
@@ -65,6 +65,28 @@ every category the recent half chose from. Phases should recover both, split whe
     <td class="{{if eq .Flat.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Flat.Persona.ImagePath}}" alt="{{.Flat.Persona.Name}}"> {{.Flat.Persona.Name}}<br><span class="muted">{{.Flat.Correct}}/{{len .Flat.Categories}} categories</span></td>
     <td class="{{if eq .Decayed.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Decayed.Persona.ImagePath}}" alt="{{.Decayed.Persona.Name}}"> {{.Decayed.Persona.Name}}<br><span class="muted">{{.Decayed.Correct}}/{{len .Decayed.Categories}} categories</span></td>
     <td><div class="row">{{range .Decayed.Categories}}<div class="thumb{{if .OK}} top{{end}}"><img src="{{img .Nearest.ImagePath}}" alt="{{.Nearest.ItemName}}" title="{{.Name}} · {{.Nearest.ItemID}}" style="width:56px;height:75px">{{.Nearest.ItemName}}</div>{{end}}</div></td>
+    <td>{{template "phases" .Phases}}</td>
+  </tr>
+  {{end}}
+</tbody>
+</table>
+</div>
+
+<h2 id="drawoff">Drawing off</h2>
+<p class="note">Four of the drifts above, fed into two stills: one holds everything, the other has a standing draw-off,
+<code>affinity.OlderThan(env.At, {{.DrawOffAge}} days)</code>, run after every feed against the time of the batch. By the
+end of the month the old taste has been drawn off: summed flat, the still that holds everything misreads some of them as
+the old shopper (red), the bounded one reads every one as the recent shopper, and only the recent phase is left.</p>
+<div class="scroll">
+<table class="data">
+  <thead><tr><th>Shopped</th><th>Holds everything, read flat</th><th>Draws off after {{.DrawOffAge}} days, read flat</th><th>Choices held</th><th>Phases left</th></tr></thead>
+  <tbody>
+  {{range .DrawOffs}}
+  <tr>
+    <td style="white-space:nowrap"><img class="avatar small" src="{{img .Old.ImagePath}}" alt="{{.Old.Name}}"> → <img class="avatar small" src="{{img .Recent.ImagePath}}" alt="{{.Recent.Name}}"><br><span class="muted">{{.Old.Name}} then {{.Recent.Name}}</span></td>
+    <td class="{{if eq .Unbounded.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Unbounded.Persona.ImagePath}}" alt="{{.Unbounded.Persona.Name}}"> {{.Unbounded.Persona.Name}}</td>
+    <td class="{{if eq .Bounded.Persona.Name .Recent.Name}}hit{{else}}miss{{end}}"><img class="avatar small" src="{{img .Bounded.Persona.ImagePath}}" alt="{{.Bounded.Persona.Name}}"> {{.Bounded.Persona.Name}}</td>
+    <td>{{.Held}} <span class="muted">of {{.HeldAll}}</span></td>
     <td>{{template "phases" .Phases}}</td>
   </tr>
   {{end}}

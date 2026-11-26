@@ -3,15 +3,18 @@
 The vector the shop ranks with is `affinity.Fade.Vector`, distilled from the shopper's
 choices (selections, views and carts; listings never get past the cut). Recency is
 counted in events, not time: a shopper who comes back after three weeks is not a
-stranger. Three rules, applied in event order:
+stranger. Two rules, applied in event order:
 
 - every event fades everything before it by a factor (0.95: about 60% of the vector
   survives a visit);
-- only the last 1000 events count at all, far more than the mock data reach;
 - a strong change of intent forgets faster. When the last 3 choices point clearly away
   from the rest of the vector (cosine below 0.5, over the dimensions both name), the
   rest collapses to a fifth. Moving into a new category's own dimensions (clothes to
   cushions) is no change of intent and never triggers it.
+
+The still holds only the newest 1000 choices (`affinity.DefaultKeep`), far more than the
+mock data reach: older ones are [drawn off](/guide/distillery#drawing-off) after every
+feed.
 
 `TestIntentPicksUpQuickly` checks this on long histories (a visit every two days, the
 intent changing every six visits, every direction of change between the personas):

@@ -27,11 +27,18 @@ below are read off the chain the tests use, in order.</p>
   <div class="stage">
     <h4>4 · The still</h4>
     <p>Kept events with their infusion, in arrival order: <code>Infused{Event, Infusion}</code>, where the
-    infusion is <code>At · Session · Affinity</code>. Never rewritten.</p>
+    infusion is <code>At · Session · Affinity</code>. Never rewritten; only drawn off.</p>
   </div>
   <div class="arrow">→</div>
   <div class="stage">
-    <h4>5 · Recipes</h4>
+    <h4>5 · Draw off</h4>
+    <p>A <code>Rule</code> selects what the still should no longer hold: by position, name, time or session, composed with
+    <code>Any</code>, <code>All</code> and <code>Not</code>. It runs as a standing policy after every feed, and on request.</p>
+    <p class="meta">affinity still: keeps the newest {{.Keep}} choices · on request, e.g. <code>InSession(id)</code> to forget a visit</p>
+  </div>
+  <div class="arrow">→</div>
+  <div class="stage">
+    <h4>6 · Recipes</h4>
     <ul>{{range .Recipes}}<li><code>{{.Name}}</code> — {{.Doc}}</li>{{end}}</ul>
     <p class="meta">anything relative to now, like decay, happens here and nowhere earlier</p>
   </div>
