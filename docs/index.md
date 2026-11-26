@@ -17,7 +17,7 @@ hero:
       link: /guide/distillery
     - theme: alt
       text: See the Exhibits
-      link: /exhibits/catalog
+      link: /exhibits/shop
 
 features:
   - title: A still per user
@@ -78,12 +78,13 @@ still.DrawOff(affinity.Rules.InSession(month[0].ID()))                   // forg
 
 ## Exhibits from the tests
 
-The [Exhibits](/exhibits/catalog) are written by the test suite: every page is computed from
-the real code on every run, every product and persona shown by its image, every claim
+The exhibits are written by the test suite: every one is computed from the real code on
+every run, every product and persona shown by its image, every claim
 next to the test that checks it.
 
-- [Catalog](/exhibits/catalog), [Personas](/exhibits/personas), [Shop](/exhibits/shop)
-  and [Shoppers](/exhibits/shoppers): the test shop, package by package
+- [Catalog](/guide/test-shop/catalog) and [Personas](/guide/test-shop/personas), at the top of
+  their guide pages, and [Shop](/exhibits/shop) and [Shoppers](/exhibits/shoppers): the test
+  shop, package by package
 - [Distillery](/exhibits/distillery): how a still works, what it distills from the
   traffic, and what drawing off does to it
 - [Affinity vector](/exhibits/affinity): how the personalization vector fades and follows a

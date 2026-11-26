@@ -53,8 +53,8 @@ type ExhibitInfo struct {
 
 // Exhibits are the exhibits the tests write, and the pages that show them.
 var Exhibits = []ExhibitInfo{
-	{Name: "catalog", Page: "exhibits/catalog"},
-	{Name: "personas", Page: "exhibits/personas"},
+	{Name: "catalog", Page: "guide/test-shop/catalog"},
+	{Name: "personas", Page: "guide/test-shop/personas"},
 	{Name: "shop", Page: "exhibits/shop"},
 	{Name: "shoppers", Page: "exhibits/shoppers"},
 	{Name: "distillery", Page: "exhibits/distillery"},

@@ -1,10 +1,11 @@
 {{define "body"}}
-<h1>Personas</h1>
 <p class="lede">Shown by <code>TestExhibit</code> in <code>pkg/internal/mock/persona</code>: the four shoppers the
-traffic is generated for, each a taste vector, chosen so that each one's favourite is a different product.</p>
-<nav><a href="#personas">Personas</a><a href="#choosing">How a persona chooses</a><a href="#rankings">Rankings</a></nav>
+traffic is generated for, each a taste vector, chosen so that each one's favourite is a different product. Each
+picks from the first {{.ScanDepth}} positions of a listing what scores at least {{pct .GoodEnough}} of its favourite there
+(<a href="#how-a-persona-chooses">how a persona chooses</a>).</p>
+<nav><a href="#persona-tastes">Tastes</a><a href="#persona-rankings">Rankings</a></nav>
 
-<h2 id="personas">Personas</h2>
+<h2 id="persona-tastes">Tastes</h2>
 <p class="note">Each persona's taste vector, the occasion it browses (its strongest occasion dimension), and its favourite
 in every category. Fashion and home share some dimensions and not others: the home-only ones (cozy, natural,
 industrial) come from the personas' own vectors, the shared ones carry over from what they wear.</p>
@@ -21,15 +22,7 @@ industrial) come from the personas' own vectors, the shared ones carry over from
 {{end}}
 </div>
 
-<h2 id="choosing">How a persona chooses</h2>
-<p class="note">A persona decides what a shopper picks; the shop never sees it. Nobody reads a listing to the end and takes
-the optimum: <code>Persona.Choose</code> scans the first {{.ScanDepth}} positions, considers what scores at least
-{{pct .GoodEnough}} of its favourite there, and picks one, position <i>n</i> weighted 1/<i>n</i>, seeded so the traffic is
-reproducible. If nothing near the top is good enough, it scrolls on to its favourite. So a shopper does not always open
-the first product, nor, from a listing not yet ranked for it, its best match. The <a href="./shoppers">shoppers</a>
-exhibit shows the picks it makes.</p>
-
-<h2 id="rankings">Rankings</h2>
+<h2 id="persona-rankings">Rankings</h2>
 <p class="note">The whole catalog, both departments, ordered by each persona's score: its taste against each product's
 attractor, in the product's own category's weights. The front of each row should look like the persona, the back like
 its opposite.</p>

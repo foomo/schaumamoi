@@ -36,7 +36,7 @@ then [the distillery](/guide/distillery) for what each step does.
 go test ./...
 ```
 
-Besides checking the code, the tests write the [Exhibits](/exhibits/catalog) of this site:
+Besides checking the code, the tests write the [exhibits](/guide/documentation) of this site:
 pages computed from the real code on every run, next to the tests that check them.
 
 ## Build the documentation

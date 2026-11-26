@@ -1,12 +1,19 @@
 # Catalog
 
-`pkg/internal/mock/catalog` is what the shop sells: 54 products, each with an attractor
-vector and a description saying the same thing in prose. There are 18 dresses and 18
-pairs of trousers, six of each per occasion, and 18 home decoration pieces, six per
-category. Several products in each section suit each persona, so a shopper has real
-alternatives to choose between. Names are shop-style, an invented model name plus what
-the product is (`Halden Concrete Pendant`, `Odette Tulle Ballgown`); the description,
-not the name, says what taste it serves.
+`pkg/internal/mock/catalog` is what the test shop sells: 54 products in a small category
+tree, each with an attractor vector and a description saying the same thing in prose.
+Here is every one of them, as the tests see it.
+
+<!-- written by the tests: TestExhibit renders it into docs/.exhibits/ -->
+<!--@include: ../../.exhibits/catalog.md-->
+
+## Products
+
+There are 18 dresses and 18 pairs of trousers, six of each per occasion, and 18 home
+decoration pieces, six per category. Several products in each section suit each
+persona, so a shopper has real alternatives to choose between. Names are shop-style, an
+invented model name plus what the product is (`Halden Concrete Pendant`, `Odette Tulle
+Ballgown`); the description, not the name, says what taste it serves.
 
 ```go
 catalog.All()             // []catalog.Item, all 54
@@ -15,18 +22,7 @@ catalog.HomeDecoration()  // cushions, lamps, vases
 catalog.Dresses()         // one category
 ```
 
-The [catalog exhibit](/exhibits/catalog) shows every product with its picture, copy and
-attractor.
-
 ## Category tree
-
-| Department | Category | Items |
-|---|---|---|
-| Women's Fashion | Dresses | `DRESS_01` … `DRESS_18` |
-| Women's Fashion | Trousers | `TROUSERS_01` … `TROUSERS_18` |
-| Home Decoration | Cushions | six of `HOME_01` … `HOME_18` |
-| Home Decoration | Lamps | six of `HOME_01` … `HOME_18` |
-| Home Decoration | Vases | six of `HOME_01` … `HOME_18` |
 
 The GA4 category path carries the whole branch, e.g.
 `Women's Fashion > Trousers > Business > Ankle`. Dresses come in mini, midi and maxi,

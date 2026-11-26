@@ -1,17 +1,19 @@
 # Personas
 
 `pkg/internal/mock/persona` is the four shoppers the traffic is generated for, each a
-taste vector over the [catalog's dimensions](./catalog#dimensions):
+taste vector over the [catalog's dimensions](./catalog#dimensions). Here they are, as the
+tests see them: each one's taste, favourite in every category, and ranking of the whole
+catalog.
+
+<!-- written by the tests: TestExhibit renders it into docs/.exhibits/ -->
+<!--@include: ../../.exhibits/personas.md-->
+
+## Chosen to discriminate
 
 ```go
 persona.All()   // Kate, Sofia, Lena, Mira
 persona.Kate    // persona.Persona{Name, Description, Affinity}
 ```
-
-The [personas exhibit](/exhibits/personas) shows each one's taste, favourite in every
-category, and ranking of the whole catalog.
-
-## Chosen to discriminate
 
 Kate and Mira both dress for business but sit at opposite ends of classic and modern,
 so occasion alone never decides the outcome. Both fashion rails compete in one ranking,

@@ -14,14 +14,15 @@ and writes the product and persona images next to it, to `docs/.exhibits/images`
 
 A page shows an exhibit by including its fragment, with VitePress's
 `<!--@include: …-->`. The pages are committed like any other: a page of its own under
-`docs/exhibits/`, or a guide page that opens with its exhibit. `docs.Exhibits` names
+`docs/exhibits/`, or a guide page that opens with its exhibit. The catalog and the
+personas open their guide pages; the others are pages of their own, for now. `docs.Exhibits` names
 each exhibit and the page that shows it, because an included fragment's image paths
 resolve against that page.
 
 | Exhibit | What it shows |
 |---|---|
-| [Catalog](/exhibits/catalog) | the category tree, the dimensions and weights, every product with its copy and attractor |
-| [Personas](/exhibits/personas) | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
+| [Catalog](/guide/test-shop/catalog), on the guide page | the category tree, the dimensions and weights, every product with its copy and attractor |
+| [Personas](/guide/test-shop/personas), on the guide page | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
 | [Shop](/exhibits/shop) | every listing as a new shopper sees it, and ranked by what one visit taught the shop |
 | [Shoppers](/exhibits/shoppers) | journeys step by step, months of visits, and the shop's final rankings |
 | [Distillery](/exhibits/distillery) | how a still works, and what it distills: sessions, months, drift, detour, consent |

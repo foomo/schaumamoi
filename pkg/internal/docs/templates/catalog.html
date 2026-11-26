@@ -1,11 +1,10 @@
 {{define "body"}}
-<h1>Catalog</h1>
 <p class="lede">Shown by <code>TestExhibit</code> in <code>pkg/internal/mock/catalog</code>: the {{.Count}} products the
 shop sells, in its category tree. Every picture is drawn from the data it illustrates, so a product that looks wrong for
 its copy points at a vector, not at the drawing.</p>
-<nav><a href="#tree">The tree</a><a href="#dimensions">Dimensions</a><a href="#weights">Weights</a>{{range .Tree}}<a href="#{{lower .Name}}">{{.Name}}</a>{{end}}</nav>
+<nav><a href="#catalog-tree">Category tree</a><a href="#catalog-dimensions">Dimensions</a><a href="#catalog-weights">Weights</a>{{range .Tree}}<a href="#{{lower .Name}}">{{.Name}}</a>{{end}}</nav>
 
-<h2 id="tree">The tree</h2>
+<h2 id="catalog-tree">Category tree</h2>
 <p class="note">Two departments, each with its categories. The GA4 category path carries the whole branch; in fashion
 occasion and length sit below the category, home pieces stop at it. Categories are where products are offered, not a
 signal about the shopper: what the shopper opens, views and buys is.</p>
@@ -18,7 +17,7 @@ signal about the shopper: what the shopper opens, views and buys is.</p>
 </table>
 </div>
 
-<h2 id="dimensions">Dimensions</h2>
+<h2 id="catalog-dimensions">Dimensions</h2>
 <p class="note">The taste dimensions (<code>pkg/internal/mock/taste</code>) the products' attractors use, by department.
 Dresses and trousers speak the same ones, so taste carries between them. Home decoration shares only some, so what
 the shop learns from clothes reaches it only through those.</p>
@@ -28,7 +27,7 @@ the shop learns from clothes reaches it only through those.</p>
   <div class="card"><h3>home only</h3><p class="meta">{{range $i, $d := .Dimensions.Home}}{{if $i}} · {{end}}{{$d}}{{end}}</p></div>
 </div>
 
-<h2 id="weights">Weights</h2>
+<h2 id="catalog-weights">Weights</h2>
 <p class="note">Every product is scored in its own category's weights (<code>catalog.Score</code>): by the shop when it
 ranks, by a persona when it chooses. A dimension a category does not name counts for nothing there; each category's
 weights average 1, so they set emphasis, not scale.</p>
