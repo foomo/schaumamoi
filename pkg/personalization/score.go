@@ -1,6 +1,9 @@
 package personalization
 
-import "sort"
+import (
+	"math"
+	"sort"
+)
 
 // Score is the sparse dot product of two affinity maps: a dimension missing from either
 // side contributes nothing, so the maps only have to name the dimensions they care
@@ -51,4 +54,17 @@ func (m Map) WeightedScore(other, weights Map) Value {
 	}
 
 	return total
+}
+
+// Cosine is the similarity of two maps independent of their magnitude: a shopper seen
+// for six events and one seen for sixty compare on equal terms. It is 1 for the same
+// direction, -1 for the opposite one, and 0 when they share nothing or either is empty.
+// Built on Score, it is just as stable.
+func (m Map) Cosine(other Map) Value {
+	norm := float64(m.Score(m)) * float64(other.Score(other))
+	if norm == 0 {
+		return 0
+	}
+
+	return Value(float64(m.Score(other)) / math.Sqrt(norm))
 }

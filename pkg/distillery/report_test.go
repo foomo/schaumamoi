@@ -105,7 +105,7 @@ func TestReport(t *testing.T) {
 		month := shopper.History(shopper.Month(p))
 		c = newAffinityStill(nil)
 		addHistory(c, month)
-		months = append(months, monthRow{Persona: p, Read: read(t, c.Distill(decayed(wire.BaseTime, week)), p, eventsOf(month)), Phases: chips(c.Distill(phases(phaseThreshold)))})
+		months = append(months, monthRow{Persona: p, Read: read(t, c.Distill(decayed(wire.BaseTime, week)), p, eventsOf(month)), Phases: chips(c.Distill(affinity.Phases(affinity.DefaultPhaseThreshold)))})
 	}
 
 	for _, old := range persona.All() {
@@ -122,7 +122,7 @@ func TestReport(t *testing.T) {
 				Recent:  recent,
 				Flat:    read(t, c.Distill(flat), recent, eventsOf(history[3:])),
 				Decayed: read(t, c.Distill(decayed(wire.BaseTime, week)), recent, eventsOf(history[3:])),
-				Phases:  chips(c.Distill(phases(phaseThreshold))),
+				Phases:  chips(c.Distill(affinity.Phases(affinity.DefaultPhaseThreshold))),
 			})
 		}
 	}
@@ -150,7 +150,7 @@ func TestReport(t *testing.T) {
 			HeldAll:   all.Len(),
 			Bounded:   read(t, bounded.Distill(flat), recent, eventsOf(history[3:])),
 			Unbounded: read(t, all.Distill(flat), recent, eventsOf(history[3:])),
-			Phases:    chips(bounded.Distill(phases(phaseThreshold))),
+			Phases:    chips(bounded.Distill(affinity.Phases(affinity.DefaultPhaseThreshold))),
 		})
 
 		row := drawOffs[len(drawOffs)-1]
@@ -165,7 +165,7 @@ func TestReport(t *testing.T) {
 
 	c := newAffinityStill(nil)
 	addHistory(c, history)
-	detourPhases := chips(c.Distill(phases(phaseThreshold)))
+	detourPhases := chips(c.Distill(affinity.Phases(affinity.DefaultPhaseThreshold)))
 
 	for _, i := range []int{2, 3} {
 		history[i] = history[i].WithConsent(wire.ConsentDenied())
@@ -186,8 +186,8 @@ func TestReport(t *testing.T) {
 		"DrawOffs":   drawOffs,
 		"DrawOffAge": int(drawOffAge / (24 * time.Hour)),
 		"Detour":     detourPhases,
-		"Consented":  chips(consentedOnly.Distill(phases(phaseThreshold))),
-		"Threshold":  phaseThreshold,
+		"Consented":  chips(consentedOnly.Distill(affinity.Phases(affinity.DefaultPhaseThreshold))),
+		"Threshold":  affinity.DefaultPhaseThreshold,
 		"BaseTime":   wire.BaseTime,
 	}, nil))
 
@@ -218,20 +218,20 @@ func read(t *testing.T, aff personalization.Map, want persona.Persona, events []
 	}
 
 	for _, p := range persona.All() {
-		r.Sims = append(r.Sims, similarity{Persona: p, Score: cosine(aff, p.Affinity), Best: p.Name == r.Persona.Name})
+		r.Sims = append(r.Sims, similarity{Persona: p, Score: aff.Cosine(p.Affinity), Best: p.Name == r.Persona.Name})
 	}
 
 	return r
 }
 
-func chips(ws []window) []chip {
-	out := make([]chip, 0, len(ws))
-	for _, w := range ws {
+func chips(ps []affinity.Phase) []chip {
+	out := make([]chip, 0, len(ps))
+	for _, w := range ps {
 		out = append(out, chip{
-			Persona:  nearestPersona(w.Affinity, persona.All()),
+			Persona:  nearestPersona(w.Taste, persona.All()),
 			From:     w.From,
 			To:       w.To,
-			Sessions: len(w.Sessions),
+			Sessions: len(w.Visits),
 		})
 	}
 

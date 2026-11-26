@@ -128,7 +128,7 @@ func (tr traced) readsAs(title string) docs.Chart {
 	for slot, p := range persona.All() {
 		s := docs.Series{Name: p.Name, Slot: slot + 1}
 		for _, step := range tr.steps {
-			s.Values = append(s.Values, float64(cosine(step.Vector, p.Affinity)))
+			s.Values = append(s.Values, float64(step.Vector.Cosine(p.Affinity)))
 		}
 
 		c.Series = append(c.Series, s)
@@ -267,15 +267,6 @@ func TestReport(t *testing.T) {
 	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "affinity.md"))
 }
 
-func cosine(a, b personalization.Map) personalization.Value {
-	norm := float64(a.Score(a)) * float64(b.Score(b))
-	if norm == 0 {
-		return 0
-	}
-
-	return personalization.Value(float64(a.Score(b)) / math.Sqrt(norm))
-}
-
 func nearestPersona(aff personalization.Map) persona.Persona {
 	var (
 		best  persona.Persona
@@ -283,7 +274,7 @@ func nearestPersona(aff personalization.Map) persona.Persona {
 	)
 
 	for i, p := range persona.All() {
-		if v := cosine(aff, p.Affinity); i == 0 || v > score {
+		if v := aff.Cosine(p.Affinity); i == 0 || v > score {
 			best, score = p, v
 		}
 	}

@@ -39,6 +39,7 @@ mise run docs:dev    # serve it locally with live reload
 | `pkg/personalization` | the sparse taste vector and its (weighted) score                                |
 | `pkg/distillery`      | a still per user: fed events, cut and infused once, distilled by any number of recipes |
 | `pkg/affinity`        | the still that distills a shopper's personalization vector                     |
+| `pkg/visits`          | recipes that read a still visit by visit: visits, and phases of steady taste       |
 
 The tests drive them with deterministic GA4 traffic from a two-department shop,
 `pkg/internal/mock`: test fixtures, not a public API.

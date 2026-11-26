@@ -103,3 +103,28 @@ func TestWeightedScore(t *testing.T) {
 		})
 	}
 }
+
+func TestCosine(t *testing.T) {
+	t.Parallel()
+
+	a := personalization.Map{"classic": 1, "modern": -0.5}
+
+	tests := map[string]struct {
+		other personalization.Map
+		want  float64
+	}{
+		"itself":                  {a, 1},
+		"scaled, same direction":  {personalization.Map{"classic": 10, "modern": -5}, 1},
+		"opposite":                {personalization.Map{"classic": -2, "modern": 1}, -1},
+		"nothing shared":          {personalization.Map{"cozy": 1}, 0},
+		"empty":                   {personalization.Map{}, 0},
+		"half way, one dimension": {personalization.Map{"classic": 1}, 1 / 1.118034},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.InDelta(t, tt.want, float64(a.Cosine(tt.other)), 1e-6)
+		})
+	}
+}

@@ -1,7 +1,6 @@
 package distillery_test
 
 import (
-	"math"
 	"slices"
 	"testing"
 	"time"
@@ -14,6 +13,7 @@ import (
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
+	"github.com/foomo/schaumamoi/pkg/visits"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 	"github.com/stretchr/testify/assert"
@@ -167,17 +167,6 @@ func funnel(events []testInfused) map[sesamy.EventName]int {
 	return out
 }
 
-// cosine is the similarity of two affinity maps, independent of their magnitude: a
-// shopper seen for six events and one seen for sixty compare to a persona on equal terms.
-func cosine(a, b personalization.Map) personalization.Value {
-	norm := float64(a.Score(a)) * float64(b.Score(b))
-	if norm == 0 {
-		return 0
-	}
-
-	return personalization.Value(float64(a.Score(b)) / math.Sqrt(norm))
-}
-
 // nearestPersona is the persona whose taste the affinity is closest to, ties broken by
 // name so the result is stable.
 func nearestPersona(aff personalization.Map, personas []persona.Persona) persona.Persona {
@@ -187,7 +176,7 @@ func nearestPersona(aff personalization.Map, personas []persona.Persona) persona
 	)
 
 	for i, p := range personas {
-		v := cosine(aff, p.Affinity)
+		v := aff.Cosine(p.Affinity)
 		if i == 0 || v > score || (v == score && p.Name < best.Name) {
 			best, score = p, v
 		}
@@ -205,7 +194,7 @@ func nearestItem(aff personalization.Map, items []catalog.Item) catalog.Item {
 	)
 
 	for i, item := range items {
-		v := cosine(aff, item.Attractor)
+		v := aff.Cosine(item.Attractor)
 		if i == 0 || v > score || (v == score && item.ItemID < best.ItemID) {
 			best, score = item, v
 		}
@@ -250,13 +239,13 @@ func TestAffinityRecoversPersona(t *testing.T) {
 			aff := p.Distill(flat)
 			assert.Equal(t, who.Name, nearestPersona(aff, persona.All()).Name)
 
-			own := cosine(aff, who.Affinity)
+			own := aff.Cosine(who.Affinity)
 			for _, other := range persona.All() {
 				if other.Name == who.Name {
 					continue
 				}
 
-				assert.Greater(t, own, cosine(aff, other.Affinity), "closer to %s than to %s", other.Name, who.Name)
+				assert.Greater(t, own, aff.Cosine(other.Affinity), "closer to %s than to %s", other.Name, who.Name)
 			}
 		})
 	}
@@ -688,80 +677,12 @@ func TestFeedWithoutTimeDecaysAway(t *testing.T) {
 // visit ends and the next begins, and a visit is the unit taste is judged in — a single
 // event is too small, a whole month too large.
 
-// phaseThreshold is the cosine a visit must reach against the phase so far to belong to
-// it. Across every persona pair a visit within a phase scores at least 0.94 and the first
-// visit after a drift at most 0.63 — Mira to Lena, who share a minimal, modern taste, is
-// the close call — so 0.9 sits in the gap, nearer its top. A visit is only its choices;
-// the listings it scrolled past add nothing to it. The within-phase side is the tight
-// one: a shopper does not open the same products every visit (Sofia drifts between her
-// sequin and her tulle dress), so even one taste's visits differ.
-const phaseThreshold personalization.Value = 0.9
-
-// window is a run of consecutive sessions, with the affinity shown across them. A phase
-// is a window of steady taste.
-type window struct {
-	From, To time.Time
-	Sessions []string
-	Affinity personalization.Map
-}
-
-// sessionWindows groups the still into one window per session, in order. Events arrive in
-// order and a session's events arrive together, so a change of session opens a new window.
-func sessionWindows(events []testInfused) []window {
-	var out []window
-
-	for i, e := range events {
-		if i == 0 || e.Infusion.Session != events[i-1].Infusion.Session {
-			out = append(out, window{From: e.Infusion.At, Sessions: []string{e.Infusion.Session}, Affinity: personalization.Map{}})
-		}
-
-		v := &out[len(out)-1]
-		v.To = e.Infusion.At
-		for dimension, w := range e.Infusion.Affinity {
-			v.Affinity[dimension] += w
-		}
-	}
-
-	return out
-}
-
-// phases merges consecutive visits into windows of steady taste: a visit joins the
-// current phase if it is at least threshold similar to the phase so far, and opens a new
-// one otherwise. A visit that says nothing about taste joins whatever phase it falls in.
-//
-// Phases are contiguous. A shopper who drifts away and comes back gets three windows,
-// not two — the return is news about when the taste held, which a merge would lose.
-func phases(threshold personalization.Value) distillery.Recipe[any, infusion, []window] {
-	return func(events []testInfused) []window {
-		var out []window
-
-		for _, v := range sessionWindows(events) {
-			if len(out) > 0 {
-				current := &out[len(out)-1]
-				if len(v.Affinity) == 0 || cosine(v.Affinity, current.Affinity) >= threshold {
-					current.To = v.To
-					current.Sessions = append(current.Sessions, v.Sessions...)
-					for dimension, w := range v.Affinity {
-						current.Affinity[dimension] += w
-					}
-
-					continue
-				}
-			}
-
-			out = append(out, v)
-		}
-
-		return out
-	}
-}
-
 // phasePersonas names the persona each phase is nearest to, which is how a test reads a
 // list of phases back.
-func phasePersonas(ps []window) []string {
+func phasePersonas(ps []affinity.Phase) []string {
 	out := make([]string, 0, len(ps))
 	for _, p := range ps {
-		out = append(out, nearestPersona(p.Affinity, persona.All()).Name)
+		out = append(out, nearestPersona(p.Taste, persona.All()).Name)
 	}
 
 	return out
@@ -785,8 +706,8 @@ func TestStampReadsEnvelopeSession(t *testing.T) {
 
 	got := p.Distill(func(events []testInfused) []string {
 		var out []string
-		for _, v := range sessionWindows(events) {
-			out = append(out, v.Sessions...)
+		for _, v := range visits.Of(events) {
+			out = append(out, v.Session)
 		}
 
 		return out
@@ -796,99 +717,8 @@ func TestStampReadsEnvelopeSession(t *testing.T) {
 	bare := newAffinityStill(nil)
 	bare.Feed(envelope{}, kateJourney()...)
 	assert.Equal(t, []string{""}, bare.Distill(func(events []testInfused) []string {
-		return sessionWindows(events)[0].Sessions
+		return []string{visits.Of(events)[0].Session}
 	}))
-}
-
-// TestSteadyMonthIsOnePhase is the baseline: a shopper who never drifts has one window,
-// spanning the whole month, and it reads as them.
-func TestSteadyMonthIsOnePhase(t *testing.T) {
-	t.Parallel()
-
-	for _, who := range persona.All() {
-		t.Run(who.Name, func(t *testing.T) {
-			t.Parallel()
-
-			history := shopper.History(shopper.Month(who))
-			p := newAffinityStill(nil)
-			addHistory(p, history)
-
-			got := p.Distill(phases(phaseThreshold))
-			require.Len(t, got, 1)
-			assert.Equal(t, []string{who.Name}, phasePersonas(got))
-			assertDuring(t, got[0].From, history[0], "the phase starts in the first visit")
-			assertDuring(t, got[0].To, history[len(history)-1], "the phase ends in the last visit")
-			assert.Len(t, got[0].Sessions, len(shopper.Month(who)))
-		})
-	}
-}
-
-// TestDriftSplitsIntoPhases is what the windows are for. A month that drifts from one
-// taste to another must split exactly where it drifted — after the third visit, two
-// weeks ago — and each side must read as the persona who was shopping then. Unlike
-// decay, which only answers "who now", this recovers who the shopper was and when.
-func TestDriftSplitsIntoPhases(t *testing.T) {
-	t.Parallel()
-
-	for _, old := range persona.All() {
-		for _, recent := range persona.All() {
-			if old.Name == recent.Name {
-				continue
-			}
-
-			t.Run(old.Name+" then "+recent.Name, func(t *testing.T) {
-				t.Parallel()
-
-				history := drifted(old, recent)
-				p := newAffinityStill(nil)
-				addHistory(p, history)
-
-				got := p.Distill(phases(phaseThreshold))
-				require.Len(t, got, 2)
-				assert.Equal(t, []string{old.Name, recent.Name}, phasePersonas(got))
-
-				assertDuring(t, got[0].To, history[2], "the old taste ends in the visit of the first purchase")
-				assertDuring(t, got[1].From, history[3], "the new taste starts in the next visit")
-				assert.Len(t, got[0].Sessions, 3)
-				assert.Len(t, got[1].Sessions, 4)
-			})
-		}
-	}
-}
-
-// TestReturningTasteIsANewPhase pins that windows are contiguous: Kate detours into
-// Sofia's taste for two visits mid-month and comes back, which is three phases, not a
-// Kate phase with a hole in it.
-func TestReturningTasteIsANewPhase(t *testing.T) {
-	t.Parallel()
-
-	visitsOf := shopper.Month(persona.Kate)
-	visitsOf[2].Persona = persona.Sofia
-	visitsOf[3].Persona = persona.Sofia
-
-	p := newAffinityStill(nil)
-	addHistory(p, shopper.History(visitsOf))
-
-	got := p.Distill(phases(phaseThreshold))
-	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(got))
-}
-
-// TestPhasesNeedSessions shows the session stamp doing the work: the same drifted month
-// stamped with its time but not its session is one undivided visit, nothing to split.
-func TestPhasesNeedSessions(t *testing.T) {
-	t.Parallel()
-
-	// the time only: Stamp without its session
-	timeOnly := func(env envelope, _ testEvent, d infusion) infusion {
-		d.At = env.At
-
-		return d
-	}
-
-	p := distillery.New(testConfig{Infusers: []testInfuser{timeOnly, addAttractors, weighByIntent}})
-	addHistory(p, drifted(persona.Sofia, persona.Kate))
-
-	assert.Len(t, p.Distill(phases(phaseThreshold)), 1)
 }
 
 // consented keeps only events from batches whose shopper consented to personalization.
@@ -926,8 +756,8 @@ func TestCutSeesEnvelope(t *testing.T) {
 	}
 
 	assert.Equal(t, kept, consentCut.Len())
-	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(all.Distill(phases(phaseThreshold))))
-	assert.Equal(t, []string{"Kate"}, phasePersonas(consentCut.Distill(phases(phaseThreshold))))
+	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phasePersonas(all.Distill(affinity.Phases(affinity.DefaultPhaseThreshold))))
+	assert.Equal(t, []string{"Kate"}, phasePersonas(consentCut.Distill(affinity.Phases(affinity.DefaultPhaseThreshold))))
 }
 
 func clone(m personalization.Map) personalization.Map {
@@ -937,14 +767,4 @@ func clone(m personalization.Map) personalization.Map {
 	}
 
 	return out
-}
-
-// assertDuring checks that at falls within a visit: from its first request to its last.
-// A phase starts and ends at choices, which happen during a visit, not at its start.
-func assertDuring(t *testing.T, at time.Time, session wire.Session, msg string) {
-	t.Helper()
-
-	end := time.UnixMicro(session[len(session)-1].TimestampMicros).UTC()
-	assert.False(t, at.Before(session.Start()), "%s: %s is before %s", msg, at, session.Start())
-	assert.False(t, at.After(end), "%s: %s is after %s", msg, at, end)
 }

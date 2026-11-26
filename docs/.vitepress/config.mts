@@ -30,6 +30,7 @@ export default defineConfig({
 					{ text: 'Personalization', link: '/guide/personalization' },
 					{ text: 'The Distillery', link: '/guide/distillery' },
 					{ text: 'The Vector', link: '/guide/vector' },
+					{ text: 'Visits and Phases', link: '/guide/visits' },
 					{ text: 'Documentation', link: '/guide/documentation' },
 				],
 			},

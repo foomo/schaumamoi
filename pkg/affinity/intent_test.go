@@ -116,7 +116,7 @@ func TestIntentPicksUpQuickly(t *testing.T) {
 			name, bound := who.Name, strongPickup
 			if phase > 0 {
 				name = order[phase-1].Name + " then " + who.Name
-				if cosine(order[phase-1].Affinity, who.Affinity) > 0 {
+				if order[phase-1].Affinity.Cosine(who.Affinity) > 0 {
 					name, bound = name+" (gentle)", gentlePickup
 				}
 			}

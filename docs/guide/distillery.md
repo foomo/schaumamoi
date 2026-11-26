@@ -97,7 +97,8 @@ what it cuts never gets in.
   map, and `WeighByIntent` weighs it: a selection or view counts once, a cart three times.
 - **Recipes:** `Flat` sums everything, `Decayed` fades by time, and `Fade.Vector`
   fades per choice. `Fade.Vector` is [the personalization vector](/guide/vector) the
-  shop ranks every listing with.
+  shop ranks every listing with. `Phases` cuts a history into [phases of steady
+  taste](/guide/visits).
 - **Draw off:** it holds the newest `DefaultKeep` (1000) choices, and draws off the rest
   after every feed.
 
