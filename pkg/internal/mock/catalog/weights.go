@@ -14,9 +14,13 @@ import (
 // across the shop — what the shopper opens, views and buys — and the weights decide how
 // it applies to dresses, to trousers, to lamps.
 //
-// The weights are a complete statement: a dimension a category does not name counts for
-// nothing there (personalization.Vector.WeightedScore). TestCategoryWeightsAreComplete
-// keeps every dimension a category's products carry named in its weights.
+// The weights are exactly the category's own part of the vector space: the dimensions its
+// products carry, no more and no less. A dimension a category does not name counts for
+// nothing there (personalization.Vector.WeightedScore), so every dimension a product
+// carries must be named (TestCategoryWeightsAreComplete). And a weight on a dimension none
+// of its products carries would score nothing and only skew the scaling, so resolveWeights
+// drops it (TestCategoryWeightsNameOnlyWhatItsProductsSpeak): no cushion is industrial, so
+// cushions do not weigh industrial, whatever home decoration does.
 //
 // They are defined per department and refined per category: a category starts from its
 // department's weights and overrides only what differs. Each category's weights are then
@@ -87,6 +91,15 @@ func resolveWeights() map[string]personalization.Vector {
 			w[d] = v
 		}
 
+		// a category looks only at what its own products speak: a weight on a dimension none
+		// of them carries would score nothing, and only skew the scaling below
+		spoken := spokenIn(category)
+		for d := range w {
+			if !spoken[d] {
+				delete(w, d)
+			}
+		}
+
 		// summed in sorted dimension order: float addition is not associative and map order
 		// is random, so a sum in map order would differ in its last bits from one run to the
 		// next, and so would every score.
@@ -124,4 +137,20 @@ func CategoryWeights(category string) personalization.Vector {
 // scorer the shop ranks with and the personas choose by.
 func Score(taste personalization.Vector, item Item) personalization.Value {
 	return taste.WeightedScore(item.Attractor, categoryWeights[item.Category()])
+}
+
+// spokenIn is the dimensions the products of a category carry in their attractors: the
+// part of the vector space that category lives in.
+func spokenIn(category string) map[personalization.Dimension]bool {
+	out := map[personalization.Dimension]bool{}
+
+	for _, item := range All() {
+		if item.Category() == category {
+			for d := range item.Attractor {
+				out[d] = true
+			}
+		}
+	}
+
+	return out
 }

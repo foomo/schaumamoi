@@ -4411,27 +4411,6 @@
             },
             {
               "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Studio",
-              "item_category": "Home Decoration",
-              "item_category2": "Cushions",
-              "item_id": "HOME_01",
-              "item_list_id": "all-products",
-              "item_list_name": "All Products",
-              "item_name": "Boudoir Velvet Cushion",
-              "item_variant": "plum",
-              "price": 69,
-              "quantity": 1,
-              "attractor": {
-                "classic": 0.3,
-                "colourful": 0.6,
-                "cozy": 0.5,
-                "minimalistic": -0.6,
-                "opulent": 0.85,
-                "romantic": 0.7
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Atelier",
               "item_category": "Women's Fashion",
               "item_category2": "Dresses",
@@ -4451,6 +4430,27 @@
                 "festive": 0.8,
                 "opulent": 0.5,
                 "romantic": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Studio",
+              "item_category": "Home Decoration",
+              "item_category2": "Cushions",
+              "item_id": "HOME_01",
+              "item_list_id": "all-products",
+              "item_list_name": "All Products",
+              "item_name": "Boudoir Velvet Cushion",
+              "item_variant": "plum",
+              "price": 69,
+              "quantity": 1,
+              "attractor": {
+                "classic": 0.3,
+                "colourful": 0.6,
+                "cozy": 0.5,
+                "minimalistic": -0.6,
+                "opulent": 0.85,
+                "romantic": 0.7
               }
             },
             {
@@ -4477,26 +4477,6 @@
             {
               "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Atelier",
-              "item_category": "Home Decoration",
-              "item_category2": "Lamps",
-              "item_id": "HOME_08",
-              "item_list_id": "all-products",
-              "item_list_name": "All Products",
-              "item_name": "Versailles Crystal Lamp",
-              "item_variant": "champagne",
-              "price": 249,
-              "quantity": 1,
-              "attractor": {
-                "bold": 0.5,
-                "classic": 0.4,
-                "minimalistic": -0.7,
-                "opulent": 0.95,
-                "romantic": 0.75
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Atelier",
               "item_category": "Women's Fashion",
               "item_category2": "Trousers",
               "item_category3": "Festive",
@@ -4516,6 +4496,26 @@
                 "festive": 0.85,
                 "opulent": 0.8,
                 "romantic": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Home Decoration",
+              "item_category2": "Lamps",
+              "item_id": "HOME_08",
+              "item_list_id": "all-products",
+              "item_list_name": "All Products",
+              "item_name": "Versailles Crystal Lamp",
+              "item_variant": "champagne",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.4,
+                "minimalistic": -0.7,
+                "opulent": 0.95,
+                "romantic": 0.75
               }
             },
             {

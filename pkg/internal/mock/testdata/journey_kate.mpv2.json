@@ -4080,26 +4080,6 @@
             {
               "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Studio",
-              "item_category": "Home Decoration",
-              "item_category2": "Lamps",
-              "item_id": "HOME_05",
-              "item_list_id": "all-products",
-              "item_list_name": "All Products",
-              "item_name": "Archive Brass Table Lamp",
-              "item_variant": "gold",
-              "price": 189,
-              "quantity": 1,
-              "attractor": {
-                "classic": 0.9,
-                "cozy": 0.5,
-                "modern": -0.5,
-                "opulent": 0.4,
-                "retro": 0.4
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Studio",
               "item_category": "Women's Fashion",
               "item_category2": "Trousers",
               "item_category3": "Business",
@@ -4117,6 +4097,26 @@
                 "minimalistic": 0.6,
                 "modern": 0.7,
                 "structured": 0.7
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Studio",
+              "item_category": "Home Decoration",
+              "item_category2": "Lamps",
+              "item_id": "HOME_05",
+              "item_list_id": "all-products",
+              "item_list_name": "All Products",
+              "item_name": "Archive Brass Table Lamp",
+              "item_variant": "gold",
+              "price": 189,
+              "quantity": 1,
+              "attractor": {
+                "classic": 0.9,
+                "cozy": 0.5,
+                "modern": -0.5,
+                "opulent": 0.4,
+                "retro": 0.4
               }
             },
             {
@@ -4278,25 +4278,6 @@
             },
             {
               "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Studio",
-              "item_category": "Home Decoration",
-              "item_category2": "Cushions",
-              "item_id": "HOME_02",
-              "item_list_id": "all-products",
-              "item_list_name": "All Products",
-              "item_name": "Fireside Knit Cushion",
-              "item_variant": "cream",
-              "price": 49,
-              "quantity": 1,
-              "attractor": {
-                "classic": 0.7,
-                "cozy": 0.9,
-                "natural": 0.4,
-                "retro": 0.3
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Atelier",
               "item_category": "Women's Fashion",
               "item_category2": "Trousers",
@@ -4317,6 +4298,25 @@
                 "opulent": 0.7,
                 "retro": 0.3,
                 "structured": 0.5
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Studio",
+              "item_category": "Home Decoration",
+              "item_category2": "Cushions",
+              "item_id": "HOME_02",
+              "item_list_id": "all-products",
+              "item_list_name": "All Products",
+              "item_name": "Fireside Knit Cushion",
+              "item_variant": "cream",
+              "price": 49,
+              "quantity": 1,
+              "attractor": {
+                "classic": 0.7,
+                "cozy": 0.9,
+                "natural": 0.4,
+                "retro": 0.3
               }
             },
             {
@@ -4793,25 +4793,6 @@
             {
               "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Studio",
-              "item_category": "Home Decoration",
-              "item_category2": "Cushions",
-              "item_id": "HOME_13",
-              "item_list_id": "all-products",
-              "item_list_name": "All Products",
-              "item_name": "Cloud Bouclé Cushion",
-              "item_variant": "cream",
-              "price": 59,
-              "quantity": 1,
-              "attractor": {
-                "cozy": 0.85,
-                "minimalistic": 0.5,
-                "modern": 0.4,
-                "natural": 0.3
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Studio",
               "item_category": "Women's Fashion",
               "item_category2": "Trousers",
               "item_category3": "Casual",
@@ -4828,6 +4809,25 @@
                 "edgy": 0.5,
                 "minimalistic": 0.8,
                 "modern": 0.6
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Studio",
+              "item_category": "Home Decoration",
+              "item_category2": "Cushions",
+              "item_id": "HOME_13",
+              "item_list_id": "all-products",
+              "item_list_name": "All Products",
+              "item_name": "Cloud Bouclé Cushion",
+              "item_variant": "cream",
+              "price": 59,
+              "quantity": 1,
+              "attractor": {
+                "cozy": 0.85,
+                "minimalistic": 0.5,
+                "modern": 0.4,
+                "natural": 0.3
               }
             },
             {

@@ -25,6 +25,28 @@ func TestCategoryWeightsAreComplete(t *testing.T) {
 	}
 }
 
+// TestCategoryWeightsNameOnlyWhatItsProductsSpeak is the other half: a category weighs
+// only dimensions its products carry. The department states what its categories may look
+// at; each category looks only at the part of it its own products speak.
+func TestCategoryWeightsNameOnlyWhatItsProductsSpeak(t *testing.T) {
+	t.Parallel()
+
+	for _, category := range categories {
+		spoken := map[personalization.Dimension]bool{}
+		for _, item := range catalog.All() {
+			if item.Category() == category {
+				for d := range item.Attractor {
+					spoken[d] = true
+				}
+			}
+		}
+
+		for d := range catalog.CategoryWeights(category) {
+			assert.True(t, spoken[d], "%s weighs %s, which none of its products carries", category, d)
+		}
+	}
+}
+
 // TestCategoryWeightsAverageOne pins the scaling: every category's weights average 1 over
 // the dimensions they name, so they set emphasis and not scale, and a listing that mixes
 // categories ranks them on one scale.

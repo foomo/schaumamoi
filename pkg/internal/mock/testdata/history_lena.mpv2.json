@@ -4045,26 +4045,6 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_06",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Halden Concrete Pendant",
-                "item_variant": "grey",
-                "price": 159,
-                "quantity": 1,
-                "attractor": {
-                  "classic": -0.4,
-                  "edgy": 0.6,
-                  "industrial": 0.9,
-                  "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
                 "item_category2": "Vases",
                 "item_id": "HOME_10",
                 "item_list_id": "all-products",
@@ -4097,6 +4077,26 @@
                   "minimalistic": 0.7,
                   "modern": 0.2,
                   "natural": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Lamps",
+                "item_id": "HOME_06",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Halden Concrete Pendant",
+                "item_variant": "grey",
+                "price": 159,
+                "quantity": 1,
+                "attractor": {
+                  "classic": -0.4,
+                  "edgy": 0.6,
+                  "industrial": 0.9,
+                  "minimalistic": 0.75,
+                  "modern": 0.85
                 }
               },
               {
@@ -8207,6 +8207,25 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
                 "item_category2": "Lamps",
                 "item_id": "HOME_06",
                 "item_list_id": "home-decoration",
@@ -8220,25 +8239,6 @@
                   "edgy": 0.6,
                   "industrial": 0.9,
                   "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -9105,26 +9105,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_06",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Halden Concrete Pendant",
-                "item_variant": "grey",
-                "price": 159,
-                "quantity": 1,
-                "attractor": {
-                  "classic": -0.4,
-                  "edgy": 0.6,
-                  "industrial": 0.9,
-                  "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
                 "item_category3": "Casual",
@@ -9163,6 +9143,26 @@
                   "feminine": 0.3,
                   "minimalistic": 0.4,
                   "romantic": 0.2
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Lamps",
+                "item_id": "HOME_06",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Halden Concrete Pendant",
+                "item_variant": "grey",
+                "price": 159,
+                "quantity": 1,
+                "attractor": {
+                  "classic": -0.4,
+                  "edgy": 0.6,
+                  "industrial": 0.9,
+                  "minimalistic": 0.75,
+                  "modern": 0.85
                 }
               },
               {
@@ -9488,25 +9488,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_02",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Fireside Knit Cushion",
-                "item_variant": "cream",
-                "price": 49,
-                "quantity": 1,
-                "attractor": {
-                  "classic": 0.7,
-                  "cozy": 0.9,
-                  "natural": 0.4,
-                  "retro": 0.3
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Business",
@@ -9525,6 +9506,25 @@
                   "minimalistic": 0.5,
                   "retro": 0.3,
                   "structured": 0.9
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_02",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Fireside Knit Cushion",
+                "item_variant": "cream",
+                "price": 49,
+                "quantity": 1,
+                "attractor": {
+                  "classic": 0.7,
+                  "cozy": 0.9,
+                  "natural": 0.4,
+                  "retro": 0.3
                 }
               },
               {
@@ -13279,6 +13279,25 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
                 "item_category2": "Lamps",
                 "item_id": "HOME_06",
                 "item_list_id": "home-decoration",
@@ -13292,25 +13311,6 @@
                   "edgy": 0.6,
                   "industrial": 0.9,
                   "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -14075,25 +14075,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Casual",
@@ -14140,6 +14121,25 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
                 "item_category2": "Lamps",
                 "item_id": "HOME_06",
                 "item_list_id": "all-products",
@@ -14160,19 +14160,19 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
                 "item_list_id": "all-products",
                 "item_list_name": "All Products",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
                 "quantity": 1,
                 "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
-                  "modern": 0.85
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
+                  "natural": 0.85
                 }
               },
               {
@@ -14239,26 +14239,6 @@
               },
               {
                 "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Atelier",
-                "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_15",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Meridian Arc Floor Lamp",
-                "item_variant": "black",
-                "price": 229,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.3,
-                  "edgy": 0.4,
-                  "industrial": 0.6,
-                  "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
@@ -14281,21 +14261,22 @@
               },
               {
                 "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
+                "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_13",
+                "item_category2": "Lamps",
+                "item_id": "HOME_15",
                 "item_list_id": "all-products",
                 "item_list_name": "All Products",
-                "item_name": "Cloud Bouclé Cushion",
-                "item_variant": "cream",
-                "price": 59,
+                "item_name": "Meridian Arc Floor Lamp",
+                "item_variant": "black",
+                "price": 229,
                 "quantity": 1,
                 "attractor": {
-                  "cozy": 0.85,
-                  "minimalistic": 0.5,
-                  "modern": 0.4,
-                  "natural": 0.3
+                  "bold": 0.3,
+                  "edgy": 0.4,
+                  "industrial": 0.6,
+                  "minimalistic": 0.6,
+                  "modern": 0.85
                 }
               },
               {
@@ -14387,6 +14368,25 @@
                   "minimalistic": 0.6,
                   "modern": 0.7,
                   "romantic": 0.5
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_13",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Cloud Bouclé Cushion",
+                "item_variant": "cream",
+                "price": 59,
+                "quantity": 1,
+                "attractor": {
+                  "cozy": 0.85,
+                  "minimalistic": 0.5,
+                  "modern": 0.4,
+                  "natural": 0.3
                 }
               },
               {
@@ -14915,25 +14915,6 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_11",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Canton Ginger Jar",
-                "item_variant": "navy",
-                "price": 99,
-                "quantity": 1,
-                "attractor": {
-                  "classic": 0.95,
-                  "colourful": 0.3,
-                  "modern": -0.6,
-                  "retro": 0.5
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
                 "item_category2": "Lamps",
                 "item_id": "HOME_05",
                 "item_list_id": "all-products",
@@ -14948,6 +14929,25 @@
                   "modern": -0.5,
                   "opulent": 0.4,
                   "retro": 0.4
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_11",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Canton Ginger Jar",
+                "item_variant": "navy",
+                "price": 99,
+                "quantity": 1,
+                "attractor": {
+                  "classic": 0.95,
+                  "colourful": 0.3,
+                  "modern": -0.6,
+                  "retro": 0.5
                 }
               },
               {
@@ -18304,6 +18304,25 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
                 "item_category2": "Lamps",
                 "item_id": "HOME_06",
                 "item_list_id": "home-decoration",
@@ -18317,25 +18336,6 @@
                   "edgy": 0.6,
                   "industrial": 0.9,
                   "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -19055,25 +19055,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
                 "item_category3": "Business",
@@ -19136,6 +19117,25 @@
                   "feminine": 0.4,
                   "minimalistic": 0.5,
                   "romantic": 0.2
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
+                  "natural": 0.85
                 }
               },
               {
@@ -23331,26 +23331,6 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_06",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Halden Concrete Pendant",
-                "item_variant": "grey",
-                "price": 159,
-                "quantity": 1,
-                "attractor": {
-                  "classic": -0.4,
-                  "edgy": 0.6,
-                  "industrial": 0.9,
-                  "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
                 "item_category2": "Vases",
                 "item_id": "HOME_10",
                 "item_list_id": "home-decoration",
@@ -23370,19 +23350,20 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
+                "item_category2": "Lamps",
+                "item_id": "HOME_06",
                 "item_list_id": "home-decoration",
                 "item_list_name": "Home Decoration",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
+                "item_name": "Halden Concrete Pendant",
+                "item_variant": "grey",
+                "price": 159,
                 "quantity": 1,
                 "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
+                  "classic": -0.4,
+                  "edgy": 0.6,
+                  "industrial": 0.9,
                   "minimalistic": 0.75,
-                  "natural": 0.85
+                  "modern": 0.85
                 }
               },
               {
@@ -23403,6 +23384,25 @@
                   "industrial": 0.6,
                   "minimalistic": 0.6,
                   "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
+                  "natural": 0.85
                 }
               },
               {
@@ -24184,26 +24184,6 @@
               },
               {
                 "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Atelier",
-                "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_15",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Meridian Arc Floor Lamp",
-                "item_variant": "black",
-                "price": 229,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.3,
-                  "edgy": 0.4,
-                  "industrial": 0.6,
-                  "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
@@ -24222,6 +24202,26 @@
                   "feminine": 0.4,
                   "minimalistic": 0.5,
                   "romantic": 0.2
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Atelier",
+                "item_category": "Home Decoration",
+                "item_category2": "Lamps",
+                "item_id": "HOME_15",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Meridian Arc Floor Lamp",
+                "item_variant": "black",
+                "price": 229,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.3,
+                  "edgy": 0.4,
+                  "industrial": 0.6,
+                  "minimalistic": 0.6,
+                  "modern": 0.85
                 }
               },
               {
@@ -24248,25 +24248,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
                 "item_category3": "Casual",
@@ -24284,6 +24265,25 @@
                   "feminine": 0.3,
                   "minimalistic": 0.4,
                   "romantic": 0.2
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
+                  "natural": 0.85
                 }
               },
               {
@@ -25020,6 +25020,27 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_01",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Boudoir Velvet Cushion",
+                "item_variant": "plum",
+                "price": 69,
+                "quantity": 1,
+                "attractor": {
+                  "classic": 0.3,
+                  "colourful": 0.6,
+                  "cozy": 0.5,
+                  "minimalistic": -0.6,
+                  "opulent": 0.85,
+                  "romantic": 0.7
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
@@ -25040,27 +25061,6 @@
                   "minimalistic": -0.6,
                   "opulent": 0.7,
                   "romantic": 0.5
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_01",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Boudoir Velvet Cushion",
-                "item_variant": "plum",
-                "price": 69,
-                "quantity": 1,
-                "attractor": {
-                  "classic": 0.3,
-                  "colourful": 0.6,
-                  "cozy": 0.5,
-                  "minimalistic": -0.6,
-                  "opulent": 0.85,
-                  "romantic": 0.7
                 }
               },
               {
@@ -29101,26 +29101,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_06",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Halden Concrete Pendant",
-                "item_variant": "grey",
-                "price": 159,
-                "quantity": 1,
-                "attractor": {
-                  "classic": -0.4,
-                  "edgy": 0.6,
-                  "industrial": 0.9,
-                  "minimalistic": 0.75,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
                 "item_category3": "Business",
@@ -29139,6 +29119,26 @@
                   "minimalistic": 0.85,
                   "modern": 0.9,
                   "structured": 0.8
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Lamps",
+                "item_id": "HOME_06",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Halden Concrete Pendant",
+                "item_variant": "grey",
+                "price": 159,
+                "quantity": 1,
+                "attractor": {
+                  "classic": -0.4,
+                  "edgy": 0.6,
+                  "industrial": 0.9,
+                  "minimalistic": 0.75,
+                  "modern": 0.85
                 }
               },
               {
@@ -29314,25 +29314,6 @@
               },
               {
                 "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
@@ -29414,6 +29395,25 @@
                   "cozy": 0.2,
                   "minimalistic": 0.7,
                   "modern": 0.2,
+                  "natural": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
                   "natural": 0.85
                 }
               },
@@ -33479,25 +33479,6 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
                 "item_category2": "Vases",
                 "item_id": "HOME_09",
                 "item_list_id": "home-decoration",
@@ -33510,6 +33491,25 @@
                   "cozy": 0.2,
                   "minimalistic": 0.7,
                   "modern": 0.2,
+                  "natural": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
                   "natural": 0.85
                 }
               },
@@ -33801,18 +33801,18 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
+                "item_category2": "Vases",
+                "item_id": "HOME_09",
                 "item_list_id": "home-decoration",
                 "item_list_name": "Home Decoration",
-                "item_name": "Driftwood Linen Cushion",
+                "item_name": "Kiln Stoneware Vase",
                 "item_variant": "sand",
-                "price": 39,
+                "price": 59,
                 "quantity": 1,
                 "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
+                  "cozy": 0.2,
+                  "minimalistic": 0.7,
+                  "modern": 0.2,
                   "natural": 0.85
                 }
               }
@@ -33840,25 +33840,44 @@
         {
           "name": "view_item_list",
           "params": {
-            "item_list_id": "home-decoration/cushions",
-            "item_list_name": "Cushions",
+            "item_list_id": "home-decoration/vases",
+            "item_list_name": "Vases",
             "items": [
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
                 "quantity": 1,
                 "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_09",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Kiln Stoneware Vase",
+                "item_variant": "sand",
+                "price": 59,
+                "quantity": 1,
+                "attractor": {
+                  "cozy": 0.2,
+                  "minimalistic": 0.7,
+                  "modern": 0.2,
                   "natural": 0.85
                 }
               },
@@ -33866,103 +33885,80 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_13",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Cloud Bouclé Cushion",
-                "item_variant": "cream",
-                "price": 59,
-                "quantity": 1,
-                "attractor": {
-                  "cozy": 0.85,
-                  "minimalistic": 0.5,
-                  "modern": 0.4,
-                  "natural": 0.3
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_04",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Zigzag Print Cushion",
-                "item_variant": "mustard",
-                "price": 45,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.8,
-                  "colourful": 0.7,
-                  "edgy": 0.3,
-                  "modern": 0.6,
-                  "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_02",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Fireside Knit Cushion",
-                "item_variant": "cream",
+                "item_category2": "Vases",
+                "item_id": "HOME_18",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Sienna Terracotta Vase",
+                "item_variant": "terracotta",
                 "price": 49,
                 "quantity": 1,
                 "attractor": {
-                  "classic": 0.7,
-                  "cozy": 0.9,
-                  "natural": 0.4,
-                  "retro": 0.3
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_14",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Posy Embroidered Cushion",
-                "item_variant": "rose",
-                "price": 55,
-                "quantity": 1,
-                "attractor": {
-                  "classic": 0.4,
-                  "colourful": 0.6,
+                  "bohemian": 0.7,
                   "cozy": 0.4,
-                  "retro": 0.6,
-                  "romantic": 0.7
+                  "natural": 0.8,
+                  "retro": 0.2
                 }
               },
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_01",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Boudoir Velvet Cushion",
-                "item_variant": "plum",
-                "price": 69,
+                "item_category2": "Vases",
+                "item_id": "HOME_17",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Coupe Fluted Vase",
+                "item_variant": "champagne",
+                "price": 89,
                 "quantity": 1,
                 "attractor": {
-                  "classic": 0.3,
-                  "colourful": 0.6,
-                  "cozy": 0.5,
-                  "minimalistic": -0.6,
-                  "opulent": 0.85,
-                  "romantic": 0.7
+                  "classic": 0.5,
+                  "opulent": 0.6,
+                  "romantic": 0.6
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_11",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Canton Ginger Jar",
+                "item_variant": "navy",
+                "price": 99,
+                "quantity": 1,
+                "attractor": {
+                  "classic": 0.95,
+                  "colourful": 0.3,
+                  "modern": -0.6,
+                  "retro": 0.5
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_12",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Carnevale Murano Vase",
+                "item_variant": "rose",
+                "price": 149,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.8,
+                  "colourful": 0.9,
+                  "minimalistic": -0.5,
+                  "opulent": 0.6,
+                  "retro": 0.4
                 }
               }
             ],
-            "filter_category": "Cushions",
+            "filter_category": "Vases",
             "sort_by": "affinity",
             "personalized": true,
             "taste_signals": 63,
@@ -33990,26 +33986,26 @@
         {
           "name": "select_item",
           "params": {
-            "item_list_id": "home-decoration/cushions",
-            "item_list_name": "Cushions",
+            "item_list_id": "home-decoration/vases",
+            "item_list_name": "Vases",
             "items": [
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "home-decoration/cushions",
-                "item_list_name": "Cushions",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration/vases",
+                "item_list_name": "Vases",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
                 "quantity": 1,
                 "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
                 }
               }
             ]
@@ -34037,23 +34033,23 @@
           "name": "view_item",
           "params": {
             "currency": "EUR",
-            "value": 39,
+            "value": 79,
             "items": [
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
                 "quantity": 1,
                 "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
                 }
               }
             ]
@@ -34151,27 +34147,6 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
-                "item_category2": "Dresses",
-                "item_category3": "Casual",
-                "item_category4": "Mini",
-                "item_id": "DRESS_17",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Fenna Knit Dress",
-                "item_variant": "grey",
-                "price": 69,
-                "quantity": 1,
-                "attractor": {
-                  "casual": 0.9,
-                  "classic": 0.2,
-                  "minimalistic": 0.7,
-                  "modern": 0.4
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
                 "item_category3": "Business",
                 "item_category4": "Ankle",
@@ -34189,6 +34164,27 @@
                   "minimalistic": 0.85,
                   "modern": 0.9,
                   "structured": 0.8
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Women's Fashion",
+                "item_category2": "Dresses",
+                "item_category3": "Casual",
+                "item_category4": "Mini",
+                "item_id": "DRESS_17",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Fenna Knit Dress",
+                "item_variant": "grey",
+                "price": 69,
+                "quantity": 1,
+                "attractor": {
+                  "casual": 0.9,
+                  "classic": 0.2,
+                  "minimalistic": 0.7,
+                  "modern": 0.4
                 }
               },
               {
@@ -34255,28 +34251,6 @@
               },
               {
                 "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Women's Fashion",
-                "item_category2": "Dresses",
-                "item_category3": "Casual",
-                "item_category4": "Midi",
-                "item_id": "DRESS_09",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Harbour Shirt Dress",
-                "item_variant": "sky",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "casual": 0.9,
-                  "classic": 0.3,
-                  "colourful": 0.3,
-                  "minimalistic": 0.6,
-                  "structured": 0.4
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -34301,40 +34275,19 @@
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Casual",
-                "item_category4": "Maxi",
-                "item_id": "DRESS_11",
+                "item_category4": "Midi",
+                "item_id": "DRESS_09",
                 "item_list_id": "all-products",
                 "item_list_name": "All Products",
-                "item_name": "Meadow Smock Dress",
-                "item_variant": "sand",
-                "price": 99,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.8,
-                  "casual": 0.85,
-                  "feminine": 0.4,
-                  "minimalistic": 0.5,
-                  "romantic": 0.2
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Women's Fashion",
-                "item_category2": "Trousers",
-                "item_category3": "Casual",
-                "item_category4": "Full",
-                "item_id": "TROUSERS_09",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Mile Straight Jeans",
-                "item_variant": "indigo",
-                "price": 89,
+                "item_name": "Harbour Shirt Dress",
+                "item_variant": "sky",
+                "price": 79,
                 "quantity": 1,
                 "attractor": {
                   "casual": 0.9,
-                  "classic": 0.5,
-                  "minimalistic": 0.5,
+                  "classic": 0.3,
+                  "colourful": 0.3,
+                  "minimalistic": 0.6,
                   "structured": 0.4
                 }
               },
@@ -34367,57 +34320,40 @@
                 "item_category2": "Trousers",
                 "item_category3": "Casual",
                 "item_category4": "Full",
-                "item_id": "TROUSERS_11",
+                "item_id": "TROUSERS_09",
                 "item_list_id": "all-products",
                 "item_list_name": "All Products",
-                "item_name": "Dune Linen Trousers",
-                "item_variant": "olive",
-                "price": 79,
+                "item_name": "Mile Straight Jeans",
+                "item_variant": "indigo",
+                "price": 89,
+                "quantity": 1,
+                "attractor": {
+                  "casual": 0.9,
+                  "classic": 0.5,
+                  "minimalistic": 0.5,
+                  "structured": 0.4
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Women's Fashion",
+                "item_category2": "Dresses",
+                "item_category3": "Casual",
+                "item_category4": "Maxi",
+                "item_id": "DRESS_11",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Meadow Smock Dress",
+                "item_variant": "sand",
+                "price": 99,
                 "quantity": 1,
                 "attractor": {
                   "bohemian": 0.8,
                   "casual": 0.85,
-                  "feminine": 0.3,
-                  "minimalistic": 0.4,
+                  "feminine": 0.4,
+                  "minimalistic": 0.5,
                   "romantic": 0.2
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_03",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Driftwood Linen Cushion",
-                "item_variant": "sand",
-                "price": 39,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.4,
-                  "cozy": 0.3,
-                  "minimalistic": 0.75,
-                  "natural": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_09",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Kiln Stoneware Vase",
-                "item_variant": "sand",
-                "price": 59,
-                "quantity": 1,
-                "attractor": {
-                  "cozy": 0.2,
-                  "minimalistic": 0.7,
-                  "modern": 0.2,
-                  "natural": 0.85
                 }
               },
               {
@@ -34441,6 +34377,28 @@
                   "minimalistic": 0.5,
                   "modern": 0.7,
                   "structured": 0.7
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Women's Fashion",
+                "item_category2": "Trousers",
+                "item_category3": "Casual",
+                "item_category4": "Full",
+                "item_id": "TROUSERS_11",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Dune Linen Trousers",
+                "item_variant": "olive",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.8,
+                  "casual": 0.85,
+                  "feminine": 0.3,
+                  "minimalistic": 0.4,
+                  "romantic": 0.2
                 }
               },
               {
@@ -34509,6 +34467,44 @@
                   "minimalistic": 0.6,
                   "modern": 0.7,
                   "romantic": 0.5
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_09",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Kiln Stoneware Vase",
+                "item_variant": "sand",
+                "price": 59,
+                "quantity": 1,
+                "attractor": {
+                  "cozy": 0.2,
+                  "minimalistic": 0.7,
+                  "modern": 0.2,
+                  "natural": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_03",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Driftwood Linen Cushion",
+                "item_variant": "sand",
+                "price": 39,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.4,
+                  "cozy": 0.3,
+                  "minimalistic": 0.75,
+                  "natural": 0.85
                 }
               },
               {
@@ -34598,25 +34594,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_16",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Grove Ceramic Table Lamp",
-                "item_variant": "olive",
-                "price": 139,
-                "quantity": 1,
-                "attractor": {
-                  "classic": 0.3,
-                  "cozy": 0.6,
-                  "minimalistic": 0.3,
-                  "natural": 0.7
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Casual",
@@ -34664,6 +34641,25 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Lamps",
+                "item_id": "HOME_16",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Grove Ceramic Table Lamp",
+                "item_variant": "olive",
+                "price": 139,
+                "quantity": 1,
+                "attractor": {
+                  "classic": 0.3,
+                  "cozy": 0.6,
+                  "minimalistic": 0.3,
+                  "natural": 0.7
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Business",
@@ -34682,24 +34678,6 @@
                   "minimalistic": 0.5,
                   "retro": 0.3,
                   "structured": 0.9
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Lamps",
-                "item_id": "HOME_07",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Bali Rattan Floor Lamp",
-                "item_variant": "sand",
-                "price": 129,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.85,
-                  "cozy": 0.4,
-                  "natural": 0.9
                 }
               },
               {
@@ -34728,25 +34706,6 @@
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_18",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Sienna Terracotta Vase",
-                "item_variant": "terracotta",
-                "price": 49,
-                "quantity": 1,
-                "attractor": {
-                  "bohemian": 0.7,
-                  "cozy": 0.4,
-                  "natural": 0.8,
-                  "retro": 0.2
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
                 "item_category2": "Cushions",
                 "item_id": "HOME_04",
                 "item_list_id": "all-products",
@@ -34761,25 +34720,6 @@
                   "edgy": 0.3,
                   "modern": 0.6,
                   "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_02",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Fireside Knit Cushion",
-                "item_variant": "cream",
-                "price": 49,
-                "quantity": 1,
-                "attractor": {
-                  "classic": 0.7,
-                  "cozy": 0.9,
-                  "natural": 0.4,
-                  "retro": 0.3
                 }
               },
               {
@@ -34801,6 +34741,62 @@
                   "classic": 0.8,
                   "minimalistic": 0.3,
                   "structured": 0.75
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Lamps",
+                "item_id": "HOME_07",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Bali Rattan Floor Lamp",
+                "item_variant": "sand",
+                "price": 129,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.85,
+                  "cozy": 0.4,
+                  "natural": 0.9
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_18",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Sienna Terracotta Vase",
+                "item_variant": "terracotta",
+                "price": 49,
+                "quantity": 1,
+                "attractor": {
+                  "bohemian": 0.7,
+                  "cozy": 0.4,
+                  "natural": 0.8,
+                  "retro": 0.2
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_02",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Fireside Knit Cushion",
+                "item_variant": "cream",
+                "price": 49,
+                "quantity": 1,
+                "attractor": {
+                  "classic": 0.7,
+                  "cozy": 0.9,
+                  "natural": 0.4,
+                  "retro": 0.3
                 }
               },
               {

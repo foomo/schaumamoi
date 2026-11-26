@@ -3283,6 +3283,26 @@
             },
             {
               "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Atelier",
+              "item_category": "Home Decoration",
+              "item_category2": "Lamps",
+              "item_id": "HOME_08",
+              "item_list_id": "home-decoration",
+              "item_list_name": "Home Decoration",
+              "item_name": "Versailles Crystal Lamp",
+              "item_variant": "champagne",
+              "price": 249,
+              "quantity": 1,
+              "attractor": {
+                "bold": 0.5,
+                "classic": 0.4,
+                "minimalistic": -0.7,
+                "opulent": 0.95,
+                "romantic": 0.75
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Studio",
               "item_category": "Home Decoration",
               "item_category2": "Cushions",
@@ -3300,26 +3320,6 @@
                 "minimalistic": -0.6,
                 "opulent": 0.85,
                 "romantic": 0.7
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Atelier",
-              "item_category": "Home Decoration",
-              "item_category2": "Lamps",
-              "item_id": "HOME_08",
-              "item_list_id": "home-decoration",
-              "item_list_name": "Home Decoration",
-              "item_name": "Versailles Crystal Lamp",
-              "item_variant": "champagne",
-              "price": 249,
-              "quantity": 1,
-              "attractor": {
-                "bold": 0.5,
-                "classic": 0.4,
-                "minimalistic": -0.7,
-                "opulent": 0.95,
-                "romantic": 0.75
               }
             },
             {
@@ -3556,6 +3556,25 @@
               "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Studio",
               "item_category": "Home Decoration",
+              "item_category2": "Cushions",
+              "item_id": "HOME_03",
+              "item_list_id": "home-decoration",
+              "item_list_name": "Home Decoration",
+              "item_name": "Driftwood Linen Cushion",
+              "item_variant": "sand",
+              "price": 39,
+              "quantity": 1,
+              "attractor": {
+                "bohemian": 0.4,
+                "cozy": 0.3,
+                "minimalistic": 0.75,
+                "natural": 0.85
+              }
+            },
+            {
+              "affiliation": "Foomo Fashion",
+              "item_brand": "Foomo Studio",
+              "item_category": "Home Decoration",
               "item_category2": "Lamps",
               "item_id": "HOME_06",
               "item_list_id": "home-decoration",
@@ -3570,25 +3589,6 @@
                 "industrial": 0.9,
                 "minimalistic": 0.75,
                 "modern": 0.85
-              }
-            },
-            {
-              "affiliation": "Foomo Fashion",
-              "item_brand": "Foomo Studio",
-              "item_category": "Home Decoration",
-              "item_category2": "Cushions",
-              "item_id": "HOME_03",
-              "item_list_id": "home-decoration",
-              "item_list_name": "Home Decoration",
-              "item_name": "Driftwood Linen Cushion",
-              "item_variant": "sand",
-              "price": 39,
-              "quantity": 1,
-              "attractor": {
-                "bohemian": 0.4,
-                "cozy": 0.3,
-                "minimalistic": 0.75,
-                "natural": 0.85
               }
             },
             {
@@ -4971,22 +4971,20 @@
             {
               "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Studio",
-              "item_category": "Women's Fashion",
-              "item_category2": "Dresses",
-              "item_category3": "Casual",
-              "item_category4": "Mini",
-              "item_id": "DRESS_10",
+              "item_category": "Home Decoration",
+              "item_category2": "Cushions",
+              "item_id": "HOME_03",
               "item_list_id": "all-products",
               "item_list_name": "All Products",
-              "item_name": "Sunday Tee Dress",
-              "item_variant": "grey",
-              "price": 49,
+              "item_name": "Driftwood Linen Cushion",
+              "item_variant": "sand",
+              "price": 39,
               "quantity": 1,
               "attractor": {
-                "casual": 0.95,
-                "edgy": 0.4,
-                "minimalistic": 0.85,
-                "modern": 0.5
+                "bohemian": 0.4,
+                "cozy": 0.3,
+                "minimalistic": 0.75,
+                "natural": 0.85
               }
             },
             {
@@ -5012,20 +5010,22 @@
             {
               "affiliation": "Foomo Fashion",
               "item_brand": "Foomo Studio",
-              "item_category": "Home Decoration",
-              "item_category2": "Cushions",
-              "item_id": "HOME_03",
+              "item_category": "Women's Fashion",
+              "item_category2": "Dresses",
+              "item_category3": "Casual",
+              "item_category4": "Mini",
+              "item_id": "DRESS_10",
               "item_list_id": "all-products",
               "item_list_name": "All Products",
-              "item_name": "Driftwood Linen Cushion",
-              "item_variant": "sand",
-              "price": 39,
+              "item_name": "Sunday Tee Dress",
+              "item_variant": "grey",
+              "price": 49,
               "quantity": 1,
               "attractor": {
-                "bohemian": 0.4,
-                "cozy": 0.3,
-                "minimalistic": 0.75,
-                "natural": 0.85
+                "casual": 0.95,
+                "edgy": 0.4,
+                "minimalistic": 0.85,
+                "modern": 0.5
               }
             },
             {

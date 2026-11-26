@@ -4324,6 +4324,28 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
+                "item_category": "Women's Fashion",
+                "item_category2": "Dresses",
+                "item_category3": "Business",
+                "item_category4": "Midi",
+                "item_id": "DRESS_14",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Chancery Pencil Dress",
+                "item_variant": "navy",
+                "price": 179,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.3,
+                  "business": 0.9,
+                  "classic": 0.8,
+                  "retro": 0.3,
+                  "structured": 0.8
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
                 "item_category": "Home Decoration",
                 "item_category2": "Cushions",
                 "item_id": "HOME_13",
@@ -4364,21 +4386,21 @@
                 "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
-                "item_category3": "Business",
+                "item_category3": "Casual",
                 "item_category4": "Midi",
-                "item_id": "DRESS_14",
+                "item_id": "DRESS_09",
                 "item_list_id": "all-products",
                 "item_list_name": "All Products",
-                "item_name": "Chancery Pencil Dress",
-                "item_variant": "navy",
-                "price": 179,
+                "item_name": "Harbour Shirt Dress",
+                "item_variant": "sky",
+                "price": 79,
                 "quantity": 1,
                 "attractor": {
-                  "bold": 0.3,
-                  "business": 0.9,
-                  "classic": 0.8,
-                  "retro": 0.3,
-                  "structured": 0.8
+                  "casual": 0.9,
+                  "classic": 0.3,
+                  "colourful": 0.3,
+                  "minimalistic": 0.6,
+                  "structured": 0.4
                 }
               },
               {
@@ -4399,28 +4421,6 @@
                   "edgy": 0.3,
                   "modern": 0.6,
                   "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Women's Fashion",
-                "item_category2": "Dresses",
-                "item_category3": "Casual",
-                "item_category4": "Midi",
-                "item_id": "DRESS_09",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Harbour Shirt Dress",
-                "item_variant": "sky",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "casual": 0.9,
-                  "classic": 0.3,
-                  "colourful": 0.3,
-                  "minimalistic": 0.6,
-                  "structured": 0.4
                 }
               },
               {
@@ -9000,6 +9000,25 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -9015,25 +9034,6 @@
                   "edgy": 0.4,
                   "industrial": 0.6,
                   "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -9428,26 +9428,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_04",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Zigzag Print Cushion",
-                "item_variant": "mustard",
-                "price": 45,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.8,
-                  "colourful": 0.7,
-                  "edgy": 0.3,
-                  "modern": 0.6,
-                  "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Casual",
@@ -9465,6 +9445,26 @@
                   "colourful": 0.3,
                   "minimalistic": 0.6,
                   "structured": 0.4
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_04",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Zigzag Print Cushion",
+                "item_variant": "mustard",
+                "price": 45,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.8,
+                  "colourful": 0.7,
+                  "edgy": 0.3,
+                  "modern": 0.6,
+                  "retro": 0.6
                 }
               },
               {
@@ -14092,6 +14092,25 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -14107,25 +14126,6 @@
                   "edgy": 0.4,
                   "industrial": 0.6,
                   "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -14542,26 +14542,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_04",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Zigzag Print Cushion",
-                "item_variant": "mustard",
-                "price": 45,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.8,
-                  "colourful": 0.7,
-                  "edgy": 0.3,
-                  "modern": 0.6,
-                  "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Trousers",
                 "item_category3": "Casual",
@@ -14578,6 +14558,26 @@
                   "classic": 0.5,
                   "minimalistic": 0.5,
                   "structured": 0.4
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_04",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Zigzag Print Cushion",
+                "item_variant": "mustard",
+                "price": 45,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.8,
+                  "colourful": 0.7,
+                  "edgy": 0.3,
+                  "modern": 0.6,
+                  "retro": 0.6
                 }
               },
               {
@@ -19136,6 +19136,25 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -19151,25 +19170,6 @@
                   "edgy": 0.4,
                   "industrial": 0.6,
                   "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -19564,26 +19564,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_04",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Zigzag Print Cushion",
-                "item_variant": "mustard",
-                "price": 45,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.8,
-                  "colourful": 0.7,
-                  "edgy": 0.3,
-                  "modern": 0.6,
-                  "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Casual",
@@ -19601,6 +19581,26 @@
                   "colourful": 0.3,
                   "minimalistic": 0.6,
                   "structured": 0.4
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_04",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Zigzag Print Cushion",
+                "item_variant": "mustard",
+                "price": 45,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.8,
+                  "colourful": 0.7,
+                  "edgy": 0.3,
+                  "modern": 0.6,
+                  "retro": 0.6
                 }
               },
               {
@@ -23443,6 +23443,25 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -23458,25 +23477,6 @@
                   "edgy": 0.4,
                   "industrial": 0.6,
                   "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -28487,6 +28487,25 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "home-decoration",
+                "item_list_name": "Home Decoration",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -28502,25 +28521,6 @@
                   "edgy": 0.4,
                   "industrial": 0.6,
                   "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "home-decoration",
-                "item_list_name": "Home Decoration",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -34316,6 +34316,25 @@
               },
               {
                 "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Vases",
+                "item_id": "HOME_10",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Obsidian Glass Vase",
+                "item_variant": "black",
+                "price": 79,
+                "quantity": 1,
+                "attractor": {
+                  "edgy": 0.6,
+                  "industrial": 0.4,
+                  "minimalistic": 0.8,
+                  "modern": 0.85
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Atelier",
                 "item_category": "Home Decoration",
                 "item_category2": "Lamps",
@@ -34331,25 +34350,6 @@
                   "edgy": 0.4,
                   "industrial": 0.6,
                   "minimalistic": 0.6,
-                  "modern": 0.85
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Vases",
-                "item_id": "HOME_10",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Obsidian Glass Vase",
-                "item_variant": "black",
-                "price": 79,
-                "quantity": 1,
-                "attractor": {
-                  "edgy": 0.6,
-                  "industrial": 0.4,
-                  "minimalistic": 0.8,
                   "modern": 0.85
                 }
               },
@@ -34744,26 +34744,6 @@
               {
                 "affiliation": "Foomo Fashion",
                 "item_brand": "Foomo Studio",
-                "item_category": "Home Decoration",
-                "item_category2": "Cushions",
-                "item_id": "HOME_04",
-                "item_list_id": "all-products",
-                "item_list_name": "All Products",
-                "item_name": "Zigzag Print Cushion",
-                "item_variant": "mustard",
-                "price": 45,
-                "quantity": 1,
-                "attractor": {
-                  "bold": 0.8,
-                  "colourful": 0.7,
-                  "edgy": 0.3,
-                  "modern": 0.6,
-                  "retro": 0.6
-                }
-              },
-              {
-                "affiliation": "Foomo Fashion",
-                "item_brand": "Foomo Studio",
                 "item_category": "Women's Fashion",
                 "item_category2": "Dresses",
                 "item_category3": "Casual",
@@ -34781,6 +34761,26 @@
                   "colourful": 0.3,
                   "minimalistic": 0.6,
                   "structured": 0.4
+                }
+              },
+              {
+                "affiliation": "Foomo Fashion",
+                "item_brand": "Foomo Studio",
+                "item_category": "Home Decoration",
+                "item_category2": "Cushions",
+                "item_id": "HOME_04",
+                "item_list_id": "all-products",
+                "item_list_name": "All Products",
+                "item_name": "Zigzag Print Cushion",
+                "item_variant": "mustard",
+                "price": 45,
+                "quantity": 1,
+                "attractor": {
+                  "bold": 0.8,
+                  "colourful": 0.7,
+                  "edgy": 0.3,
+                  "modern": 0.6,
+                  "retro": 0.6
                 }
               },
               {
