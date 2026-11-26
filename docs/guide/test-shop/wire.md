@@ -56,7 +56,7 @@ Because items are `catalog.Item` rather than `params.Item`, the events are built
 ## Envelope
 
 ```go
-shopper.Journey(persona.Kate,
+journeys.Buying(persona.Kate,
     wire.WithClientID("123.456"),
     wire.WithSessionID("789"),
     wire.WithConsentDenied(),

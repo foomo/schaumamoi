@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -64,7 +64,7 @@ func TestAffinitySort(t *testing.T) {
 	t.Parallel()
 
 	// a profile that has learned Mira's taste exactly
-	f := shopper.SectionFilter(persona.Mira).Personalize(shop.Profile{Taste: persona.Mira.Affinity, Signals: 1})
+	f := journeys.SectionFilter(persona.Mira).Personalize(shop.Profile{Taste: persona.Mira.Affinity, Signals: 1})
 	got := f.Apply(catalog.All())
 
 	require.NotEmpty(t, got)
@@ -128,7 +128,7 @@ func TestFilterQuery(t *testing.T) {
 
 	assert.Equal(t, "length=maxi&occasion=festive&sort=affinity", shop.NarrowedFilter.Query())
 	assert.Equal(t, "sort=affinity", shop.CategoryFilter.Query())
-	assert.Equal(t, "occasion=business&sort=affinity", shopper.SectionFilter(persona.Kate).Query())
+	assert.Equal(t, "occasion=business&sort=affinity", journeys.SectionFilter(persona.Kate).Query())
 }
 
 // inCategory is the items of one category, in their order.

@@ -9,9 +9,9 @@ import (
 	"github.com/foomo/schaumamoi/pkg/distillery/recipes/visits"
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
@@ -68,7 +68,7 @@ func only(names ...sesamy.EventName) testCut {
 // kateJourney is the stream the still will actually see: heterogeneous GA4 events
 // type-erased to sesamy.Event[any], as sesamy-go hands them downstream.
 func kateJourney() []testEvent {
-	return shopper.Journey(persona.Kate).Events()
+	return journeys.Buying(persona.Kate).Events()
 }
 
 // nearestIn is the product of one category that ranks first for a taste: how that
@@ -224,7 +224,7 @@ func TestAffinityRecoversPersona(t *testing.T) {
 			t.Parallel()
 
 			p := newAffinityStill(nil)
-			p.Feed(envelope{}, shopper.Journey(who).Events()...)
+			p.Feed(envelope{}, journeys.Buying(who).Events()...)
 
 			aff := p.Distill(flat)
 			assert.Equal(t, who.Name, nearestPersona(aff, persona.All()).Name)
@@ -251,7 +251,7 @@ func TestAffinityNearestItemIsPurchase(t *testing.T) {
 		t.Run(who.Name, func(t *testing.T) {
 			t.Parallel()
 
-			events := shopper.Journey(who).Events()
+			events := journeys.Buying(who).Events()
 
 			p := newAffinityStill(nil)
 			p.Feed(envelope{}, events...)
@@ -370,7 +370,7 @@ func TestDistillIsRepeatable(t *testing.T) {
 func TestFeedAfterDistillDoesNotReinfuse(t *testing.T) {
 	t.Parallel()
 
-	first, second := kateJourney(), shopper.BrowseJourney(persona.Lena).Events()
+	first, second := kateJourney(), journeys.Browsing(persona.Lena).Events()
 
 	p := newAffinityStill(nil)
 	p.Feed(envelope{}, first...)
@@ -448,8 +448,8 @@ func TestStampReadsEnvelopeTime(t *testing.T) {
 
 	p := newAffinityStill(nil)
 	visits := []wire.Session{
-		shopper.Journey(persona.Sofia, wire.WithTimestamp(earlier)),
-		shopper.BrowseJourney(persona.Kate, wire.WithTimestamp(later)),
+		journeys.Buying(persona.Sofia, wire.WithTimestamp(earlier)),
+		journeys.Browsing(persona.Kate, wire.WithTimestamp(later)),
 	}
 	addHistory(p, visits)
 	p.Feed(envelope{}, shop.AddToCart(persona.Kate.TopMatch(catalog.All())).AnyEvent())
@@ -536,12 +536,12 @@ func addHistory(p *testStill, history []wire.Session) {
 // visits, up to two weeks ago and including the first purchase, are old's; the rest,
 // ending with today's purchase, are recent's.
 func drifted(old, recent persona.Persona) []wire.Session {
-	visits := shopper.Month(recent)
+	visits := journeys.Month(recent)
 	for i := range 3 {
 		visits[i].Persona = old
 	}
 
-	return shopper.History(visits)
+	return journeys.History(visits)
 }
 
 // TestMonthRecoversPersona is TestAffinityRecoversPersona over a month of visits rather
@@ -554,7 +554,7 @@ func TestMonthRecoversPersona(t *testing.T) {
 		t.Run(who.Name, func(t *testing.T) {
 			t.Parallel()
 
-			history := shopper.History(shopper.Month(who))
+			history := journeys.History(journeys.Month(who))
 			p := newAffinityStill(nil)
 			addHistory(p, history)
 
@@ -627,7 +627,7 @@ func TestUndecayedMisreadsDrift(t *testing.T) {
 func TestDecayIsRepeatable(t *testing.T) {
 	t.Parallel()
 
-	visit := shopper.Journey(persona.Kate, wire.WithTimestamp(wire.BaseTime))
+	visit := journeys.Buying(persona.Kate, wire.WithTimestamp(wire.BaseTime))
 	end := time.UnixMicro(visit[len(visit)-1].TimestampMicros).UTC() // every event is in the past
 
 	p := newAffinityStill(nil)
@@ -684,7 +684,7 @@ func phasePersonas(ps []affinity.Phase) []string {
 func TestStampReadsEnvelopeSession(t *testing.T) {
 	t.Parallel()
 
-	history := shopper.History(shopper.Month(persona.Kate))
+	history := journeys.History(journeys.Month(persona.Kate))
 
 	p := newAffinityStill(nil)
 	addHistory(p, history)
@@ -725,11 +725,11 @@ func consented(env envelope, _ testEvent) bool {
 func TestCutSeesEnvelope(t *testing.T) {
 	t.Parallel()
 
-	visitsOf := shopper.Month(persona.Kate)
+	visitsOf := journeys.Month(persona.Kate)
 	visitsOf[2].Persona = persona.Sofia
 	visitsOf[3].Persona = persona.Sofia
 
-	history := shopper.History(visitsOf)
+	history := journeys.History(visitsOf)
 	for _, i := range []int{2, 3} {
 		history[i] = history[i].WithConsent(wire.ConsentDenied())
 	}

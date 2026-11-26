@@ -56,7 +56,7 @@ var Exhibits = []ExhibitInfo{
 	{Name: "catalog", Page: "guide/test-shop/catalog"},
 	{Name: "personas", Page: "guide/test-shop/personas"},
 	{Name: "shop", Page: "exhibits/shop"},
-	{Name: "shoppers", Page: "exhibits/shoppers"},
+	{Name: "journeys", Page: "exhibits/journeys"},
 	{Name: "distillery", Page: "exhibits/distillery"},
 	{Name: "affinity", Page: "exhibits/affinity"},
 }

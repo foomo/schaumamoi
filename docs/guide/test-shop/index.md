@@ -18,7 +18,7 @@ so it is split the way a real shop is, and these pages follow that split.
 | `mock/catalog` | what the shop sells: products, category tree, weights, `Score` | [Catalog](./catalog) | on the guide page |
 | `mock/persona` | the four shoppers' tastes, and how a shopper picks | [Personas](./personas) | on the guide page |
 | `mock/shop` | listings, ranked by a profile, and the GA4 events they report | [Shop](./shop) | [Shop](/exhibits/shop) |
-| `mock/shopper` | a persona taken through the shop: journeys and histories | [Shoppers](./shoppers) | [Shoppers](/exhibits/shoppers) |
+| `mock/journeys` | a persona taken through the shop: a visit, or a month of them | [Journeys](./journeys) | [Journeys](/exhibits/journeys) |
 | `mock/wire` | the Measurement Protocol envelope, and a visit as requests | [Events on the wire](./wire) | |
 | `mock` | the fixtures in `testdata` and the images, built from all of the above | [Events on the wire](./wire#fixtures) | |
 
@@ -26,9 +26,9 @@ so it is split the way a real shop is, and these pages follow that split.
 
 ```mermaid
 flowchart TD
-  mock["mock<br/>the fixtures"] --> shopper & wire & shop & persona & catalog
-  shopper --> persona & shop & wire
-  shopper --> affinity["pkg/distillery/stills/affinity"]
+  mock["mock<br/>the fixtures"] --> journeys & wire & shop & persona & catalog
+  journeys --> persona & shop & wire
+  journeys --> affinity["pkg/distillery/stills/affinity"]
   persona --> catalog & taste
   shop --> catalog
   catalog --> taste
@@ -38,7 +38,7 @@ The arrows are imports (`wire` needs nothing but sesamy-go), and they carry the 
 one rule: **the shop never sees a persona.** `shop` imports the catalog and nothing that
 knows a shopper's taste. It ranks every listing by a `shop.Profile`, the vector an
 affinity still (`pkg/distillery/stills/affinity`) distills from the shopper's events so
-far. Only `shopper` brings a persona and the shop together. The persona decides what
+far. Only `journeys` brings a persona and the shop together. The persona decides what
 gets picked, and the shop has to learn it from the picks.
 
 ## In a test
@@ -47,11 +47,11 @@ gets picked, and the shop has to learn it from the picks.
 import (
     "github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
     "github.com/foomo/schaumamoi/pkg/internal/mock/persona"
-    "github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
+    "github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 )
 
-visit := shopper.Journey(persona.Sofia)              // wire.Session: one request per event
-month := shopper.History(shopper.Month(persona.Kate)) // []wire.Session, 7 visits
+visit := journeys.Buying(persona.Sofia)                // wire.Session: one request per event
+month := journeys.History(journeys.Month(persona.Kate)) // []wire.Session, 7 visits
 
 still := affinity.New(nil) // the shopper's still
 for _, request := range visit {

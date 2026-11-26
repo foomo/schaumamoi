@@ -6,8 +6,8 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/distillery"
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
 	"github.com/stretchr/testify/assert"
@@ -30,12 +30,12 @@ func month(history []wire.Session) *affinity.Still {
 // visits, up to two weeks ago and including the first purchase, are old's; the rest,
 // ending with today's purchase, are recent's.
 func drifted(old, recent persona.Persona) []wire.Session {
-	visits := shopper.Month(recent)
+	visits := journeys.Month(recent)
 	for i := range 3 {
 		visits[i].Persona = old
 	}
 
-	return shopper.History(visits)
+	return journeys.History(visits)
 }
 
 // phaseNames names the persona each phase is nearest to.
@@ -69,14 +69,14 @@ func TestSteadyMonthIsOnePhase(t *testing.T) {
 		t.Run(who.Name, func(t *testing.T) {
 			t.Parallel()
 
-			history := shopper.History(shopper.Month(who))
+			history := journeys.History(journeys.Month(who))
 			got := month(history).Distill(phases)
 
 			require.Len(t, got, 1)
 			assert.Equal(t, []string{who.Name}, phaseNames(got))
 			assertDuring(t, got[0].From, history[0], "the phase starts in the first visit")
 			assertDuring(t, got[0].To, history[len(history)-1], "the phase ends in the last visit")
-			assert.Len(t, got[0].Visits, len(shopper.Month(who)))
+			assert.Len(t, got[0].Visits, len(journeys.Month(who)))
 		})
 	}
 }
@@ -117,11 +117,11 @@ func TestDriftSplitsIntoPhases(t *testing.T) {
 func TestReturningTasteIsANewPhase(t *testing.T) {
 	t.Parallel()
 
-	detour := shopper.Month(persona.Kate)
+	detour := journeys.Month(persona.Kate)
 	detour[2].Persona = persona.Sofia
 	detour[3].Persona = persona.Sofia
 
-	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phaseNames(month(shopper.History(detour)).Distill(phases)))
+	assert.Equal(t, []string{"Kate", "Sofia", "Kate"}, phaseNames(month(journeys.History(detour)).Distill(phases)))
 }
 
 // TestPhasesNeedSessions shows the session stamp doing the work: the same drifted month

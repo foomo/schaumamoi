@@ -1,4 +1,4 @@
-package shopper
+package journeys
 
 import (
 	"cmp"

@@ -1,4 +1,4 @@
-package shopper_test
+package journeys_test
 
 import (
 	"fmt"
@@ -11,9 +11,9 @@ import (
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
@@ -46,7 +46,7 @@ type (
 		LandingTop catalog.Item
 	}
 
-	shopperReport struct {
+	journeyReport struct {
 		Persona persona.Persona
 		Journey []step
 		Month   []visitRow
@@ -70,32 +70,32 @@ type (
 	}
 )
 
-// TestExhibit writes the shoppers exhibit: each persona's converting journey, step by step,
+// TestExhibit writes the journeys exhibit: each persona's converting journey, step by step,
 // its month of visits with how well the shop knew it by each, and the shop's final
 // ranking of all products after one visit and after the month.
 func TestExhibit(t *testing.T) {
 	t.Parallel()
 
-	var shoppers []shopperReport
+	var rows []journeyReport
 
 	for _, p := range persona.All() {
-		shoppers = append(shoppers, shopperReport{
+		rows = append(rows, journeyReport{
 			Persona: p,
-			Journey: steps(t, shopper.Journey(p).Events()),
+			Journey: steps(t, journeys.Buying(p).Events()),
 			Month:   month(t, p),
 			Final: []finalRanking{
-				final(t, p, "after one journey", shopper.Journey(p).Events(), affinity.New(nil)),
+				final(t, p, "after one journey", journeys.Buying(p).Events(), affinity.New(nil)),
 				finalOfMonth(t, p),
 			},
 		})
 	}
 
-	require.NoError(t, docs.Exhibit("shoppers", map[string]any{
-		"Shoppers": shoppers,
+	require.NoError(t, docs.Exhibit("journeys", map[string]any{
+		"Journeys": rows,
 		"BaseTime": wire.BaseTime,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "shoppers.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "journeys.md"))
 }
 
 // final reads the listing of all products that events end on. The scores come from
@@ -132,7 +132,7 @@ func final(t *testing.T, p persona.Persona, label string, events []sesamy.Event[
 func finalOfMonth(t *testing.T, p persona.Persona) finalRanking {
 	t.Helper()
 
-	history := shopper.History(shopper.Month(p))
+	history := journeys.History(journeys.Month(p))
 	c := affinity.New(nil)
 
 	for _, session := range history[:len(history)-1] {
@@ -197,7 +197,7 @@ func month(t *testing.T, p persona.Persona) []visitRow {
 
 	var out []visitRow
 
-	for _, session := range shopper.History(shopper.Month(p)) {
+	for _, session := range journeys.History(journeys.Month(p)) {
 		journey := steps(t, session.Events())
 
 		// the product the visit ended on: the one it viewed from its section

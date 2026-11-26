@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
 
@@ -14,7 +14,7 @@ import (
 func Example() {
 	still := affinity.New(nil)
 
-	month := shopper.History(shopper.Month(persona.Kate))
+	month := journeys.History(journeys.Month(persona.Kate))
 	for _, visit := range month {
 		for _, request := range visit {
 			env := affinity.Envelope(request) // a sesamy-go payload, as it comes off the stream

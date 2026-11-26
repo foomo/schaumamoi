@@ -10,9 +10,9 @@ import (
 	"github.com/foomo/gostandards/iso4217"
 	"github.com/foomo/schaumamoi/pkg/internal/mock"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/event/params"
@@ -60,11 +60,11 @@ func TestDeterministic(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range persona.All() {
-		first, err := json.Marshal(shopper.Journey(p))
+		first, err := json.Marshal(journeys.Buying(p))
 		require.NoError(t, err)
 
 		for range 20 {
-			again, err := json.Marshal(shopper.Journey(p))
+			again, err := json.Marshal(journeys.Buying(p))
 			require.NoError(t, err)
 			assert.JSONEq(t, string(first), string(again), p.Name)
 		}

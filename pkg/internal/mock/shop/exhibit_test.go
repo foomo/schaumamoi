@@ -7,9 +7,9 @@ import (
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/stretchr/testify/require"
 )
 
@@ -47,7 +47,7 @@ func TestExhibit(t *testing.T) {
 
 	for _, p := range persona.All() {
 		c := affinity.New(nil)
-		c.Feed(affinity.Envelope{}, shopper.Journey(p).Events()...)
+		c.Feed(affinity.Envelope{}, journeys.Buying(p).Events()...)
 
 		f := shop.CategoryFilter.Personalize(shop.Profile{Taste: c.Distill(affinity.DefaultFade.Vector), Signals: c.Len()})
 		after = append(after, learned{Who: p, Signals: c.Len(), Items: f.Apply(catalog.All())})

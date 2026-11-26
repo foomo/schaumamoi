@@ -1,4 +1,4 @@
-package shopper_test
+package journeys_test
 
 import (
 	"cmp"
@@ -9,9 +9,9 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/sesamy-go/pkg/event/params"
 	"github.com/foomo/sesamy-go/pkg/sesamy"
@@ -37,7 +37,7 @@ func TestJourneyIsMixed(t *testing.T) {
 	names := make([]sesamy.EventName, 0)
 	var lists []string
 
-	for _, e := range shopper.Journey(persona.Kate).Events() {
+	for _, e := range journeys.Buying(persona.Kate).Events() {
 		names = append(names, e.Name)
 
 		if e.Name == sesamy.EventNameViewItemList {
@@ -74,7 +74,7 @@ func TestEveryListIsInteractedWith(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range persona.All() {
-		for name, journey := range map[string]wire.Session{"journey": shopper.Journey(p), "browse": shopper.BrowseJourney(p)} {
+		for name, journey := range map[string]wire.Session{"journey": journeys.Buying(p), "browse": journeys.Browsing(p)} {
 			t.Run(p.Name+" "+name, func(t *testing.T) {
 				t.Parallel()
 
@@ -123,7 +123,7 @@ func TestJourneyIsPersonaDriven(t *testing.T) {
 	for _, p := range persona.All() {
 		var added []catalog.Item
 
-		for _, e := range shopper.Journey(p).Events() {
+		for _, e := range journeys.Buying(p).Events() {
 			if e.Name != sesamy.EventNameAddToCart {
 				continue
 			}
@@ -136,7 +136,7 @@ func TestJourneyIsPersonaDriven(t *testing.T) {
 
 		require.Len(t, added, 1, p.Name)
 
-		section := shopper.SectionFilter(p).Apply(catalog.All())
+		section := journeys.SectionFilter(p).Apply(catalog.All())
 		assert.Contains(t, itemIDs(section), added[0].ItemID, "%s bought outside its section", p.Name)
 		assert.True(t, p.Likes(added[0], section), "%s, %s, bought %s, which it does not like", p.Name, p.Description, added[0].ItemID)
 	}
@@ -146,7 +146,7 @@ func TestJourneyIsPersonaDriven(t *testing.T) {
 func TestBrowseJourneyDoesNotConvert(t *testing.T) {
 	t.Parallel()
 
-	for _, e := range shopper.BrowseJourney(persona.Kate).Events() {
+	for _, e := range journeys.Browsing(persona.Kate).Events() {
 		assert.NotEqual(t, sesamy.EventNameAddToCart, e.Name)
 	}
 }
@@ -156,8 +156,8 @@ func TestBrowseJourneyDoesNotConvert(t *testing.T) {
 func TestMonthIsAMonth(t *testing.T) {
 	t.Parallel()
 
-	visits := shopper.Month(persona.Kate)
-	history := shopper.History(visits, wire.WithUserID("U-KATE"))
+	visits := journeys.Month(persona.Kate)
+	history := journeys.History(visits, wire.WithUserID("U-KATE"))
 
 	require.Len(t, history, len(visits))
 
@@ -168,7 +168,7 @@ func TestMonthIsAMonth(t *testing.T) {
 		at := session.Start()
 
 		assert.False(t, at.After(wire.BaseTime), "visit %d is after BaseTime", i)
-		assert.False(t, at.Before(wire.BaseTime.Add(-30*shopper.Day)), "visit %d is more than a month old", i)
+		assert.False(t, at.Before(wire.BaseTime.Add(-30*journeys.Day)), "visit %d is more than a month old", i)
 		if i > 0 {
 			assert.True(t, at.After(history[i-1].Start()), "visit %d is out of order", i)
 		}
@@ -197,9 +197,9 @@ func TestMonthIsAMonth(t *testing.T) {
 func TestHistoryOrdersVisits(t *testing.T) {
 	t.Parallel()
 
-	history := shopper.History([]shopper.Visit{
+	history := journeys.History([]journeys.Visit{
 		{Persona: persona.Kate, Ago: 0, Convert: true},
-		{Persona: persona.Sofia, Ago: 10 * shopper.Day, Convert: true},
+		{Persona: persona.Sofia, Ago: 10 * journeys.Day, Convert: true},
 	})
 
 	require.Len(t, history, 2)
@@ -212,7 +212,7 @@ func TestHistoryOrdersVisits(t *testing.T) {
 
 		require.NotEqual(t, -1, cart, "visit %d did not convert", i)
 		require.NoError(t, events[cart].DecodeParams(&ap))
-		section := shopper.SectionFilter(want).Apply(catalog.All())
+		section := journeys.SectionFilter(want).Apply(catalog.All())
 		assert.Equal(t, want.Occasion(), ap.Items[0].Occasion(), "visit %d", i)
 		assert.True(t, want.Likes(ap.Items[0], section), "visit %d: %s does not like %s", i, want.Name, ap.Items[0].ItemID)
 	}
@@ -244,10 +244,10 @@ func TestEveryListIsPersonalized(t *testing.T) {
 
 	var events []sesamy.Event[any]
 	for _, p := range persona.All() {
-		events = append(events, shopper.Journey(p).Events()...)
-		events = append(events, shopper.BrowseJourney(p).Events()...)
+		events = append(events, journeys.Buying(p).Events()...)
+		events = append(events, journeys.Browsing(p).Events()...)
 
-		for _, session := range shopper.History(shopper.Month(p)) {
+		for _, session := range journeys.History(journeys.Month(p)) {
 			events = append(events, session.Events()...)
 		}
 	}
@@ -275,7 +275,7 @@ func TestJourneyStartsNeutral(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range persona.All() {
-		lists := listings(t, shopper.Journey(p).Events())
+		lists := listings(t, journeys.Buying(p).Events())
 		require.Len(t, lists, 8)
 
 		assert.Equal(t, itemIDs(catalog.Fashion()), itemIDs(lists[0].Items), "%s lands on the catalog order", p.Name)
@@ -303,7 +303,7 @@ func TestHistoryLearns(t *testing.T) {
 
 			previous := -1
 
-			for i, session := range shopper.History(shopper.Month(p)) {
+			for i, session := range journeys.History(journeys.Month(p)) {
 				landing := listings(t, session.Events())[0]
 
 				assert.Greater(t, landing.TasteSignals, previous, "visit %d learned nothing", i+1)
@@ -374,7 +374,7 @@ func TestListingsAreSortedByWhatWasLearned(t *testing.T) {
 		t.Run(p.Name, func(t *testing.T) {
 			t.Parallel()
 
-			for name, journey := range map[string]wire.Session{"journey": shopper.Journey(p), "browse": shopper.BrowseJourney(p)} {
+			for name, journey := range map[string]wire.Session{"journey": journeys.Buying(p), "browse": journeys.Browsing(p)} {
 				n := 0
 				replayListings(t, affinity.New(nil), journey.Events(), func(list shop.ItemListParams, prof shop.Profile) {
 					n++
@@ -383,7 +383,7 @@ func TestListingsAreSortedByWhatWasLearned(t *testing.T) {
 			}
 
 			c := affinity.New(nil)
-			for i, session := range shopper.History(shopper.Month(p)) {
+			for i, session := range journeys.History(journeys.Month(p)) {
 				n := 0
 				replayListings(t, c, session.Events(), func(list shop.ItemListParams, prof shop.Profile) {
 					n++
@@ -401,7 +401,7 @@ func TestJourneyClosesOnTheDepartment(t *testing.T) {
 	t.Parallel()
 
 	for _, p := range persona.All() {
-		for name, journey := range map[string]wire.Session{"journey": shopper.Journey(p), "browse": shopper.BrowseJourney(p)} {
+		for name, journey := range map[string]wire.Session{"journey": journeys.Buying(p), "browse": journeys.Browsing(p)} {
 			lists := listings(t, journey.Events())
 			closing := lists[4] // the fashion route, then the closing look
 
@@ -455,10 +455,10 @@ func TestJourneyEndsOnAllProducts(t *testing.T) {
 			t.Parallel()
 
 			visits := map[string][]sesamy.Event[any]{
-				"journey": shopper.Journey(p).Events(),
-				"browse":  shopper.BrowseJourney(p).Events(),
+				"journey": journeys.Buying(p).Events(),
+				"browse":  journeys.Browsing(p).Events(),
 			}
-			for i, session := range shopper.History(shopper.Month(p)) {
+			for i, session := range journeys.History(journeys.Month(p)) {
 				visits[fmt.Sprintf("visit %d", i+1)] = session.Events()
 			}
 
@@ -510,8 +510,8 @@ func TestVisitsAreSentRequestByRequest(t *testing.T) {
 	}
 
 	for _, p := range persona.All() {
-		visits := map[string]wire.Session{"journey": shopper.Journey(p), "browse": shopper.BrowseJourney(p)}
-		for i, session := range shopper.History(shopper.Month(p)) {
+		visits := map[string]wire.Session{"journey": journeys.Buying(p), "browse": journeys.Browsing(p)}
+		for i, session := range journeys.History(journeys.Month(p)) {
 			visits[fmt.Sprintf("visit %d", i+1)] = session
 		}
 

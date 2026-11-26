@@ -83,7 +83,7 @@ every run, every product and persona shown by its image, every claim
 next to the test that checks it.
 
 - [Catalog](/guide/test-shop/catalog) and [Personas](/guide/test-shop/personas), at the top of
-  their guide pages, and [Shop](/exhibits/shop) and [Shoppers](/exhibits/shoppers): the test
+  their guide pages, and [Shop](/exhibits/shop) and [Journeys](/exhibits/journeys): the test
   shop, package by package
 - [Distillery](/exhibits/distillery): how a still works, what it distills from the
   traffic, and what drawing off does to it

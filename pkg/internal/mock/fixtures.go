@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/sesamy-go/pkg/encoding/mpv2"
 	"github.com/foomo/sesamy-go/pkg/event/params"
@@ -42,7 +42,7 @@ func FilteredItemListPayload(opts ...wire.Option) mpv2.Payload[shop.ItemListPara
 // PersonalizedItemListPayload is the persona's section as its first visit reaches it:
 // ranked by what the shop learned from the three listings before.
 func PersonalizedItemListPayload(p persona.Persona, opts ...wire.Option) mpv2.Payload[shop.ItemListParams] {
-	return wire.Payload([]sesamy.Event[shop.ItemListParams]{shop.ViewItemList(shopper.FirstSection(p))}, opts...)
+	return wire.Payload([]sesamy.Event[shop.ItemListParams]{shop.ViewItemList(journeys.FirstSection(p))}, opts...)
 }
 
 func SelectItemPayload(opts ...wire.Option) mpv2.Payload[params.SelectItem[catalog.Item]] {
@@ -84,21 +84,21 @@ func Fixtures() map[string]any {
 		"add_to_cart.mpv2.json":                 AddToCartPayload(),
 
 		// a shopper who browses and leaves
-		"journey_browse_kate.mpv2.json": shopper.BrowseJourney(persona.Kate),
+		"journey_browse_kate.mpv2.json": journeys.Browsing(persona.Kate),
 	}
 
 	// one converting session per persona, each with its own client and session id so
 	// they read as separate shoppers rather than one person changing their mind
 	for _, p := range persona.All() {
 		name := strings.ToLower(p.Name)
-		out["journey_"+name+".mpv2.json"] = shopper.Journey(p,
+		out["journey_"+name+".mpv2.json"] = journeys.Buying(p,
 			wire.WithClientID(wire.DefaultClientID),
 			wire.WithUserID("U-"+strings.ToUpper(p.Name)),
 			wire.WithSessionID(wire.DefaultSessionID),
 		)
 
 		// and the month that shopper came back over, one session of requests per visit
-		out["history_"+name+".mpv2.json"] = shopper.History(shopper.Month(p),
+		out["history_"+name+".mpv2.json"] = journeys.History(journeys.Month(p),
 			wire.WithClientID(wire.DefaultClientID),
 			wire.WithUserID("U-"+strings.ToUpper(p.Name)),
 		)

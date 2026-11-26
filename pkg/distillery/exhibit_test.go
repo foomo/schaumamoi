@@ -9,9 +9,9 @@ import (
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/catalog"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/shop"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/require"
@@ -97,12 +97,12 @@ func TestExhibit(t *testing.T) {
 	)
 
 	for _, p := range persona.All() {
-		events := shopper.Journey(p).Events()
+		events := journeys.Buying(p).Events()
 		c := newAffinityStill(nil)
 		c.Feed(envelope{}, events...)
 		sessions = append(sessions, sessionRow{Persona: p, Purchased: purchased(t, events), Read: read(t, c.Distill(flat), p, events)})
 
-		month := shopper.History(shopper.Month(p))
+		month := journeys.History(journeys.Month(p))
 		c = newAffinityStill(nil)
 		addHistory(c, month)
 		months = append(months, monthRow{Persona: p, Read: read(t, c.Distill(decayed(wire.BaseTime, week)), p, eventsOf(month)), Phases: chips(c.Distill(affinity.Phases(affinity.DefaultPhaseThreshold)))})
@@ -158,10 +158,10 @@ func TestExhibit(t *testing.T) {
 		require.Len(t, row.Phases, 1, "%s then %s: only the recent phase is left", old.Name, recent.Name)
 	}
 
-	detour := shopper.Month(persona.Kate)
+	detour := journeys.Month(persona.Kate)
 	detour[2].Persona = persona.Sofia
 	detour[3].Persona = persona.Sofia
-	history := shopper.History(detour)
+	history := journeys.History(detour)
 
 	c := newAffinityStill(nil)
 	addHistory(c, history)
@@ -174,7 +174,7 @@ func TestExhibit(t *testing.T) {
 	consentedOnly := newAffinityStill(consented)
 	addHistory(consentedOnly, history)
 
-	third := shopper.History(shopper.Month(persona.Kate))[2]
+	third := journeys.History(journeys.Month(persona.Kate))[2]
 	pipe, err := pipeline("Kate's third visit of her month, two weeks before BaseTime: the shop knows two visits of hers by then, and this one ends in the cart", third)
 	require.NoError(t, err)
 

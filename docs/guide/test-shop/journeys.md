@@ -1,15 +1,15 @@
-# Shoppers
+# Journeys
 
-`pkg/internal/mock/shopper` takes a [persona](./personas) through [the shop](./shop):
+`pkg/internal/mock/journeys` takes a [persona](./personas) through [the shop](./shop):
 the only package that knows both. The persona picks; the shop ranks every listing with
 the vector the shopper's events add up to at that moment. Each event goes into the
 shopper's affinity still (`pkg/distillery/stills/affinity`) as it happens, so the
-next listing is already ranked with it. The [shoppers exhibit](/exhibits/shoppers) shows
+next listing is already ranked with it. The [journeys exhibit](/exhibits/journeys) shows
 every journey step by step, every month, and the shop's final rankings.
 
 ```go
-shopper.Journey(persona.Sofia)      // wire.Session, converts
-shopper.BrowseJourney(persona.Lena) // browses and leaves
+journeys.Buying(persona.Sofia)   // wire.Session, ends in the cart
+journeys.Browsing(persona.Lena)  // browses and leaves
 ```
 
 ## A journey
@@ -66,11 +66,11 @@ starts at its scheduled time, and its session id is derived from that time, the 
 does:
 
 ```go
-shopper.History(shopper.Month(persona.Kate))  // []wire.Session, 7 visits
+journeys.History(journeys.Month(persona.Kate))  // []wire.Session, 7 visits
 ```
 
 `Month` spans the four weeks up to `wire.BaseTime`, mostly browsing, converting twice.
 The shopper's still carries over from visit to visit, the way a shop recognises a
-returning client. The persona is set per `shopper.Visit`, so the intent can change
+returning client. The persona is set per `journeys.Visit`, so the intent can change
 within one history: overwrite the persona of some visits and the shopper wants
 something else from then on. That is what the [affinity vector](../vector) is tested with.

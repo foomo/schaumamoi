@@ -43,7 +43,7 @@ export default withMermaid(defineConfig({
 					{ text: 'Catalog', link: '/guide/test-shop/catalog' },
 					{ text: 'Personas', link: '/guide/test-shop/personas' },
 					{ text: 'Shop', link: '/guide/test-shop/shop' },
-					{ text: 'Shoppers', link: '/guide/test-shop/shoppers' },
+					{ text: 'Journeys', link: '/guide/test-shop/journeys' },
 					{ text: 'Events on the Wire', link: '/guide/test-shop/wire' },
 				],
 			},
@@ -52,7 +52,7 @@ export default withMermaid(defineConfig({
 				text: 'Exhibits',
 				items: [
 					{ text: 'Shop', link: '/exhibits/shop' },
-					{ text: 'Shoppers', link: '/exhibits/shoppers' },
+					{ text: 'Journeys', link: '/exhibits/journeys' },
 					{ text: 'Distillery', link: '/exhibits/distillery' },
 					{ text: 'Affinity Vector', link: '/exhibits/affinity' },
 				],

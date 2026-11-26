@@ -12,8 +12,8 @@
 //   - shop: what the shop does: listings, filtered and ranked by what it has learned,
 //     and the GA4 events it reports. The shop never sees a persona, and it does not
 //     import the persona package.
-//   - shopper: a persona going through the shop: journeys and histories, with every
-//     event fed into an affinity still whose vector ranks the next listing.
+//   - journeys: a persona going through the shop, a visit at a time or over a month,
+//     with every event fed into an affinity still whose vector ranks the next listing.
 //   - wire: the Measurement Protocol envelope, and a visit as requests on the wire.
 //
 // This package holds what is built from all of them: the wire-format fixtures in

@@ -24,7 +24,7 @@ resolve against that page.
 | [Catalog](/guide/test-shop/catalog), on the guide page | the category tree, the dimensions and weights, every product with its copy and attractor |
 | [Personas](/guide/test-shop/personas), on the guide page | each persona's taste and favourites, how it chooses, and how it ranks the whole catalog |
 | [Shop](/exhibits/shop) | every listing as a new shopper sees it, and ranked by what one visit taught the shop |
-| [Shoppers](/exhibits/shoppers) | journeys step by step, months of visits, and the shop's final rankings |
+| [Journeys](/exhibits/journeys) | journeys step by step, months of visits, and the shop's final rankings |
 | [Distillery](/exhibits/distillery) | how a still works, and what it distills: sessions, months, drift, detour, consent |
 | [Affinity vector](/exhibits/affinity) | how the personalization vector fades and follows a changing intent (visit by visit, as `TestIntentPicksUpQuickly` checks it), against a flat sum and a decay by time |
 

@@ -55,5 +55,5 @@ mise run docs:dev    # generate the exhibits and serve the site with live reload
 | `pkg/distillery/stamp` | time and session, shared by every still: the stamp infuser and the rules on it — see [Drawing off](/guide/distillery#drawing-off) |
 | `pkg/distillery/stills/affinity` | the still that distills a shopper's personalization vector — see [Affinity vector](/guide/vector) |
 | `pkg/distillery/recipes/visits` | recipes that read any stamped still visit by visit: visits, and phases of steady taste — see [Visits and phases](/guide/visits) |
-| `pkg/internal/mock` | the test shop: deterministic GA4 traffic from two departments, in `catalog`, `persona`, `shop`, `shopper` and `wire` — see [Test shop](/guide/test-shop/) |
+| `pkg/internal/mock` | the test shop: deterministic GA4 traffic from two departments, in `catalog`, `persona`, `shop`, `journeys` and `wire` — see [Test shop](/guide/test-shop/) |
 | `pkg/internal/docs` | the templates the tests render their exhibits with — see [Documentation](/guide/documentation) |

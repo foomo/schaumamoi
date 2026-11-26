@@ -9,8 +9,8 @@ import (
 
 	"github.com/foomo/schaumamoi/pkg/distillery/stills/affinity"
 	"github.com/foomo/schaumamoi/pkg/internal/docs"
+	"github.com/foomo/schaumamoi/pkg/internal/mock/journeys"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/persona"
-	"github.com/foomo/schaumamoi/pkg/internal/mock/shopper"
 	"github.com/foomo/schaumamoi/pkg/internal/mock/wire"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 	"github.com/stretchr/testify/require"
@@ -23,19 +23,19 @@ const (
 
 // history is a shopper whose intent changes every phaseVisits visits, one visit every
 // gapDays days, every third visit converting — the shape TestIntentPicksUpQuickly checks.
-func history(order ...persona.Persona) ([]shopper.Visit, []wire.Session) {
+func history(order ...persona.Persona) ([]journeys.Visit, []wire.Session) {
 	n := len(order) * phaseVisits
-	visits := make([]shopper.Visit, 0, n)
+	visits := make([]journeys.Visit, 0, n)
 
 	for i := range n {
-		visits = append(visits, shopper.Visit{
+		visits = append(visits, journeys.Visit{
 			Persona: order[i/phaseVisits],
-			Ago:     time.Duration(n-1-i) * gapDays * shopper.Day,
+			Ago:     time.Duration(n-1-i) * gapDays * journeys.Day,
 			Convert: i%3 == 2,
 		})
 	}
 
-	return visits, shopper.History(visits)
+	return visits, journeys.History(visits)
 }
 
 // add feeds a visit into the still request by request, each under its own envelope.
@@ -48,7 +48,7 @@ func add(c *affinity.Still, session wire.Session) {
 // traced is a history run through an affinity still and traced choice by choice: every
 // kept event, which visit it belongs to, and the fade's step after it.
 type traced struct {
-	visits  []shopper.Visit
+	visits  []journeys.Visit
 	visitOf []int
 	steps   []affinity.Step
 	events  []affinity.Infused
