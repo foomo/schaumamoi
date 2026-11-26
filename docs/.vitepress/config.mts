@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 	title: 'schaumamoi',
-	description: 'Event aggregation, metering and analysis for GA4 event data',
+	description: 'Distill GA4 events into per-user state: feed, cut, infuse, distill, draw off',
 	lang: 'en-US',
 	cleanUrls: true,
 	lastUpdated: true,
@@ -90,7 +90,7 @@ export default defineConfig({
 		['link', { rel: 'icon', href: '/schaumamoi/logo.png' }],
 		['meta', { name: 'author', content: 'foomo by bestbytes' }],
 		['meta', { property: 'og:title', content: 'foomo/schaumamoi' }],
-		['meta', { property: 'og:description', content: 'Event aggregation, metering and analysis for GA4 event data' }],
+		['meta', { property: 'og:description', content: 'Distill GA4 events into per-user state: feed, cut, infuse, distill, draw off' }],
 		['meta', { property: 'og:image', content: 'https://foomo.github.io/schaumamoi/logo.png' }],
 		['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
 	],

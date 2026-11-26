@@ -6,11 +6,15 @@
 
 “Schau ma moi” is Bavarian dialect for “Let’s have a look” or “Let’s see.”
 
-event aggregation, metering and analysis
+**Distill GA4 events into per-user state.**
 
-Processes GA4 event data as produced by [`foomo/sesamy-go`](https://github.com/foomo/sesamy-go):
-it folds a shopper's events into a personalization vector, and tests that against
-deterministic traffic from a mock shop.
+GA4 events, as produced by [`foomo/sesamy-go`](https://github.com/foomo/sesamy-go),
+reach schaumamoi from a NATS JetStream stream or as a replay from a database. Each user
+gets a still: events are **fed** in, **cut** to what matters, **infused** once with what
+is known about them, **drawn off** again by composable rules, and **distilled** by any
+number of recipes into states of their own type, such as a shopper's personalization
+vector or the phases of their history. Everything is tested against deterministic
+traffic from a test shop.
 
 **Documentation: [foomo.github.io/schaumamoi](https://foomo.github.io/schaumamoi/)**
 
@@ -28,6 +32,7 @@ mise install
 
 ```bash
 go test ./...        # run the tests; they also write the documentation's reports
+go test -run '^Example$' -v ./pkg/distillery/stills/affinity   # a first still, step by step
 mise run docs        # build the documentation site into docs/.vitepress/dist
 mise run docs:dev    # serve it locally with live reload
 ```

@@ -13,6 +13,12 @@ them: a taste vector, a funnel, the phases of a history.
 | **distill** | a recipe reduces the infused events to a state of its own type | `Still.Distill(recipe)` |
 | **draw off** | what the still should no longer hold is drawn off, by a rule | `Config.DrawOff`, `Still.DrawOff(rule)` |
 
+```
+ JetStream stream ─┐                                         ┌─▶ distill(recipe) ─▶ a state
+                   ├─▶ feed ─▶ cut ─▶ infuse ─▶  one still  ─┼─▶ distill(recipe) ─▶ another
+ database replay ──┘                           per user      └─▶ draw off(rule)
+```
+
 ```go
 still := distillery.New(distillery.Config[Envelope, Params, Infusion]{
     Cut:      keep,      // which events are kept at all

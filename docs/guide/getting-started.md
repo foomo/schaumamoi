@@ -1,8 +1,12 @@
 # Getting Started
 
-schaumamoi processes GA4 event data as produced by
-[foomo/sesamy-go](https://github.com/foomo/sesamy-go): it folds a shopper's events into
-a personalization vector, and tests that against deterministic traffic from a mock shop.
+schaumamoi distills GA4 events, as produced by
+[foomo/sesamy-go](https://github.com/foomo/sesamy-go), into per-user state. Events come
+from a NATS JetStream stream or a database replay. Each user's events are fed into a
+**still**, worked on once on arrival, and distilled by any number of **recipes**: a
+shopper's personalization vector, the phases of their history, whatever you need next.
+The [distillery](/guide/distillery) explains the words; the rest of this page gets you
+running.
 
 ## Requirements
 
@@ -12,6 +16,19 @@ Go for the code, Bun for this documentation site, actionlint for the workflows.
 ```shell
 mise install
 ```
+
+## A first still
+
+The affinity still's example feeds a shopper's month of test traffic into a still,
+distills it two ways, and draws off one visit. It's a test, so its output is checked:
+
+```shell
+go test -run '^Example$' -v ./pkg/distillery/stills/affinity
+```
+
+Read it in
+[`example_test.go`](https://github.com/foomo/schaumamoi/blob/main/pkg/distillery/stills/affinity/example_test.go),
+then [the distillery](/guide/distillery) for what each step does.
 
 ## Run the tests
 
