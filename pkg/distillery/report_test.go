@@ -139,7 +139,7 @@ func TestReport(t *testing.T) {
 		bounded := distillery.New(testConfig{
 			Cut:      affinity.Choices,
 			Infusers: affinity.Infusers,
-			DrawOff:  func(env envelope) affinity.Rule { return affinity.OlderThan(env.At, drawOffAge) },
+			DrawOff:  func(env envelope) affinity.Rule { return affinity.Rules.OlderThan(env.At, drawOffAge) },
 		})
 		addHistory(bounded, history)
 

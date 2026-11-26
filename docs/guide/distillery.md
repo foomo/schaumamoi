@@ -52,7 +52,9 @@ should no longer hold, and it runs two ways:
   many events it removed: a session the user asked to forget, everything once consent
   is withdrawn.
 
-Rules are small and compose:
+Rules are small and compose. They are built from a `Rules` value, which fixes the
+still's type arguments once, since Go can't infer them from a rule's own arguments. A
+still package declares one, e.g. `var Rules distillery.Rules[any, Infusion]`:
 
 | Rule | Draws off |
 |---|---|
@@ -66,18 +68,20 @@ began, so the result doesn't depend on the order of the rules. What remains keep
 arrival order, and drawing off never rewrites a slice a recipe was handed earlier.
 
 Time and session are shared by every still: `pkg/distillery/stamp` has the `Stamp` an
-infusion embeds, the infuser `stamp.Infuse` that copies it off the envelope, and the rules
-`stamp.OlderThan(now, age)` and `stamp.InSession(id)`. The affinity still offers them
-typed, as `affinity.OlderThan` and `affinity.InSession`. A policy that forgets browsing
-after two weeks but keeps what went into the cart:
+infusion embeds, the infuser `stamp.Infuse` that copies it off the envelope, and
+`stamp.Rules`, which adds `OlderThan(now, age)` and `InSession(id)` to the rules above.
+The affinity still declares `var Rules stamp.Rules[any, Infusion]` and that is all: no
+rule of its own. A policy that forgets browsing after two weeks but keeps what went into
+the cart:
 
 ```go
 DrawOff: func(env affinity.Envelope) affinity.Rule {
-    browsing := affinity.Named(sesamy.EventNameSelectItem, sesamy.EventNameViewItem)
+    r := affinity.Rules
+    browsing := r.Named(sesamy.EventNameSelectItem, sesamy.EventNameViewItem)
 
-    return distillery.Any(
-        affinity.KeepLast(affinity.DefaultKeep),
-        distillery.All(browsing, affinity.OlderThan(env.At, 14*24*time.Hour)),
+    return r.Any(
+        r.KeepLast(affinity.DefaultKeep),
+        r.All(browsing, r.OlderThan(env.At, 14*24*time.Hour)),
     )
 },
 ```

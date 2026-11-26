@@ -66,7 +66,7 @@ func TestOlderThan(t *testing.T) {
 
 	still.Feed(affinity.Envelope{}, choice(sesamy.EventNameViewItem)) // no time: infinitely old
 
-	drawn := still.DrawOff(affinity.OlderThan(start.Add(21*day), 10*day))
+	drawn := still.DrawOff(affinity.Rules.OlderThan(start.Add(21*day), 10*day))
 
 	assert.Equal(t, 3, drawn, "the first two weeks and the choice without a time")
 	assert.Equal(t, []string{"view_item@15 s", "view_item@22 s"}, kept(still))
@@ -80,7 +80,7 @@ func TestInSession(t *testing.T) {
 		still.Feed(affinity.Envelope{At: start, Session: session}, choice(sesamy.EventNameSelectItem))
 	}
 
-	assert.Equal(t, 2, still.DrawOff(affinity.InSession("a")))
+	assert.Equal(t, 2, still.DrawOff(affinity.Rules.InSession("a")))
 	assert.Equal(t, []string{"select_item@01 b", "select_item@01 c"}, kept(still))
 }
 
@@ -90,14 +90,14 @@ func TestInSession(t *testing.T) {
 func TestSelectivePolicy(t *testing.T) {
 	t.Parallel()
 
-	browsing := affinity.Named(sesamy.EventNameSelectItem, sesamy.EventNameViewItem)
+	browsing := affinity.Rules.Named(sesamy.EventNameSelectItem, sesamy.EventNameViewItem)
 	still := distillery.New(distillery.Config[affinity.Envelope, any, affinity.Infusion]{
 		Cut:      affinity.Choices,
 		Infusers: affinity.Infusers,
 		DrawOff: func(env affinity.Envelope) affinity.Rule {
-			return distillery.Any(
-				affinity.KeepLast(affinity.DefaultKeep),
-				distillery.All(browsing, affinity.OlderThan(env.At, 14*day)),
+			return affinity.Rules.Any(
+				affinity.Rules.KeepLast(affinity.DefaultKeep),
+				affinity.Rules.All(browsing, affinity.Rules.OlderThan(env.At, 14*day)),
 			)
 		},
 	})

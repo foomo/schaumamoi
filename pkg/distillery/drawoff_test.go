@@ -16,6 +16,9 @@ type (
 	numRule  = distillery.Rule[any, int]
 )
 
+// rules builds the rules for the numbered still.
+var rules distillery.Rules[any, int]
+
 // numberedStill numbers every event it keeps, from 1, and draws off what policy returns
 // after every feed.
 func numberedStill(policy func(batch int) numRule) *distillery.Still[int, any, int] {
@@ -64,10 +67,10 @@ func TestDrawOffKeepsOrder(t *testing.T) {
 	still := numberedStill(nil)
 	feed(still, 1, view, view, view, view, view, view)
 
-	assert.Equal(t, 3, still.DrawOff(distillery.Where(even)))
+	assert.Equal(t, 3, still.DrawOff(rules.Where(even)))
 	assert.Equal(t, []int{1, 3, 5}, numbers(still), "what remains keeps its arrival order")
 	assert.Equal(t, 3, still.Len())
-	assert.Zero(t, still.DrawOff(distillery.Where(even)), "nothing left to draw off")
+	assert.Zero(t, still.DrawOff(rules.Where(even)), "nothing left to draw off")
 	assert.Zero(t, still.DrawOff(nil), "a nil rule draws off nothing")
 }
 
@@ -78,14 +81,14 @@ func TestRules(t *testing.T) {
 		rule numRule
 		want []int
 	}{
-		"KeepLast keeps the newest":       {distillery.KeepLast[any, int](2), []int{5, 6}},
-		"KeepLast beyond the length":      {distillery.KeepLast[any, int](10), []int{1, 2, 3, 4, 5, 6}},
-		"Named":                           {distillery.Named[any, int](cart), []int{1, 2, 4, 5}},
-		"Any is either":                   {distillery.Any(distillery.Named[any, int](cart), distillery.Where(even)), []int{1, 5}},
-		"All narrows one rule by another": {distillery.All(distillery.Named[any, int](cart), distillery.Where(even)), []int{1, 2, 3, 4, 5}},
-		"Not keeps what it selects":       {distillery.Not(distillery.Named[any, int](cart)), []int{3, 6}},
-		"empty Any draws off nothing":     {distillery.Any[any, int](), []int{1, 2, 3, 4, 5, 6}},
-		"empty All draws off nothing":     {distillery.All[any, int](), []int{1, 2, 3, 4, 5, 6}},
+		"KeepLast keeps the newest":       {rules.KeepLast(2), []int{5, 6}},
+		"KeepLast beyond the length":      {rules.KeepLast(10), []int{1, 2, 3, 4, 5, 6}},
+		"Named":                           {rules.Named(cart), []int{1, 2, 4, 5}},
+		"Any is either":                   {rules.Any(rules.Named(cart), rules.Where(even)), []int{1, 5}},
+		"All narrows one rule by another": {rules.All(rules.Named(cart), rules.Where(even)), []int{1, 2, 3, 4, 5}},
+		"Not keeps what it selects":       {rules.Not(rules.Named(cart)), []int{3, 6}},
+		"empty Any draws off nothing":     {rules.Any(), []int{1, 2, 3, 4, 5, 6}},
+		"empty All draws off nothing":     {rules.All(), []int{1, 2, 3, 4, 5, 6}},
 	}
 
 	for name, tt := range tests {
@@ -107,12 +110,12 @@ func TestRules(t *testing.T) {
 func TestPositionsDoNotDependOnRuleOrder(t *testing.T) {
 	t.Parallel()
 
-	carts := distillery.Named[any, int](cart)
-	last := distillery.KeepLast[any, int](3)
+	carts := rules.Named(cart)
+	last := rules.KeepLast(3)
 
 	for name, rule := range map[string]numRule{
-		"carts first": distillery.Any(carts, last),
-		"last first":  distillery.Any(last, carts),
+		"carts first": rules.Any(carts, last),
+		"last first":  rules.Any(last, carts),
 	} {
 		still := numberedStill(nil)
 		feed(still, 1, view, view, view, cart, view, cart)
@@ -132,7 +135,7 @@ func TestStandingDrawOff(t *testing.T) {
 	still := numberedStill(func(batch int) numRule {
 		seen = append(seen, batch)
 
-		return distillery.KeepLast[any, int](batch)
+		return rules.KeepLast(batch)
 	})
 
 	feed(still, 3, view, view, view, view)
@@ -153,7 +156,7 @@ func TestDrawOffDoesNotRewriteADistilledSlice(t *testing.T) {
 	feed(still, 1, view, view, view, view)
 
 	held := still.Distill(func(events []numbered) []numbered { return events })
-	still.DrawOff(distillery.Where(func(e numbered) bool { return e.Infusion == 1 }))
+	still.DrawOff(rules.Where(func(e numbered) bool { return e.Infusion == 1 }))
 
 	got := make([]int, 0, len(held))
 	for _, e := range held {

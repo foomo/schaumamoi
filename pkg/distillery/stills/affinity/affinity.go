@@ -87,7 +87,7 @@ func New(cut Cut) *Still {
 	return distillery.New(distillery.Config[Envelope, any, Infusion]{
 		Cut:      keep,
 		Infusers: Infusers,
-		DrawOff:  func(Envelope) Rule { return KeepLast(DefaultKeep) },
+		DrawOff:  func(Envelope) Rule { return Rules.KeepLast(DefaultKeep) },
 	})
 }
 

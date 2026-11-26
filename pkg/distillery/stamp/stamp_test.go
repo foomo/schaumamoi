@@ -29,6 +29,9 @@ func (e envelope) Stamped() stamp.Stamp { return stamp.Stamp{At: e.at, Session: 
 
 var start = time.Date(2026, time.September, 1, 10, 0, 0, 0, time.UTC)
 
+// rules is how a still package offers its rules: one value with the type arguments fixed.
+var rules stamp.Rules[any, infusion]
+
 func still() *distillery.Still[envelope, any, infusion] {
 	return distillery.New(distillery.Config[envelope, any, infusion]{
 		Infusers: []distillery.Infuser[envelope, any, infusion]{
@@ -69,7 +72,7 @@ func TestOlderThan(t *testing.T) {
 
 	s.Feed(envelope{session: "a"}, sesamy.Event[any]{Name: sesamy.EventNameViewItem}) // no time
 
-	assert.Equal(t, 3, s.DrawOff(stamp.OlderThan[any, infusion](start.Add(3*24*time.Hour), 36*time.Hour)),
+	assert.Equal(t, 3, s.DrawOff(rules.OlderThan(start.Add(3*24*time.Hour), 36*time.Hour)),
 		"the first two days, and the event without a time")
 
 	var days []int
@@ -88,6 +91,6 @@ func TestInSession(t *testing.T) {
 		s.Feed(envelope{at: start, session: session}, sesamy.Event[any]{Name: sesamy.EventNameViewItem})
 	}
 
-	assert.Equal(t, 2, s.DrawOff(stamp.InSession[any, infusion]("a")))
+	assert.Equal(t, 2, s.DrawOff(rules.InSession("a")))
 	assert.Equal(t, "b", held(s)[0].Session)
 }

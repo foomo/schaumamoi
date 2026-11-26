@@ -3,8 +3,8 @@
 //
 // The envelope exists on the way in only, so the stamp has to be infused into each kept
 // event to survive. Embed Stamp in an infusion and Infuse copies it there; the rules
-// OlderThan and InSession, and any recipe that decays by age or groups by visit, read
-// it back — whatever else the infusion holds.
+// Rules.OlderThan and Rules.InSession, and any recipe that decays by age or groups by
+// visit, read it back — whatever else the infusion holds.
 package stamp
 
 import (
@@ -49,14 +49,22 @@ func Infuse[Envelope Stamped, Params any, Infusion any, PI interface {
 	return i
 }
 
+// Rules builds the rules for a stamped still: every rule of distillery.Rules, and the two
+// that read the stamp. A still package declares one value of it, e.g.
+//
+//	var Rules stamp.Rules[any, Infusion]
+type Rules[Params any, Infusion Stamped] struct {
+	distillery.Rules[Params, Infusion]
+}
+
 // OlderThan draws off the events that happened more than age before now. Now is handed
 // in, not read off the clock: as a standing policy it is the time of the batch being fed.
 // An event without a time counts as infinitely old — it would weigh nothing when decayed
 // either.
-func OlderThan[Params any, Infusion Stamped](now time.Time, age time.Duration) distillery.Rule[Params, Infusion] {
+func (r Rules[Params, Infusion]) OlderThan(now time.Time, age time.Duration) distillery.Rule[Params, Infusion] {
 	cutoff := now.Add(-age)
 
-	return distillery.Where(func(e distillery.Infused[Params, Infusion]) bool {
+	return r.Where(func(e distillery.Infused[Params, Infusion]) bool {
 		at := e.Infusion.Stamped().At
 
 		return at.IsZero() || at.Before(cutoff)
@@ -65,8 +73,8 @@ func OlderThan[Params any, Infusion Stamped](now time.Time, age time.Duration) d
 
 // InSession draws off the events of one session: a visit the user asked to have
 // forgotten.
-func InSession[Params any, Infusion Stamped](id string) distillery.Rule[Params, Infusion] {
-	return distillery.Where(func(e distillery.Infused[Params, Infusion]) bool {
+func (r Rules[Params, Infusion]) InSession(id string) distillery.Rule[Params, Infusion] {
+	return r.Where(func(e distillery.Infused[Params, Infusion]) bool {
 		return e.Infusion.Stamped().Session == id
 	})
 }
