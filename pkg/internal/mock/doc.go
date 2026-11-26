@@ -1,6 +1,6 @@
 // Package mock is the shop the tests run on: deterministic GA4 traffic from a shop with
 // two departments, women's fashion and home decoration. It is internal: test fixtures
-// for this module, free to change, not an API. The reports the tests write use it to
+// for this module, free to change, not an API. The exhibits the tests write use it to
 // show the module's packages at work.
 //
 // The shop is split the way a real one is:

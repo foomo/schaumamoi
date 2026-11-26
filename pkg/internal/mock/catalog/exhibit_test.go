@@ -29,10 +29,10 @@ type (
 	}
 )
 
-// TestReport writes the catalog page: the category tree, the dimensions each department
+// TestExhibit writes the catalog exhibit: the category tree, the dimensions each department
 // speaks, the weights every category scores with, and every product with its facets,
 // copy and attractor. It also writes the product images every page shows.
-func TestReport(t *testing.T) {
+func TestExhibit(t *testing.T) {
 	t.Parallel()
 
 	var tree []category
@@ -60,13 +60,13 @@ func TestReport(t *testing.T) {
 		require.NoError(t, docs.Image(item.ImagePath(), []byte(item.SVG())))
 	}
 
-	require.NoError(t, docs.Page("catalog", map[string]any{
+	require.NoError(t, docs.Exhibit("catalog", map[string]any{
 		"Tree":       tree,
 		"Dimensions": spoken(),
 		"Count":      len(catalog.All()),
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "catalog.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "catalog.md"))
 }
 
 // spoken sorts the dimensions the products carry by department: those both departments'

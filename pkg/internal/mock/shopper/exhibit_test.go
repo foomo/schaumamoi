@@ -70,10 +70,10 @@ type (
 	}
 )
 
-// TestReport writes the shoppers page: each persona's converting journey, step by step,
+// TestExhibit writes the shoppers exhibit: each persona's converting journey, step by step,
 // its month of visits with how well the shop knew it by each, and the shop's final
 // ranking of all products after one visit and after the month.
-func TestReport(t *testing.T) {
+func TestExhibit(t *testing.T) {
 	t.Parallel()
 
 	var shoppers []shopperReport
@@ -90,12 +90,12 @@ func TestReport(t *testing.T) {
 		})
 	}
 
-	require.NoError(t, docs.Page("shoppers", map[string]any{
+	require.NoError(t, docs.Exhibit("shoppers", map[string]any{
 		"Shoppers": shoppers,
 		"BaseTime": wire.BaseTime,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "shoppers.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "shoppers.md"))
 }
 
 // final reads the listing of all products that events end on. The scores come from

@@ -1,4 +1,4 @@
-// Hover for the line charts on the generated report pages (pkg/internal/docs/chart.go):
+// Hover for the line charts in the generated exhibits (pkg/internal/docs/chart.go):
 // a crosshair that snaps to the nearest x, and a tooltip listing every series there.
 // Built from text nodes only, never innerHTML.
 type HoverData = {

@@ -22,9 +22,9 @@ coverage.*
 # .opencode/ instead, which is deliberately not ignored.
 /opencode.json
 
-# The documentation site (docs/, VitePress). The reports the tests generate are output,
+# The documentation site (docs/, VitePress). The exhibits the tests generate are output,
 # not sources: deterministic, but rebuilt on every run. The site builds in CI.
-/docs/reports/
+/docs/.exhibits/
 
 /docs/node_modules/
 /docs/.vitepress/cache/

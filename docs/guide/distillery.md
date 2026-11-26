@@ -150,5 +150,5 @@ how far their visits get) go under `stills/`, next to `affinity`.
 - **Draw off:** it holds the newest `DefaultKeep` (1000) choices, and draws off the rest
   after every feed.
 
-The [distillery report](/reports/distillery) draws this setup from the code and traces
+The [distillery exhibit](/exhibits/distillery) draws this setup from the code and traces
 one visit through it, request by request.

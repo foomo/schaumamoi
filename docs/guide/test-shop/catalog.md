@@ -15,7 +15,7 @@ catalog.HomeDecoration()  // cushions, lamps, vases
 catalog.Dresses()         // one category
 ```
 
-The [catalog report](/reports/catalog) shows every product with its picture, copy and
+The [catalog exhibit](/exhibits/catalog) shows every product with its picture, copy and
 attractor.
 
 ## Category tree

@@ -7,18 +7,18 @@ ranks every listing with the personalization vector the affinity still distills 
 they did.
 
 It is internal: test fixtures for this module, free to change, not an API. But it is
-what the [reports](/reports/catalog) and these guides use to show the packages at work,
+what the [exhibits](/exhibits/catalog) and these guides use to show the packages at work,
 so it is split the way a real shop is, and these pages follow that split.
 
 ## Packages
 
-| Package | What it is | Guide | Report |
+| Package | What it is | Guide | Exhibit |
 |---|---|---|---|
 | `mock/taste` | the dimensions taste is described in | [Catalog](./catalog#dimensions) | |
-| `mock/catalog` | what the shop sells: products, category tree, weights, `Score` | [Catalog](./catalog) | [Catalog](/reports/catalog) |
-| `mock/persona` | the four shoppers' tastes, and how a shopper picks | [Personas](./personas) | [Personas](/reports/personas) |
-| `mock/shop` | listings, ranked by a profile, and the GA4 events they report | [Shop](./shop) | [Shop](/reports/shop) |
-| `mock/shopper` | a persona taken through the shop: journeys and histories | [Shoppers](./shoppers) | [Shoppers](/reports/shoppers) |
+| `mock/catalog` | what the shop sells: products, category tree, weights, `Score` | [Catalog](./catalog) | [Catalog](/exhibits/catalog) |
+| `mock/persona` | the four shoppers' tastes, and how a shopper picks | [Personas](./personas) | [Personas](/exhibits/personas) |
+| `mock/shop` | listings, ranked by a profile, and the GA4 events they report | [Shop](./shop) | [Shop](/exhibits/shop) |
+| `mock/shopper` | a persona taken through the shop: journeys and histories | [Shoppers](./shoppers) | [Shoppers](/exhibits/shoppers) |
 | `mock/wire` | the Measurement Protocol envelope, and a visit as requests | [Events on the wire](./wire) | |
 | `mock` | the fixtures in `testdata` and the images, built from all of the above | [Events on the wire](./wire#fixtures) | |
 

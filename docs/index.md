@@ -16,8 +16,8 @@ hero:
       text: The Distillery
       link: /guide/distillery
     - theme: alt
-      text: See the Reports
-      link: /reports/catalog
+      text: See the Exhibits
+      link: /exhibits/catalog
 
 features:
   - title: A still per user
@@ -76,17 +76,17 @@ still.DrawOff(affinity.Rules.InSession(month[0].ID()))                   // forg
 // forgetting the first visit draws off 9 choices
 ```
 
-## Reports from the tests
+## Exhibits from the tests
 
-The [Reports](/reports/catalog) are written by the test suite: every page is computed from
+The [Exhibits](/exhibits/catalog) are written by the test suite: every page is computed from
 the real code on every run, every product and persona shown by its image, every claim
 next to the test that checks it.
 
-- [Catalog](/reports/catalog), [Personas](/reports/personas), [Shop](/reports/shop)
-  and [Shoppers](/reports/shoppers): the test shop, package by package
-- [Distillery](/reports/distillery): how a still works, what it distills from the
+- [Catalog](/exhibits/catalog), [Personas](/exhibits/personas), [Shop](/exhibits/shop)
+  and [Shoppers](/exhibits/shoppers): the test shop, package by package
+- [Distillery](/exhibits/distillery): how a still works, what it distills from the
   traffic, and what drawing off does to it
-- [Affinity vector](/reports/affinity): how the personalization vector fades and follows a
+- [Affinity vector](/exhibits/affinity): how the personalization vector fades and follows a
   changing intent
 
 *Schau ma moi*: Bavarian for "let's have a look". Or, at a distillery, a taste.

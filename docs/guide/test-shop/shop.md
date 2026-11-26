@@ -3,7 +3,7 @@
 `pkg/internal/mock/shop` is the shop's side of the traffic: the listings it renders,
 and the GA4 events reporting them — `view_item_list`, `select_item`, `view_item`,
 `add_to_cart`. It ranks by what a shopper has done, never by who the shopper is: the
-package does not import a persona. The [shop report](/reports/shop) shows every
+package does not import a persona. The [shop exhibit](/exhibits/shop) shows every
 listing, and the same department ranked for four shoppers after one visit each.
 
 ## Listings

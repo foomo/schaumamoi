@@ -34,10 +34,10 @@ type (
 	}
 )
 
-// TestReport writes the personas page: every persona's taste, the occasion it browses,
+// TestExhibit writes the personas exhibit: every persona's taste, the occasion it browses,
 // its favourite in every category, and how it ranks the whole catalog. It also writes
 // the avatars every page shows.
-func TestReport(t *testing.T) {
+func TestExhibit(t *testing.T) {
 	t.Parallel()
 
 	var personas []personaReport
@@ -55,13 +55,13 @@ func TestReport(t *testing.T) {
 		require.NoError(t, docs.Image(p.ImagePath(), []byte(p.SVG())))
 	}
 
-	require.NoError(t, docs.Page("personas", map[string]any{
+	require.NoError(t, docs.Exhibit("personas", map[string]any{
 		"Personas":   personas,
 		"ScanDepth":  persona.ScanDepth,
 		"GoodEnough": float64(persona.GoodEnough) * 100,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "personas.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "personas.md"))
 }
 
 // favourites is the persona's first choice in every category.

@@ -36,14 +36,14 @@ then [the distillery](/guide/distillery) for what each step does.
 go test ./...
 ```
 
-Besides checking the code, the tests write the [Reports](/reports/catalog) of this site:
+Besides checking the code, the tests write the [Exhibits](/exhibits/catalog) of this site:
 pages computed from the real code on every run, next to the tests that check them.
 
 ## Build the documentation
 
 ```shell
-mise run docs        # generate the reports and build the site into docs/.vitepress/dist
-mise run docs:dev    # generate the reports and serve the site with live reload
+mise run docs        # generate the exhibits and build the site into docs/.vitepress/dist
+mise run docs:dev    # generate the exhibits and serve the site with live reload
 ```
 
 ## Packages
@@ -56,4 +56,4 @@ mise run docs:dev    # generate the reports and serve the site with live reload
 | `pkg/distillery/stills/affinity` | the still that distills a shopper's personalization vector — see [Affinity vector](/guide/vector) |
 | `pkg/distillery/recipes/visits` | recipes that read any stamped still visit by visit: visits, and phases of steady taste — see [Visits and phases](/guide/visits) |
 | `pkg/internal/mock` | the test shop: deterministic GA4 traffic from two departments, in `catalog`, `persona`, `shop`, `shopper` and `wire` — see [Test shop](/guide/test-shop/) |
-| `pkg/internal/docs` | the templates the tests render their reports with — see [Documentation](/guide/documentation) |
+| `pkg/internal/docs` | the templates the tests render their exhibits with — see [Documentation](/guide/documentation) |

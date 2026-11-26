@@ -14,32 +14,31 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestPageIsVitePressMarkdown renders a page into a temporary site and checks what
-// VitePress needs from it: front matter with the page's title, and the report as one
-// block of raw HTML that Vue leaves alone — no blank line to end it early, no indented
-// line to turn into a code block.
-func TestPageIsVitePressMarkdown(t *testing.T) {
+// TestExhibitIsOneHTMLBlock renders an exhibit into a temporary site and checks what the
+// page including it needs: no front matter of its own, and one block of raw HTML that Vue
+// leaves alone — no blank line to end it early, no indented line to turn into a code
+// block.
+func TestExhibitIsOneHTMLBlock(t *testing.T) {
 	t.Setenv(docs.DocsEnv, t.TempDir())
 
-	// the smallest data the affinity page renders with
+	// the smallest data the affinity exhibit renders with
 	chart := docs.Chart{Title: "c", YMin: 0, YMax: 1, Series: []docs.Series{{Name: "s", Slot: 1, Values: []float64{1, 0.5}}}}
 	data := map[string]any{
 		"Fade": affinity.DefaultFade, "HalfLife": 13.5, "AfterVisit": 60.0, "AfterWeek": 17.0,
 		"Curve": chart, "StrongReads": chart, "StrongDetect": chart, "GentleReads": chart, "GentleDetect": chart,
-		"StrongChoices": 1, "StrongCollapse": 0, "GentleCollapse": 0, "Compare": []struct{}{}, "Intents": []struct{}{},
+		"StrongChoices": 1, "StrongCollapse": 0, "GentleCollapse": 0, "Compare": []struct{}{}, "Intents": []struct{}{}, "Keep": 1000,
 	}
 
-	require.NoError(t, docs.Page("affinity", data, nil))
+	require.NoError(t, docs.Exhibit("affinity", data, nil))
 
-	raw, err := os.ReadFile(filepath.Join(docs.Dir(), "reports", "affinity.md"))
+	raw, err := os.ReadFile(filepath.Join(docs.Dir(), docs.FragmentDir, "affinity.md"))
 	require.NoError(t, err)
 
 	md := string(raw)
-	assert.True(t, strings.HasPrefix(md, "---\ntitle: \"Affinity vector\"\n"), "front matter first, values quoted for YAML")
-	assert.Contains(t, md, "pageClass: report-page")
+	assert.False(t, strings.HasPrefix(md, "---"), "no front matter: the including page has it")
 
-	_, body, found := strings.Cut(md, `<div class="report" v-pre>`+"\n")
-	require.True(t, found)
+	body, found := strings.CutPrefix(md, `<div class="exhibit" v-pre>`+"\n")
+	require.True(t, found, "the fragment is the exhibit block, from its first line")
 
 	body = strings.TrimSuffix(strings.TrimSpace(body), "</div>")
 	for i, line := range strings.Split(strings.TrimSpace(body), "\n") {
@@ -48,19 +47,24 @@ func TestPageIsVitePressMarkdown(t *testing.T) {
 	}
 }
 
-func TestPageMustBeKnown(t *testing.T) {
+func TestExhibitMustBeKnown(t *testing.T) {
 	t.Setenv(docs.DocsEnv, t.TempDir())
 
-	assert.Error(t, docs.Page("nope", nil, nil))
+	assert.Error(t, docs.Exhibit("nope", nil, nil))
 }
 
-// TestImageGoesNextToThePages: images land next to the generated pages, so a page's
-// relative image paths resolve.
-func TestImageGoesNextToThePages(t *testing.T) {
+// TestImagePathIsRelativeToItsPage: images land next to the fragments, and an exhibit
+// points at them from the page that includes it — an included fragment's relative paths
+// resolve against that page, wherever it sits.
+func TestImagePathIsRelativeToItsPage(t *testing.T) {
 	t.Setenv(docs.DocsEnv, t.TempDir())
 
 	require.NoError(t, docs.Image("images/x.svg", []byte("<svg/>")))
-	assert.FileExists(t, filepath.Join(docs.Dir(), "reports", "images", "x.svg"))
+	assert.FileExists(t, filepath.Join(docs.Dir(), docs.FragmentDir, "images", "x.svg"))
+
+	assert.Equal(t, "../.exhibits/images/x.svg", docs.ImagePath("exhibits/shop", "images/x.svg"))
+	assert.Equal(t, "../../.exhibits/images/x.svg", docs.ImagePath("guide/test-shop/catalog", "images/x.svg"))
+	assert.Equal(t, "./.exhibits/images/x.svg", docs.ImagePath("index", "images/x.svg"))
 }
 
 // rowOutsideSection is a table row directly inside <table>: valid only because browsers
@@ -82,11 +86,11 @@ func TestTablesHaveSections(t *testing.T) {
 	data := map[string]any{
 		"Fade": affinity.DefaultFade, "HalfLife": 13.5, "AfterVisit": 60.0, "AfterWeek": 17.0,
 		"Curve": chart, "StrongReads": chart, "StrongDetect": chart, "GentleReads": chart, "GentleDetect": chart,
-		"StrongChoices": 1, "StrongCollapse": 0, "GentleCollapse": 0, "Compare": []struct{}{}, "Intents": []struct{}{},
+		"StrongChoices": 1, "StrongCollapse": 0, "GentleCollapse": 0, "Compare": []struct{}{}, "Intents": []struct{}{}, "Keep": 1000,
 	}
-	require.NoError(t, docs.Page("affinity", data, nil))
+	require.NoError(t, docs.Exhibit("affinity", data, nil))
 
-	page, err := os.ReadFile(filepath.Join(docs.Dir(), "reports", "affinity.md"))
+	page, err := os.ReadFile(filepath.Join(docs.Dir(), docs.FragmentDir, "affinity.md"))
 	require.NoError(t, err)
-	assert.NotRegexp(t, rowOutsideSection, string(page), "affinity page")
+	assert.NotRegexp(t, rowOutsideSection, string(page), "affinity exhibit")
 }

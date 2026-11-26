@@ -1,7 +1,7 @@
 name: Publish docs
 
 # The documentation site (docs/, VitePress) is built from the hand-written guides and the
-# reports the test suite generates: `mise run docs` runs the tests, then `vitepress
+# exhibits the test suite generates: `mise run docs` runs the tests, then `vitepress
 # build`. Pull requests build it too, so a failing test or a dead link shows before
 # merge; pushes to main publish it to GitHub Pages.
 #

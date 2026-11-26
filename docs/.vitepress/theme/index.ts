@@ -5,7 +5,7 @@ import { nextTick } from 'vue';
 import "@catppuccin/vitepress/theme/frappe/blue.css";
 
 import './custom.css';
-import './report.css';
+import './exhibit.css';
 import { initCharts } from './charts';
 
 export default {
@@ -13,7 +13,7 @@ export default {
 	enhanceApp({ router }) {
 		if (!inBrowser) return;
 
-		// the report pages' charts get their hover once the page is in the DOM — on first
+		// the exhibits' charts get their hover once the page is in the DOM — on first
 		// load, and after every client-side navigation
 		const init = () => nextTick(() => initCharts());
 		router.onAfterPageLoad = init;

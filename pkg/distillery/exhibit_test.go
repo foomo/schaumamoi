@@ -81,12 +81,12 @@ type (
 	}
 )
 
-// TestReport writes testdata/report.html: what the still recovers from generated
+// TestExhibit writes the distillery exhibit: what the still recovers from generated
 // traffic, shown with the mock images. A single session, a steady month, every drift
 // between two personas read flat and with decay and cut into phases, a detour, and the
 // consent cut — each beside the persona that actually produced it, so a misreading
-// is visible at a glance. Open it in a browser after `go test ./pkg/distillery`.
-func TestReport(t *testing.T) {
+// is visible at a glance. `mise run docs:dev` shows it at /exhibits/distillery.
+func TestExhibit(t *testing.T) {
 	t.Parallel()
 
 	var (
@@ -178,7 +178,7 @@ func TestReport(t *testing.T) {
 	pipe, err := pipeline("Kate's third visit of her month, two weeks before BaseTime: the shop knows two visits of hers by then, and this one ends in the cart", third)
 	require.NoError(t, err)
 
-	require.NoError(t, docs.Page("distillery", map[string]any{
+	require.NoError(t, docs.Exhibit("distillery", map[string]any{
 		"Pipeline":   pipe,
 		"Sessions":   sessions,
 		"Months":     months,
@@ -191,7 +191,7 @@ func TestReport(t *testing.T) {
 		"BaseTime":   wire.BaseTime,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "distillery.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "distillery.md"))
 }
 
 // read reads a distilled taste the way assertPerCategory does — in every category the
@@ -238,6 +238,6 @@ func chips(ps []affinity.Phase) []chip {
 	return out
 }
 
-// drawOffAge is the age the report's standing draw-off forgets at: the drifted month's
+// drawOffAge is the age the exhibit's standing draw-off forgets at: the drifted month's
 // three old visits are 14 to 27 days old by its end, the four recent ones 9 days and less.
 const drawOffAge = 10 * 24 * time.Hour

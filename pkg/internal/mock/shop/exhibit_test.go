@@ -28,10 +28,10 @@ type (
 	}
 )
 
-// TestReport writes the shop page: every listing of the category tree as a new shopper
+// TestExhibit writes the shop exhibit: every listing of the category tree as a new shopper
 // sees it, and the department listing re-ranked for four shoppers after one visit each,
 // by nothing but the vector their events add up to.
-func TestReport(t *testing.T) {
+func TestExhibit(t *testing.T) {
 	t.Parallel()
 
 	var listings []listing
@@ -53,10 +53,10 @@ func TestReport(t *testing.T) {
 		after = append(after, learned{Who: p, Signals: c.Len(), Items: f.Apply(catalog.All())})
 	}
 
-	require.NoError(t, docs.Page("shop", map[string]any{
+	require.NoError(t, docs.Exhibit("shop", map[string]any{
 		"Listings": listings,
 		"Learned":  after,
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "shop.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "shop.md"))
 }

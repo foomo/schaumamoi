@@ -8,7 +8,7 @@ persona.All()   // Kate, Sofia, Lena, Mira
 persona.Kate    // persona.Persona{Name, Description, Affinity}
 ```
 
-The [personas report](/reports/personas) shows each one's taste, favourite in every
+The [personas exhibit](/exhibits/personas) shows each one's taste, favourite in every
 category, and ranking of the whole catalog.
 
 ## Chosen to discriminate

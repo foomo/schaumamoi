@@ -47,5 +47,5 @@ the same products every visit, so even one taste's visits differ.
 
 Phases need sessions. A still stamped with its time but not its session is one
 undivided visit, with nothing to split (`TestPhasesNeedSessions`). The
-[distillery report](/reports/distillery) shows phases for steady months, every drift,
+[distillery exhibit](/exhibits/distillery) shows phases for steady months, every drift,
 a detour and a consent cut.

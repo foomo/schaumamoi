@@ -210,11 +210,11 @@ func compare(t *testing.T, order ...persona.Persona) []comparison {
 	return out
 }
 
-// TestReport writes testdata/report.html: how the personalization vector fades, and how
-// it follows a shopper whose intent changes — the curve, the change detection choice by
-// choice, who the vector reads as, a gentle change, and the fade against a flat sum and
-// a decay by time. Open it in a browser after `go test ./pkg/affinity`.
-func TestReport(t *testing.T) {
+// TestExhibit writes the affinity vector exhibit: how the personalization vector fades,
+// and how it follows a shopper whose intent changes — the curve, the change detection
+// choice by choice, who the vector reads as, a gentle change, and the fade against a flat
+// sum and a decay by time. `mise run docs:dev` shows it at /exhibits/affinity.
+func TestExhibit(t *testing.T) {
 	t.Parallel()
 
 	k, s, l, m := persona.Kate, persona.Sofia, persona.Lena, persona.Mira
@@ -246,7 +246,7 @@ func TestReport(t *testing.T) {
 	strong := trace(t, k, s, l, m)
 	gentle := trace(t, m, l)
 
-	require.NoError(t, docs.Page("affinity", map[string]any{
+	require.NoError(t, docs.Exhibit("affinity", map[string]any{
 		"Fade":           f,
 		"Keep":           affinity.DefaultKeep,
 		"HalfLife":       math.Log(0.5) / math.Log(float64(f.PerEvent)),
@@ -264,7 +264,7 @@ func TestReport(t *testing.T) {
 		"Intents":        intentRows(t),
 	}, nil))
 
-	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "affinity.md"))
+	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "affinity.md"))
 }
 
 func nearestPersona(aff personalization.Vector) persona.Persona {

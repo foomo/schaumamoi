@@ -31,7 +31,7 @@ mise install
 ## Usage
 
 ```bash
-go test ./...        # run the tests; they also write the documentation's reports
+go test ./...        # run the tests; they also write the documentation's exhibits
 go test -run '^Example$' -v ./pkg/distillery/stills/affinity   # a first still, step by step
 mise run docs        # build the documentation site into docs/.vitepress/dist
 mise run docs:dev    # serve it locally with live reload
@@ -50,5 +50,5 @@ mise run docs:dev    # serve it locally with live reload
 The tests drive them with deterministic GA4 traffic from a two-department shop,
 `pkg/internal/mock`: test fixtures, not a public API.
 
-How they work, with reports computed from the code by the tests, is in the
+How they work, with exhibits computed from the code by the tests, is in the
 [documentation](https://foomo.github.io/schaumamoi/); its sources are in [`docs/`](docs/).

@@ -4,7 +4,7 @@
 the only package that knows both. The persona picks; the shop ranks every listing with
 the vector the shopper's events add up to at that moment. Each event goes into the
 shopper's affinity still (`pkg/distillery/stills/affinity`) as it happens, so the
-next listing is already ranked with it. The [shoppers report](/reports/shoppers) shows
+next listing is already ranked with it. The [shoppers exhibit](/exhibits/shoppers) shows
 every journey step by step, every month, and the shop's final rankings.
 
 ```go

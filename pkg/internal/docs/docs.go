@@ -1,17 +1,19 @@
-// Package docs renders the pages the tests contribute to the documentation site: pages
-// that show what the mock shop generates, what the distillery makes of it, and how
-// the personalization vector behaves — every product and persona by its image, every
-// claim next to the test that checks it.
+// Package docs renders the exhibits the tests contribute to the documentation site:
+// what the test shop generates, what the distillery makes of it, and how the
+// personalization vector behaves — every product and persona by its image, every claim
+// next to the test that checks it.
 //
-// The site itself is a VitePress site in docs/, like the other foomo projects': guides
-// written by hand, and a Reports section these pages fill. The tests compute; this
-// package presents. Each package's TestReport hands its page the data with Page, which
-// renders the page's template — templates/<name>.html, inside templates/page.md — into
-// docs/reports/<name>.md. Styles and the chart hover live in the VitePress theme.
+// The site is a VitePress site in docs/, like the other foomo projects': pages written by
+// hand, some of which show an exhibit. The tests compute; this package presents. Each
+// package's TestExhibit hands its exhibit the data with Exhibit, which renders the
+// exhibit's template, templates/<name>.html, into a fragment, docs/.exhibits/<name>.md.
+// The page that shows it, committed like any other, includes the fragment with
+// VitePress's <!--@include: …-->: a page of its own under docs/exhibits/, or a guide page
+// that opens with it. Styles and the chart hover live in the VitePress theme.
 //
-// The generated pages are test output, not sources: they are deterministic, but nothing
-// asserts on them, and they are not kept in version control. `mise run docs` generates
-// them and builds the site.
+// The fragments are test output, not sources: they are deterministic, but nothing asserts
+// on them, and they are not kept in version control. `mise run docs` generates them and
+// builds the site.
 package docs
 
 import (
@@ -22,11 +24,11 @@ import (
 	"html/template"
 	"math"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"slices"
 	"strings"
-	texttemplate "text/template"
 	"time"
 
 	"github.com/foomo/schaumamoi/pkg/personalization"
@@ -35,41 +37,28 @@ import (
 // DocsEnv names the environment variable that overrides where the VitePress site lives.
 const DocsEnv = "SCHAUMAMOI_DOCS"
 
+// FragmentDir is where the exhibits are written, relative to the site: a dot directory,
+// so VitePress makes no pages of it — the pages that include the fragments do that.
+const FragmentDir = ".exhibits"
+
 //go:embed templates
 var files embed.FS
 
-// PageInfo is one generated page: its name, which is its file name in docs/reports,
-// its title, and a line on what it shows.
-type PageInfo struct {
-	Name, Title, Summary string
+// ExhibitInfo is one exhibit: its name, which names its template and its fragment, and the
+// page that shows it, relative to the site and without .md. Relative image paths in an
+// included fragment resolve against that page, so the exhibit has to know it.
+type ExhibitInfo struct {
+	Name, Page string
 }
 
-// Pages are the generated pages, in the order the site's Reports section lists them.
-var Pages = []PageInfo{
-	{
-		Name: "catalog", Title: "Catalog",
-		Summary: "What the test shop sells: the category tree, the dimensions each department speaks, the weights every category scores with, and every product with its copy and attractor.",
-	},
-	{
-		Name: "personas", Title: "Personas",
-		Summary: "The four shoppers the traffic is generated for: their taste, their favourite in every category, how they choose, and how each ranks the whole catalog.",
-	},
-	{
-		Name: "shop", Title: "Shop",
-		Summary: "The listings the shop renders, filtered out of the catalog and ranked by nothing but what a shopper has done.",
-	},
-	{
-		Name: "shoppers", Title: "Shoppers",
-		Summary: "Each persona taken through the shop: its journey step by step, its month of visits, and the shop's final ranking for it.",
-	},
-	{
-		Name: "distillery", Title: "Distillery",
-		Summary: "What the distillery makes of the shoppers' traffic: how a still is set up, and what it distills from sessions, months, drifts, detours and consent.",
-	},
-	{
-		Name: "affinity", Title: "Affinity vector",
-		Summary: "How the personalization vector fades and follows a shopper whose intent changes — checked visit by visit on long histories — and how that compares to a flat sum and a decay by time.",
-	},
+// Exhibits are the exhibits the tests write, and the pages that show them.
+var Exhibits = []ExhibitInfo{
+	{Name: "catalog", Page: "exhibits/catalog"},
+	{Name: "personas", Page: "exhibits/personas"},
+	{Name: "shop", Page: "exhibits/shop"},
+	{Name: "shoppers", Page: "exhibits/shoppers"},
+	{Name: "distillery", Page: "exhibits/distillery"},
+	{Name: "affinity", Page: "exhibits/affinity"},
 }
 
 // Dir is the VitePress site's directory: SCHAUMAMOI_DOCS if set, else docs/ at the root
@@ -109,15 +98,16 @@ func moduleRoot() (string, error) {
 	}
 }
 
-// Page renders templates/<name>.html inside templates/page.md against data and writes it
-// to docs/reports/<name>.md. funcs adds helpers for this one page to the shared ones.
-func Page(name string, data any, funcs template.FuncMap) error {
-	i := slices.IndexFunc(Pages, func(p PageInfo) bool { return p.Name == name })
+// Exhibit renders templates/<name>.html against data and writes it to
+// docs/.exhibits/<name>.md: one block of raw HTML, for its page to include. funcs adds
+// helpers for this one exhibit to the shared ones.
+func Exhibit(name string, data any, funcs template.FuncMap) error {
+	i := slices.IndexFunc(Exhibits, func(e ExhibitInfo) bool { return e.Name == name })
 	if i < 0 {
-		return fmt.Errorf("no page %q in docs.Pages", name)
+		return fmt.Errorf("no exhibit %q in docs.Exhibits", name)
 	}
 
-	info := Pages[i]
+	info := Exhibits[i]
 	all := template.FuncMap{
 		"taste":   Taste,
 		"score":   Score,
@@ -126,11 +116,9 @@ func Page(name string, data any, funcs template.FuncMap) error {
 		"plusOne": func(i int) int { return i + 1 },
 		"pct":     func(v float64) string { return fmt.Sprintf("%.0f%%", v) },
 		"num":     func(v float64) string { return fmt.Sprintf("%.1f", v) },
-		// img resolves an image path from catalog.Item.ImagePath or persona.Persona.ImagePath to the
-		// image next to the page. The ./ matters: VitePress resolves image paths as imports,
-		// and without it images/x.svg reads as a package.
-		"img":  func(path string) string { return "./" + path },
-		"page": func() PageInfo { return info },
+		// img resolves an image path from catalog.Item.ImagePath or persona.Persona.ImagePath
+		// to the image Image wrote, relative to the page that shows the exhibit.
+		"img": func(p string) string { return ImagePath(info.Page, p) },
 	}
 	for k, fn := range funcs {
 		all[k] = fn
@@ -146,19 +134,26 @@ func Page(name string, data any, funcs template.FuncMap) error {
 		return fmt.Errorf("render %s: %w", name, err)
 	}
 
-	// the page around it is Markdown with YAML front matter, not HTML: text/template, so
-	// titles and descriptions are not HTML-escaped. The body above is html/template's.
-	page, err := texttemplate.New("page.md").ParseFS(files, "templates/page.md")
+	fragment := `<div class="exhibit" v-pre>` + "\n" + flatten(html.String()) + "\n</div>\n"
+
+	return write(filepath.Join(FragmentDir, name+".md"), []byte(fragment))
+}
+
+// ImagePath is where an image Image wrote is, seen from page (relative to the site,
+// without .md). VitePress resolves it like any image in that page and bundles it; the ./
+// or ../ matters, since without it images/x.svg would read as a package.
+func ImagePath(page, image string) string {
+	rel, err := filepath.Rel(filepath.Dir(filepath.FromSlash(page)), filepath.Join(FragmentDir, filepath.FromSlash(image)))
 	if err != nil {
-		return fmt.Errorf("parse page.md: %w", err)
+		return path.Join("/", FragmentDir, image)
 	}
 
-	var md strings.Builder
-	if err := page.Execute(&md, map[string]any{"Page": info, "Body": flatten(html.String())}); err != nil {
-		return fmt.Errorf("render %s: %w", name, err)
+	rel = filepath.ToSlash(rel)
+	if !strings.HasPrefix(rel, ".") || strings.HasPrefix(rel, FragmentDir) {
+		rel = "./" + rel
 	}
 
-	return write(filepath.Join("reports", name+".md"), []byte(md.String()))
+	return rel
 }
 
 // leadingSpace is the indentation of a line.
@@ -182,10 +177,10 @@ func flatten(html string) string {
 	return strings.Join(out, "\n")
 }
 
-// Image writes an image next to the generated pages, at path relative to them — where the
-// pages' relative image paths point. VitePress bundles them like any other page asset.
+// Image writes an image the exhibits show, at path (e.g. images/dress_01.svg) next to the
+// fragments. The img template function points each exhibit at it.
 func Image(path string, content []byte) error {
-	return write(filepath.Join("reports", filepath.FromSlash(path)), content)
+	return write(filepath.Join(FragmentDir, filepath.FromSlash(path)), content)
 }
 
 // write writes a file under the site's directory atomically: the package tests run in
@@ -264,7 +259,7 @@ func Score(v personalization.Value) string {
 	return fmt.Sprintf("%.2f", float64(v))
 }
 
-// Date formats a timestamp the way the reports show visits: day and time, in UTC.
+// Date formats a timestamp the way the exhibits show visits: day and time, in UTC.
 func Date(t time.Time) string {
 	if t.IsZero() {
 		return "—"
