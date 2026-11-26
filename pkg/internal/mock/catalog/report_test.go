@@ -19,7 +19,7 @@ type (
 		Department string
 		Name       string
 		Path       string
-		Weights    personalization.Map
+		Weights    personalization.Vector
 		Items      []catalog.Item
 	}
 

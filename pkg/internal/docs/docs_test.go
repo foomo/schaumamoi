@@ -73,7 +73,7 @@ var rowOutsideSection = regexp.MustCompile(`<table[^>]*>\s*<tr|</tr>\s*</table>`
 func TestTablesHaveSections(t *testing.T) {
 	t.Setenv(docs.DocsEnv, t.TempDir())
 
-	taste := string(docs.Taste(personalization.Map{"classic": 0.8, "modern": -0.4}))
+	taste := string(docs.Taste(personalization.Vector{"classic": 0.8, "modern": -0.4}))
 	assert.NotRegexp(t, rowOutsideSection, taste, "taste bars")
 
 	chart := docs.Chart{Title: "c", YMin: 0, YMax: 1, Series: []docs.Series{{Name: "s", Slot: 1, Values: []float64{1, 0.5}}}}

@@ -49,9 +49,9 @@ func TestCategoryWeightsAverageOne(t *testing.T) {
 func TestFashionOnlyDimensionsDoNotCountAtHome(t *testing.T) {
 	t.Parallel()
 
-	liked := personalization.Map{taste.Business: 1, taste.Festive: 1}
+	liked := personalization.Vector{taste.Business: 1, taste.Festive: 1}
 	for _, item := range catalog.HomeDecoration() {
-		withBusiness := personalization.Map{}
+		withBusiness := personalization.Vector{}
 		for d, v := range item.Attractor {
 			withBusiness[d] = v
 		}

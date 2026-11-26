@@ -6,15 +6,19 @@
 type (
     Dimension string
     Value     float32
-    Map       map[Dimension]Value
+    Vector    map[Dimension]Value
 )
 
-func (m Map) Score(other Map) Value                        // sparse dot product
-func (m Map) WeightedScore(other, weights Map) Value       // … seen through a context
+func (v Vector) Score(other Vector) Value                   // sparse dot product
+func (v Vector) WeightedScore(other, weights Vector) Value  // … seen through a context
+func (v Vector) Cosine(other Vector) Value                  // similarity, regardless of magnitude
 ```
 
-A map only names the dimensions it cares about; a dimension missing from either side
-contributes nothing. `WeightedScore` adds a third map, the weights of a context: each
+One `Vector` type serves every role: a shopper's taste, what a product appeals to (its
+attractor), and what a category looks at (its weights).
+
+A vector only names the dimensions it cares about; a dimension missing from either side
+contributes nothing. `WeightedScore` adds a third vector, the weights of a context: each
 shared dimension counts `weights[d]` times, and a dimension the weights don't name
 counts for nothing. Both sum in sorted dimension order: float addition is not
 associative and Go randomises map iteration, so summing in map order would wobble in the

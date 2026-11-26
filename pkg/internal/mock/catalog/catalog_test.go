@@ -49,7 +49,7 @@ func TestCatalog(t *testing.T) {
 	}, byRail)
 }
 
-// TestHomeSpeaksItsOwnDimensions pins how the Map separates the departments: a home item
+// TestHomeSpeaksItsOwnDimensions pins how the Vector separates the departments: a home item
 // never carries a fashion-only dimension, so what the shop learns from clothes reaches
 // the home department only through the dimensions the two share — and every home item
 // shares some, or fashion taste could not rank it at all.
@@ -62,7 +62,7 @@ func TestHomeSpeaksItsOwnDimensions(t *testing.T) {
 	}
 	homeOnly := []personalization.Dimension{taste.Cozy, taste.Natural, taste.Industrial}
 
-	fashion := personalization.Map{}
+	fashion := personalization.Vector{}
 	for _, item := range catalog.Fashion() {
 		for d := range item.Attractor {
 			fashion[d] = 1

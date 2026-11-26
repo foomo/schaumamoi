@@ -27,7 +27,7 @@ type stage struct {
 // infuserDocs says what each infuser in the affinity chain contributes.
 var infuserDocs = map[string]string{
 	"Stamp":         "copies the batch's time and session off the envelope, so a recipe can decay by age and group by visit",
-	"AddAttractors": "sums the attractors of the items the event carries into one Map, whatever their category",
+	"AddAttractors": "sums the attractors of the items the event carries into one vector, whatever their category",
 	"WeighByIntent": "scales that by how deliberate the choice is — select and view 1, the cart 3",
 }
 
@@ -146,7 +146,7 @@ func summarize(name string, e testEvent, before, after infusion) string {
 }
 
 // strongest lists the n largest dimensions of a vector.
-func strongest(m personalization.Map, n int) string {
+func strongest(m personalization.Vector, n int) string {
 	dims := make([]personalization.Dimension, 0, len(m))
 	for d := range m {
 		dims = append(dims, d)

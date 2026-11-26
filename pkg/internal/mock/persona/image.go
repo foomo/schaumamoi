@@ -110,7 +110,7 @@ func (p Persona) SVG() string {
 
 // hairstyle is the style of the taste group the persona leans to most. Groups are
 // compared in a fixed order, so ties resolve the same way on every run.
-func hairstyle(a personalization.Map) string {
+func hairstyle(a personalization.Vector) string {
 	best, score := "", personalization.Value(0)
 
 	for n, g := range []struct {

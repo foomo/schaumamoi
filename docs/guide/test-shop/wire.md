@@ -16,8 +16,8 @@ with no encoding contortions:
 type Item struct {
     params.Item
 
-    Attractor   personalization.Map `json:"attractor,omitempty" gtag:"-"`
-    Description string              `json:"-" gtag:"-"`
+    Attractor   personalization.Vector `json:"attractor,omitempty" gtag:"-"`
+    Description string                 `json:"-" gtag:"-"`
 }
 ```
 

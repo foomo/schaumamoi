@@ -29,7 +29,7 @@ type (
 	Phase[Params any, Infusion stamp.Stamped] struct {
 		From, To time.Time
 		Visits   []Visit[Params, Infusion]
-		Taste    personalization.Map
+		Taste    personalization.Vector
 	}
 )
 
@@ -59,12 +59,12 @@ func Of[Params any, Infusion stamp.Stamped](events []distillery.Infused[Params, 
 //
 // Phases are contiguous. A shopper who drifts away and comes back gets three phases, not
 // two — the return is news about when the taste held, which a merge would lose.
-func Phases[Params any, Infusion stamp.Stamped](threshold personalization.Value, taste func(Infusion) personalization.Map) distillery.Recipe[Params, Infusion, []Phase[Params, Infusion]] {
+func Phases[Params any, Infusion stamp.Stamped](threshold personalization.Value, taste func(Infusion) personalization.Vector) distillery.Recipe[Params, Infusion, []Phase[Params, Infusion]] {
 	return func(events []distillery.Infused[Params, Infusion]) []Phase[Params, Infusion] {
 		var out []Phase[Params, Infusion]
 
 		for _, v := range Of(events) {
-			t := personalization.Map{}
+			t := personalization.Vector{}
 			for _, e := range v.Events {
 				for d, w := range taste(e.Infusion) {
 					t[d] += w

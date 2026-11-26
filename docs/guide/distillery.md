@@ -142,7 +142,7 @@ how far their visits get) go under `stills/`, next to `affinity`.
   shopper chose.
 - **Infusers:** `Stamp` copies each choice's time and session off the envelope (the
   shared `stamp.Infuse`), `AddAttractors` sums the attractors of its items into one taste
-  map, and `WeighByIntent` weighs it: a selection or view counts once, a cart three times.
+  vector, and `WeighByIntent` weighs it: a selection or view counts once, a cart three times.
 - **Recipes:** `Flat` sums everything, `Decayed` fades by time, and `Fade.Vector`
   fades per choice. `Fade.Vector` is [the personalization vector](/guide/vector) the
   shop ranks every listing with. `Phases` cuts a history into [phases of steady

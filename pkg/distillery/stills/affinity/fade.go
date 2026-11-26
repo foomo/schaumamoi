@@ -36,7 +36,7 @@ type Fade struct {
 var DefaultFade = Fade{PerEvent: 0.95, Recent: 3, Shift: 0.5, Collapse: 0.2}
 
 // Vector is the recipe: the shopper's personalization vector after every kept event.
-func (f Fade) Vector(events []Infused) personalization.Map {
+func (f Fade) Vector(events []Infused) personalization.Vector {
 	return f.walk(events, nil)
 }
 
@@ -46,14 +46,14 @@ func (f Fade) Vector(events []Infused) personalization.Map {
 type Step struct {
 	Cosine    personalization.Value
 	Collapsed bool
-	Vector    personalization.Map
+	Vector    personalization.Vector
 }
 
 // Trace is Vector event by event, for looking at how the vector moves: one Step per
 // kept event, each with its own copy of the vector. It runs the same loop as Vector.
 func (f Fade) Trace(events []Infused) []Step {
 	out := make([]Step, 0, len(events))
-	f.walk(events, func(cosine personalization.Value, collapsed bool, vector personalization.Map) {
+	f.walk(events, func(cosine personalization.Value, collapsed bool, vector personalization.Vector) {
 		out = append(out, Step{Cosine: cosine, Collapsed: collapsed, Vector: clone(vector)})
 	})
 
@@ -61,8 +61,8 @@ func (f Fade) Trace(events []Infused) []Step {
 }
 
 // walk is the one loop behind Vector and Trace; step, if given, sees every event's result.
-func (f Fade) walk(events []Infused, step func(cosine personalization.Value, collapsed bool, vector personalization.Map)) personalization.Map {
-	all := personalization.Map{}
+func (f Fade) walk(events []Infused, step func(cosine personalization.Value, collapsed bool, vector personalization.Vector)) personalization.Vector {
+	all := personalization.Vector{}
 
 	for i, e := range events {
 		for d, v := range all {
@@ -82,7 +82,7 @@ func (f Fade) walk(events []Infused, step func(cosine personalization.Value, col
 		}
 
 		recent := f.recent(events[i+1-f.Recent : i+1])
-		rest := personalization.Map{}
+		rest := personalization.Vector{}
 
 		for d, v := range all {
 			if r := v - recent[d]; r != 0 {
@@ -108,8 +108,8 @@ func (f Fade) walk(events []Infused, step func(cosine personalization.Value, col
 }
 
 // recent is the faded sum of the last few contributions, as they stand in the vector.
-func (f Fade) recent(events []Infused) personalization.Map {
-	out := personalization.Map{}
+func (f Fade) recent(events []Infused) personalization.Vector {
+	out := personalization.Vector{}
 
 	for i, e := range events {
 		w := personalization.Value(math.Pow(float64(f.PerEvent), float64(len(events)-1-i)))
@@ -123,7 +123,7 @@ func (f Fade) recent(events []Infused) personalization.Map {
 
 // sharedCosine is the cosine of two vectors over the dimensions both name — 1 when they
 // share none, so that a step into new dimensions alone never reads as a change.
-func sharedCosine(a, b personalization.Map) personalization.Value {
+func sharedCosine(a, b personalization.Vector) personalization.Value {
 	shared := make([]personalization.Dimension, 0, len(a))
 
 	for d := range a {

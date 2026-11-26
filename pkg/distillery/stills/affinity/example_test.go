@@ -38,7 +38,7 @@ func Example() {
 }
 
 // strongest is the dimension a vector scores highest on, ties by name.
-func strongest(m personalization.Map) personalization.Dimension {
+func strongest(m personalization.Vector) personalization.Dimension {
 	var (
 		best personalization.Dimension
 		top  personalization.Value

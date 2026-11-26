@@ -1,5 +1,5 @@
 // Package affinity is the still that turns a shopper's events into their personalization
-// vector: one sparse personalization.Map of taste, learned from what the shopper selects,
+// vector: one sparse personalization.Vector of taste, learned from what the shopper selects,
 // views and buys.
 //
 // It is a distillery.Still with a fixed setup: a cut that keeps only choices, a chain of
@@ -34,14 +34,14 @@ type (
 	// stamp is embedded, so Infusion is stamp.Stamped and the shared rules and recipes
 	// read it.
 	//
-	// The taste is one Map for everything the shopper touches, whatever the category: an
+	// The taste is one Vector for everything the shopper touches, whatever the category: an
 	// item only carries the dimensions that describe it, so categories need no handling
 	// of their own here. How much each dimension counts in a category is the scorer's
 	// business, not the still's.
 	Infusion struct {
 		stamp.Stamp
 
-		Affinity personalization.Map
+		Affinity personalization.Vector
 	}
 
 	Still         = distillery.Still[Envelope, any, Infusion]
@@ -118,7 +118,7 @@ func Stamp(env Envelope, e sesamy.Event[any], d Infusion) Infusion {
 // only the attractor keeps the still independent of any item type.
 type items struct {
 	Items []struct {
-		Attractor personalization.Map `json:"attractor"`
+		Attractor personalization.Vector `json:"attractor"`
 	} `json:"items"`
 }
 
@@ -146,7 +146,7 @@ func AddAttractors(_ Envelope, e sesamy.Event[any], d Infusion) Infusion {
 func WeighByIntent(_ Envelope, e sesamy.Event[any], d Infusion) Infusion {
 	w := Weights[e.Name]
 
-	out := make(personalization.Map, len(d.Affinity))
+	out := make(personalization.Vector, len(d.Affinity))
 	for dimension, v := range d.Affinity {
 		out[dimension] = v * w
 	}
@@ -158,8 +158,8 @@ func WeighByIntent(_ Envelope, e sesamy.Event[any], d Infusion) Infusion {
 
 // Flat sums every contribution in full: the shopper's taste as if nothing faded. It sums
 // in slice order — events arrive in order and Add appends, so the float sums are stable.
-func Flat(events []Infused) personalization.Map {
-	out := personalization.Map{}
+func Flat(events []Infused) personalization.Vector {
+	out := personalization.Vector{}
 	for _, e := range events {
 		for dimension, v := range e.Infusion.Affinity {
 			out[dimension] += v
@@ -172,9 +172,9 @@ func Flat(events []Infused) personalization.Map {
 // Decayed is the taste with recency by time: a contribution halves every halfLife it is
 // older than now. Now is handed in rather than read off the clock, so distilling stays a
 // pure read. An event from after now counts in full rather than growing.
-func Decayed(now time.Time, halfLife time.Duration) Recipe[personalization.Map] {
-	return func(events []Infused) personalization.Map {
-		out := personalization.Map{}
+func Decayed(now time.Time, halfLife time.Duration) Recipe[personalization.Vector] {
+	return func(events []Infused) personalization.Vector {
+		out := personalization.Vector{}
 		for _, e := range events {
 			w := personalization.Value(math.Exp2(-float64(max(now.Sub(e.Infusion.At), 0)) / float64(halfLife)))
 			for dimension, v := range e.Infusion.Affinity {
@@ -186,8 +186,8 @@ func Decayed(now time.Time, halfLife time.Duration) Recipe[personalization.Map] 
 	}
 }
 
-func clone(m personalization.Map) personalization.Map {
-	out := make(personalization.Map, len(m))
+func clone(m personalization.Vector) personalization.Vector {
+	out := make(personalization.Vector, len(m))
 	for dimension, v := range m {
 		out[dimension] = v
 	}

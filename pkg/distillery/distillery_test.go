@@ -78,7 +78,7 @@ func kateJourney() []testEvent {
 // profile, so this is exactly the listing the shop would show. Cosine stays for comparing a taste with a persona, where the
 // magnitude must not count; for ranking it disagrees with the shop on near ties — the
 // sequin flares and the velvet palazzo, for Sofia.
-func nearestIn(aff personalization.Map, category string) catalog.Item {
+func nearestIn(aff personalization.Vector, category string) catalog.Item {
 	return persona.Persona{Affinity: aff}.TopMatch(shop.Filter{Category: category}.Apply(catalog.All()))
 }
 
@@ -114,7 +114,7 @@ func touchedCategories(t *testing.T, events []testEvent) []string {
 // favourite in that category. Not the favourite itself: the shopper does not always open
 // its favourite, and the still can only know what it did open. Categories the shopper
 // was only offered are not asserted — the still has nothing of theirs to go on.
-func assertPerCategory(t *testing.T, aff personalization.Map, want persona.Persona, events []testEvent) {
+func assertPerCategory(t *testing.T, aff personalization.Vector, want persona.Persona, events []testEvent) {
 	t.Helper()
 
 	touched := touchedCategories(t, events)
@@ -159,7 +159,7 @@ func funnel(events []testInfused) map[sesamy.EventName]int {
 
 // nearestPersona is the persona whose taste the affinity is closest to, ties broken by
 // name so the result is stable.
-func nearestPersona(aff personalization.Map, personas []persona.Persona) persona.Persona {
+func nearestPersona(aff personalization.Vector, personas []persona.Persona) persona.Persona {
 	var (
 		best  persona.Persona
 		score personalization.Value
@@ -177,7 +177,7 @@ func nearestPersona(aff personalization.Map, personas []persona.Persona) persona
 
 // nearestItem is the item whose attractor the affinity is closest to, ties broken by
 // item id, as in Persona.TopMatch.
-func nearestItem(aff personalization.Map, items []catalog.Item) catalog.Item {
+func nearestItem(aff personalization.Vector, items []catalog.Item) catalog.Item {
 	var (
 		best  catalog.Item
 		score personalization.Value
@@ -313,14 +313,14 @@ func TestFeedWithoutCutKeepsEverything(t *testing.T) {
 }
 
 // TestInfusersFoldInOrder uses the fact that the affinity infusers do not commute:
-// weighting before anything has been collected scales an empty map.
+// weighting before anything has been collected scales an empty vector.
 func TestInfusersFoldInOrder(t *testing.T) {
 	t.Parallel()
 
 	pick := persona.Kate.TopMatch(catalog.All())
 	cart := []testEvent{shop.AddToCart(pick).AnyEvent()}
 
-	distill := func(infusers ...testInfuser) personalization.Map {
+	distill := func(infusers ...testInfuser) personalization.Vector {
 		p := distillery.New(testConfig{Infusers: infusers})
 		p.Feed(envelope{}, cart...)
 
@@ -345,8 +345,8 @@ func TestDistillIsRepeatable(t *testing.T) {
 	p := newAffinityStill(nil)
 	p.Feed(envelope{}, kateJourney()...)
 
-	infusions := func(events []testInfused) []personalization.Map {
-		out := make([]personalization.Map, 0, len(events))
+	infusions := func(events []testInfused) []personalization.Vector {
+		out := make([]personalization.Vector, 0, len(events))
 		for _, e := range events {
 			out = append(out, clone(e.Infusion.Affinity))
 		}
@@ -377,8 +377,8 @@ func TestFeedAfterDistillDoesNotReinfuse(t *testing.T) {
 	require.NotEmpty(t, p.Distill(flat))
 	p.Feed(envelope{}, second...)
 
-	got := p.Distill(func(events []testInfused) []personalization.Map {
-		out := make([]personalization.Map, 0, len(events))
+	got := p.Distill(func(events []testInfused) []personalization.Vector {
+		out := make([]personalization.Vector, 0, len(events))
 		for _, e := range events {
 			out = append(out, e.Infusion.Affinity)
 		}
@@ -419,7 +419,7 @@ func TestOneStillManyRecipes(t *testing.T) {
 
 // TestDistillIsDeterministic pins the float summation: the same still must give a
 // bit-identical affinity every time, and so must a second still fed the same stream,
-// for the reason Map.Score sorts its dimensions.
+// for the reason Vector.Score sorts its dimensions.
 func TestDistillIsDeterministic(t *testing.T) {
 	t.Parallel()
 
@@ -750,8 +750,8 @@ func TestCutSeesEnvelope(t *testing.T) {
 	assert.Equal(t, []string{"Kate"}, phasePersonas(consentCut.Distill(affinity.Phases(affinity.DefaultPhaseThreshold))))
 }
 
-func clone(m personalization.Map) personalization.Map {
-	out := make(personalization.Map, len(m))
+func clone(m personalization.Vector) personalization.Vector {
+	out := make(personalization.Vector, len(m))
 	for dimension, v := range m {
 		out[dimension] = v
 	}

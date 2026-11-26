@@ -10,12 +10,12 @@ import (
 
 // Every product is scored in the context of its category: a shopper's taste and the
 // product's attractor are compared through that category's weights, which say which
-// dimensions the category looks at and how much each counts there. Taste stays one Map
+// dimensions the category looks at and how much each counts there. Taste stays one Vector
 // across the shop — what the shopper opens, views and buys — and the weights decide how
 // it applies to dresses, to trousers, to lamps.
 //
 // The weights are a complete statement: a dimension a category does not name counts for
-// nothing there (personalization.Map.WeightedScore). TestCategoryWeightsAreComplete
+// nothing there (personalization.Vector.WeightedScore). TestCategoryWeightsAreComplete
 // keeps every dimension a category's products carry named in its weights.
 //
 // They are defined per department and refined per category: a category starts from its
@@ -25,7 +25,7 @@ import (
 // categories (a department, all products) can rank them against each other.
 
 // departmentWeights is what each department looks at.
-var departmentWeights = map[string]personalization.Map{
+var departmentWeights = map[string]personalization.Vector{
 	// Fashion: the occasion a piece is for comes first, then its style. Colour counts a
 	// little less — it is the easiest thing to like in another piece.
 	CategoryWomensFashion: {
@@ -49,7 +49,7 @@ var departmentWeights = map[string]personalization.Map{
 }
 
 // categoryWeightOverrides is where a category departs from its department.
-var categoryWeightOverrides = map[string]personalization.Map{
+var categoryWeightOverrides = map[string]personalization.Vector{
 	// a dress is chosen for its line: how feminine, how romantic, less for its tailoring
 	CategoryDresses: {taste.Feminine: 1.3, taste.Romantic: 1.2, taste.Structured: 0.8},
 
@@ -74,11 +74,11 @@ var categoryWeightOverrides = map[string]personalization.Map{
 // scaled to average 1.
 var categoryWeights = resolveWeights()
 
-func resolveWeights() map[string]personalization.Map {
-	out := map[string]personalization.Map{}
+func resolveWeights() map[string]personalization.Vector {
+	out := map[string]personalization.Vector{}
 
 	for category, department := range categoryParent {
-		w := personalization.Map{}
+		w := personalization.Vector{}
 		for d, v := range departmentWeights[department] {
 			w[d] = v
 		}
@@ -109,9 +109,9 @@ func resolveWeights() map[string]personalization.Map {
 }
 
 // CategoryWeights are the weights products of a category are scored with. A category
-// without weights scores nothing. The map is a copy; changing it changes nothing.
-func CategoryWeights(category string) personalization.Map {
-	out := personalization.Map{}
+// without weights scores nothing. The vector is a copy; changing it changes nothing.
+func CategoryWeights(category string) personalization.Vector {
+	out := personalization.Vector{}
 	for d, v := range categoryWeights[category] {
 		out[d] = v
 	}
@@ -122,6 +122,6 @@ func CategoryWeights(category string) personalization.Map {
 // Score is how well a taste matches an item in the item's own category: the weighted
 // dot product of the taste and the item's attractor under CategoryWeights. It is the one
 // scorer the shop ranks with and the personas choose by.
-func Score(taste personalization.Map, item Item) personalization.Value {
+func Score(taste personalization.Vector, item Item) personalization.Value {
 	return taste.WeightedScore(item.Attractor, categoryWeights[item.Category()])
 }

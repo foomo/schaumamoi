@@ -10,7 +10,7 @@ import (
 type Persona struct {
 	Name        string
 	Description string
-	Affinity    personalization.Map
+	Affinity    personalization.Vector
 }
 
 // The personas are deliberately chosen to discriminate. Kate and Mira are both
@@ -21,7 +21,7 @@ var (
 	Kate = Persona{
 		Name:        "Kate",
 		Description: "50 year old conservative lawyer",
-		Affinity: personalization.Map{
+		Affinity: personalization.Vector{
 			taste.Business:   0.9,
 			taste.Classic:    0.99,
 			taste.Modern:     -1.0,
@@ -35,7 +35,7 @@ var (
 	Sofia = Persona{
 		Name:        "Sofia",
 		Description: "28 year old event host with a taste for glamour",
-		Affinity: personalization.Map{
+		Affinity: personalization.Vector{
 			taste.Festive:      0.95,
 			taste.Opulent:      0.85,
 			taste.Feminine:     0.8,
@@ -49,7 +49,7 @@ var (
 	Lena = Persona{
 		Name:        "Lena",
 		Description: "34 year old designer who dresses down and hates fuss",
-		Affinity: personalization.Map{
+		Affinity: personalization.Vector{
 			taste.Casual:       0.9,
 			taste.Minimalistic: 0.8,
 			taste.Modern:       0.6,
@@ -63,7 +63,7 @@ var (
 	Mira = Persona{
 		Name:        "Mira",
 		Description: "41 year old architect, business wear but strictly contemporary",
-		Affinity: personalization.Map{
+		Affinity: personalization.Vector{
 			taste.Business:     0.7,
 			taste.Modern:       0.9,
 			taste.Minimalistic: 0.75,

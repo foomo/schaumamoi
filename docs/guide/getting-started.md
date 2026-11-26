@@ -50,7 +50,7 @@ mise run docs:dev    # generate the reports and serve the site with live reload
 
 | Package | What it does |
 |---|---|
-| `pkg/personalization` | the sparse taste vector: `Map`, `Score`, `WeightedScore` — see [Personalization](/guide/personalization) |
+| `pkg/personalization` | the sparse taste vector: `Vector`, `Score`, `WeightedScore`, `Cosine` — see [Personalization](/guide/personalization) |
 | `pkg/distillery` | a still per user: fed events from a stream or a replay, cut and infused once on arrival, distilled by any number of recipes — see [The distillery](/guide/distillery) |
 | `pkg/distillery/stamp` | time and session, shared by every still: the stamp infuser and the rules on it — see [Drawing off](/guide/distillery#drawing-off) |
 | `pkg/distillery/stills/affinity` | the still that distills a shopper's personalization vector — see [The vector](/guide/vector) |

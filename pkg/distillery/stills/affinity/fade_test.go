@@ -15,7 +15,7 @@ const (
 )
 
 // events builds infused events from their contributions, in order.
-func events(contributions ...personalization.Map) []affinity.Infused {
+func events(contributions ...personalization.Vector) []affinity.Infused {
 	out := make([]affinity.Infused, 0, len(contributions))
 	for _, c := range contributions {
 		out = append(out, affinity.Infused{Infusion: affinity.Infusion{Affinity: c}})
@@ -24,8 +24,8 @@ func events(contributions ...personalization.Map) []affinity.Infused {
 	return out
 }
 
-func repeat(m personalization.Map, n int) []personalization.Map {
-	out := make([]personalization.Map, n)
+func repeat(m personalization.Vector, n int) []personalization.Vector {
+	out := make([]personalization.Vector, n)
 	for i := range out {
 		out[i] = m
 	}
@@ -39,7 +39,7 @@ var noShift = affinity.Fade{PerEvent: 0.5, Recent: 2, Shift: -2, Collapse: 0}
 func TestFadePerEvent(t *testing.T) {
 	t.Parallel()
 
-	got := noShift.Vector(events(personalization.Map{classic: 1}, personalization.Map{classic: 1}, personalization.Map{classic: 1}))
+	got := noShift.Vector(events(personalization.Vector{classic: 1}, personalization.Vector{classic: 1}, personalization.Vector{classic: 1}))
 
 	// 1·0.25 + 1·0.5 + 1: every event halves everything before it
 	assert.InDelta(t, 1.75, float64(got[classic]), 1e-6)
@@ -50,7 +50,7 @@ func TestFadePerEvent(t *testing.T) {
 func TestFadeCollapsesOnAStrongChange(t *testing.T) {
 	t.Parallel()
 
-	old, recent := personalization.Map{classic: 1, modern: -1}, personalization.Map{classic: -1, modern: 1}
+	old, recent := personalization.Vector{classic: 1, modern: -1}, personalization.Vector{classic: -1, modern: 1}
 	history := events(append(repeat(old, 10), repeat(recent, 3)...)...)
 
 	f := affinity.Fade{PerEvent: 0.95, Recent: 3, Shift: 0.5, Collapse: 0.2}
@@ -65,7 +65,7 @@ func TestFadeCollapsesOnAStrongChange(t *testing.T) {
 func TestFadeKeepsTasteOnAGentleChange(t *testing.T) {
 	t.Parallel()
 
-	old, recent := personalization.Map{classic: 1, modern: 0.2}, personalization.Map{classic: 0.6, modern: 0.4}
+	old, recent := personalization.Vector{classic: 1, modern: 0.2}, personalization.Vector{classic: 0.6, modern: 0.4}
 	history := events(append(repeat(old, 10), repeat(recent, 3)...)...)
 
 	with := affinity.Fade{PerEvent: 0.95, Recent: 3, Shift: 0.5, Collapse: 0.2}
@@ -81,7 +81,7 @@ func TestFadeKeepsTasteOnAGentleChange(t *testing.T) {
 func TestFadeKeepsTasteInANewCategory(t *testing.T) {
 	t.Parallel()
 
-	clothes, cushions := personalization.Map{classic: 1}, personalization.Map{cozy: 1}
+	clothes, cushions := personalization.Vector{classic: 1}, personalization.Vector{cozy: 1}
 	history := events(append(repeat(clothes, 10), repeat(cushions, 3)...)...)
 
 	f := affinity.Fade{PerEvent: 1, Recent: 3, Shift: 0.5, Collapse: 0}
@@ -91,7 +91,7 @@ func TestFadeKeepsTasteInANewCategory(t *testing.T) {
 func TestFadeIsRepeatable(t *testing.T) {
 	t.Parallel()
 
-	history := events(append(repeat(personalization.Map{classic: 1, modern: -1}, 7), repeat(personalization.Map{classic: -1, modern: 1, cozy: 0.3}, 4)...)...)
+	history := events(append(repeat(personalization.Vector{classic: 1, modern: -1}, 7), repeat(personalization.Vector{classic: -1, modern: 1, cozy: 0.3}, 4)...)...)
 
 	want := affinity.DefaultFade.Vector(history)
 	for range 10 {
@@ -104,7 +104,7 @@ func TestFadeIsRepeatable(t *testing.T) {
 func TestTraceEndsOnVector(t *testing.T) {
 	t.Parallel()
 
-	history := events(append(repeat(personalization.Map{classic: 1, modern: -1}, 7), repeat(personalization.Map{classic: -1, modern: 1, cozy: 0.3}, 4)...)...)
+	history := events(append(repeat(personalization.Vector{classic: 1, modern: -1}, 7), repeat(personalization.Vector{classic: -1, modern: 1, cozy: 0.3}, 4)...)...)
 	steps := affinity.DefaultFade.Trace(history)
 
 	assert.Len(t, steps, len(history))

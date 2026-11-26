@@ -17,32 +17,32 @@ func TestScore(t *testing.T) {
 	)
 
 	for name, tt := range map[string]struct {
-		left, right personalization.Map
+		left, right personalization.Vector
 		want        personalization.Value
 	}{
 		"disjoint maps score nothing": {
-			left:  personalization.Map{a: 1},
-			right: personalization.Map{b: 1},
+			left:  personalization.Vector{a: 1},
+			right: personalization.Vector{b: 1},
 			want:  0,
 		},
 		"only shared dimensions count": {
-			left:  personalization.Map{a: 0.5, b: 1},
-			right: personalization.Map{a: 0.5, c: 1},
+			left:  personalization.Vector{a: 0.5, b: 1},
+			right: personalization.Vector{a: 0.5, c: 1},
 			want:  0.25,
 		},
 		"opposing taste scores negative": {
-			left:  personalization.Map{a: 1},
-			right: personalization.Map{a: -1},
+			left:  personalization.Vector{a: 1},
+			right: personalization.Vector{a: -1},
 			want:  -1,
 		},
 		"empty scores nothing": {
-			left:  personalization.Map{},
-			right: personalization.Map{a: 1},
+			left:  personalization.Vector{},
+			right: personalization.Vector{a: 1},
 			want:  0,
 		},
 		"nil scores nothing": {
 			left:  nil,
-			right: personalization.Map{a: 1},
+			right: personalization.Vector{a: 1},
 			want:  0,
 		},
 	} {
@@ -62,8 +62,8 @@ func TestScore(t *testing.T) {
 func TestScoreStable(t *testing.T) {
 	t.Parallel()
 
-	left := personalization.Map{}
-	right := personalization.Map{}
+	left := personalization.Vector{}
+	right := personalization.Vector{}
 
 	for _, d := range []personalization.Dimension{"a", "b", "c", "d", "e", "f", "g", "h"} {
 		left[d] = 0.1
@@ -84,15 +84,15 @@ func TestWeightedScore(t *testing.T) {
 		b personalization.Dimension = "b"
 	)
 
-	left, right := personalization.Map{a: 1, b: 2}, personalization.Map{a: 3, b: 4}
+	left, right := personalization.Vector{a: 1, b: 2}, personalization.Vector{a: 3, b: 4}
 
 	for name, tt := range map[string]struct {
-		weights personalization.Map
+		weights personalization.Vector
 		want    personalization.Value
 	}{
-		"unit weights are Score":           {weights: personalization.Map{a: 1, b: 1}, want: left.Score(right)},
-		"a weight scales its dimension":    {weights: personalization.Map{a: 2, b: 1}, want: 2*3 + 8},
-		"an unnamed dimension counts zero": {weights: personalization.Map{a: 1}, want: 3},
+		"unit weights are Score":           {weights: personalization.Vector{a: 1, b: 1}, want: left.Score(right)},
+		"a weight scales its dimension":    {weights: personalization.Vector{a: 2, b: 1}, want: 2*3 + 8},
+		"an unnamed dimension counts zero": {weights: personalization.Vector{a: 1}, want: 3},
 		"no weights score nothing":         {weights: nil, want: 0},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -107,18 +107,18 @@ func TestWeightedScore(t *testing.T) {
 func TestCosine(t *testing.T) {
 	t.Parallel()
 
-	a := personalization.Map{"classic": 1, "modern": -0.5}
+	a := personalization.Vector{"classic": 1, "modern": -0.5}
 
 	tests := map[string]struct {
-		other personalization.Map
+		other personalization.Vector
 		want  float64
 	}{
 		"itself":                  {a, 1},
-		"scaled, same direction":  {personalization.Map{"classic": 10, "modern": -5}, 1},
-		"opposite":                {personalization.Map{"classic": -2, "modern": 1}, -1},
-		"nothing shared":          {personalization.Map{"cozy": 1}, 0},
-		"empty":                   {personalization.Map{}, 0},
-		"half way, one dimension": {personalization.Map{"classic": 1}, 1 / 1.118034},
+		"scaled, same direction":  {personalization.Vector{"classic": 10, "modern": -5}, 1},
+		"opposite":                {personalization.Vector{"classic": -2, "modern": 1}, -1},
+		"nothing shared":          {personalization.Vector{"cozy": 1}, 0},
+		"empty":                   {personalization.Vector{}, 0},
+		"half way, one dimension": {personalization.Vector{"classic": 1}, 1 / 1.118034},
 	}
 
 	for name, tt := range tests {

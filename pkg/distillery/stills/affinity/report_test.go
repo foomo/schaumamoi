@@ -267,7 +267,7 @@ func TestReport(t *testing.T) {
 	t.Logf("wrote %s", filepath.Join(docs.Dir(), "reports", "affinity.md"))
 }
 
-func nearestPersona(aff personalization.Map) persona.Persona {
+func nearestPersona(aff personalization.Vector) persona.Persona {
 	var (
 		best  persona.Persona
 		score personalization.Value

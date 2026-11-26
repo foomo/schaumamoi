@@ -224,7 +224,7 @@ func write(path string, content []byte) error {
 // Taste draws a vector as one diverging bar per dimension, strongest first: positive
 // to the right of the axis, negative to the left. Dimensions it does not mention are
 // left out rather than drawn as zero.
-func Taste(m personalization.Map) template.HTML {
+func Taste(m personalization.Vector) template.HTML {
 	dims := make([]personalization.Dimension, 0, len(m))
 	for d := range m {
 		dims = append(dims, d)

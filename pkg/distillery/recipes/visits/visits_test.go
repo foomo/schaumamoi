@@ -15,7 +15,7 @@ import (
 type infusion struct {
 	stamp.Stamp
 
-	Taste personalization.Map
+	Taste personalization.Vector
 }
 
 type event = distillery.Infused[any, infusion]
@@ -23,14 +23,14 @@ type event = distillery.Infused[any, infusion]
 var start = time.Date(2026, time.September, 1, 10, 0, 0, 0, time.UTC)
 
 // at is an event in session s, minute m, with the given taste.
-func at(s string, m int, taste personalization.Map) event {
+func at(s string, m int, taste personalization.Vector) event {
 	return event{Infusion: infusion{Stamp: stamp.Stamp{At: start.Add(time.Duration(m) * time.Minute), Session: s}, Taste: taste}}
 }
 
 var (
-	classic = personalization.Map{"classic": 1}
-	modern  = personalization.Map{"modern": 1}
-	phases  = visits.Phases[any, infusion](0.9, func(i infusion) personalization.Map { return i.Taste })
+	classic = personalization.Vector{"classic": 1}
+	modern  = personalization.Vector{"modern": 1}
+	phases  = visits.Phases[any, infusion](0.9, func(i infusion) personalization.Vector { return i.Taste })
 )
 
 func TestOfSplitsOnSessionChange(t *testing.T) {
@@ -57,7 +57,7 @@ func TestPhasesMergeSteadyVisits(t *testing.T) {
 
 	assert.Len(t, got, 2)
 	assert.Len(t, got[0].Visits, 2)
-	assert.Equal(t, personalization.Map{"classic": 2}, got[0].Taste)
+	assert.Equal(t, personalization.Vector{"classic": 2}, got[0].Taste)
 	assert.Equal(t, start.Add(10*time.Minute), got[0].To)
 	assert.Equal(t, start.Add(20*time.Minute), got[1].From)
 }

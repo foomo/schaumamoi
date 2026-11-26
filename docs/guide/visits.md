@@ -25,7 +25,7 @@ comes back after another. A visit runs from its first event's time to its last's
 ## Phases
 
 `Phases` merges consecutive visits into **phases of steady taste**. A visit joins the
-current phase if its taste is at least `threshold` similar (`personalization.Map.Cosine`)
+current phase if its taste is at least `threshold` similar (`personalization.Vector.Cosine`)
 to the phase's taste so far, and opens a new phase otherwise. A visit that says nothing
 about taste joins whatever phase it falls in. The caller hands in the taste to judge by,
 so the recipe never needs to know what else an infusion holds.

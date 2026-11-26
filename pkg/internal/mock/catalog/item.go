@@ -26,7 +26,7 @@ import (
 type Item struct {
 	params.Item
 
-	Attractor personalization.Map `json:"attractor,omitempty" gtag:"-"`
+	Attractor personalization.Vector `json:"attractor,omitempty" gtag:"-"`
 
 	// Description is the dress in prose, written to say what the attractor says. It is
 	// catalog-only and stays off both wires — json and gtag are separate tag keys, so

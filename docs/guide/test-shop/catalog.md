@@ -40,8 +40,8 @@ How the shop lists them is [The shop](./shop)'s business.
 
 ## Dimensions
 
-One `personalization.Map` carries taste across every category, in the dimensions of
-`pkg/internal/mock/taste` (`taste.Business`, `taste.Cozy` …). The Map is sparse: an
+One `personalization.Vector` carries taste across every category, in the dimensions of
+`pkg/internal/mock/taste` (`taste.Business`, `taste.Cozy` …). The vector is sparse: an
 item carries only the dimensions that describe it. Dresses and trousers speak largely
 the same dimensions, so taste carries between them. Home decoration shares some
 (modern, classic, minimalistic, bohemian, opulent, romantic, retro, edgy, bold,

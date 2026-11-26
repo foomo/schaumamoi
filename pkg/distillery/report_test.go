@@ -38,7 +38,7 @@ type (
 	// reading is what one distill made of a still: the taste, its similarity to every
 	// persona, and the reading in each category the shopper chose from.
 	reading struct {
-		Affinity   personalization.Map
+		Affinity   personalization.Vector
 		Sims       []similarity
 		Persona    persona.Persona
 		Categories []categoryReading
@@ -197,7 +197,7 @@ func TestReport(t *testing.T) {
 // read reads a distilled taste the way assertPerCategory does — in every category the
 // shopper chose from, against the persona that should have produced it — but records the
 // outcome instead of failing on it.
-func read(t *testing.T, aff personalization.Map, want persona.Persona, events []testEvent) reading {
+func read(t *testing.T, aff personalization.Vector, want persona.Persona, events []testEvent) reading {
 	t.Helper()
 
 	r := reading{Affinity: aff, Persona: nearestPersona(aff, persona.All())}

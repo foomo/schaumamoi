@@ -21,5 +21,5 @@ type Phase = visits.Phase[any, Infusion]
 // Phases is the recipe that cuts a shopper's history into phases of steady taste:
 // visits.Phases, judging each visit by the taste its choices add up to.
 func Phases(threshold personalization.Value) Recipe[[]Phase] {
-	return visits.Phases[any, Infusion](threshold, func(i Infusion) personalization.Map { return i.Affinity })
+	return visits.Phases[any, Infusion](threshold, func(i Infusion) personalization.Vector { return i.Affinity })
 }

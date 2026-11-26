@@ -14,7 +14,7 @@ import (
 // persona only drives what the shopper picks; how well the listings anticipate those
 // picks is up to the vector.
 type Profile struct {
-	Taste   personalization.Map
+	Taste   personalization.Vector
 	Signals int
 }
 
