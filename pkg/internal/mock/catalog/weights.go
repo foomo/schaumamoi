@@ -1,6 +1,9 @@
 package catalog
 
 import (
+	"maps"
+	"slices"
+
 	"github.com/foomo/schaumamoi/pkg/internal/mock/taste"
 	"github.com/foomo/schaumamoi/pkg/personalization"
 )
@@ -84,9 +87,14 @@ func resolveWeights() map[string]personalization.Map {
 			w[d] = v
 		}
 
+		// summed in sorted dimension order: float addition is not associative and map order
+		// is random, so a sum in map order would differ in its last bits from one run to the
+		// next, and so would every score.
+		dims := slices.Sorted(maps.Keys(w))
+
 		var sum personalization.Value
-		for _, v := range w {
-			sum += v
+		for _, d := range dims {
+			sum += w[d]
 		}
 
 		mean := sum / personalization.Value(len(w))
