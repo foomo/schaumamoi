@@ -110,6 +110,7 @@ func Exhibit(name string, data any, funcs template.FuncMap) error {
 	info := Exhibits[i]
 	all := template.FuncMap{
 		"taste":   Taste,
+		"weights": Weights,
 		"score":   Score,
 		"date":    Date,
 		"lower":   strings.ToLower,
@@ -247,6 +248,45 @@ func Taste(m personalization.Vector) template.HTML {
 
 		fmt.Fprintf(&b, `<tr><th>%s</th><td><div class="track"><div class="bar %s" style="left:%.1f%%;width:%.1f%%"></div></div></td><td class="num">%+.2f</td></tr>`,
 			template.HTMLEscapeString(string(d)), side, left, width, v)
+	}
+
+	b.WriteString(`</tbody></table>`)
+
+	return template.HTML(b.String()) //nolint:gosec // built from escaped names and formatted numbers only
+}
+
+// WeightScale is the multiplier a full weight bar stands for: every category's weights
+// average 1, so ×2 leaves room for the strongest emphasis, and a fixed scale keeps the
+// bars of different categories comparable.
+const WeightScale = 2.0
+
+// Weights draws a category's weights: one bar per dimension it looks at, from zero, the
+// strongest first, labelled with its multiplier. They are emphasis, not taste — every bar
+// points the same way, in a colour of its own, so they never read as a taste vector.
+func Weights(w personalization.Vector) template.HTML {
+	dims := make([]personalization.Dimension, 0, len(w))
+	for d := range w {
+		dims = append(dims, d)
+	}
+
+	slices.SortFunc(dims, func(a, b personalization.Dimension) int {
+		if c := cmp.Compare(w[b], w[a]); c != 0 {
+			return c
+		}
+
+		return cmp.Compare(a, b)
+	})
+
+	var b strings.Builder
+
+	b.WriteString(`<table class="taste weights"><tbody>`)
+
+	for _, d := range dims {
+		v := float64(w[d])
+		width := math.Min(v/WeightScale, 1) * 100
+
+		fmt.Fprintf(&b, `<tr><th>%s</th><td><div class="track share"><div class="bar weight" style="left:0;width:%.1f%%"></div></div></td><td class="num">×%.2f</td></tr>`,
+			template.HTMLEscapeString(string(d)), width, v)
 	}
 
 	b.WriteString(`</tbody></table>`)

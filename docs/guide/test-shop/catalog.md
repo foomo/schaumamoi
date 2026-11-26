@@ -52,8 +52,11 @@ Every product is scored in its own category's weights: `catalog.Score(taste, ite
 the weighted dot product of a taste and the item's attractor under
 `catalog.CategoryWeights(item.Category())`. It is the one scorer the shop ranks with
 and the personas choose by. Each department states what it looks at, and each category
-overrides only where it differs; [Personalization](../personalization#weights-per-category)
-explains how they are built and scaled.
+overrides only where it differs. A category then looks only at the part of the vector
+space its own products speak: no cushion is industrial, so cushions don't weigh
+industrial, whatever home decoration does. The exhibit above shows every department's
+base weights and every category's own, next to its products;
+[Personalization](../personalization#weights-per-category) explains how they are scaled.
 
 ## Images
 

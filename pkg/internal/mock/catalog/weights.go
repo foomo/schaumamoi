@@ -154,3 +154,14 @@ func spokenIn(category string) map[personalization.Dimension]bool {
 
 	return out
 }
+
+// DepartmentWeights are the weights a department's categories start from, before each
+// category's own and before the scaling. The map is a copy; changing it changes nothing.
+func DepartmentWeights(department string) personalization.Vector {
+	out := personalization.Vector{}
+	for d, v := range departmentWeights[department] {
+		out[d] = v
+	}
+
+	return out
+}

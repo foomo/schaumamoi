@@ -2,17 +2,21 @@
 <p class="lede">Shown by <code>TestExhibit</code> in <code>pkg/internal/mock/catalog</code>: the {{.Count}} products the
 shop sells, in its category tree. Every picture is drawn from the data it illustrates, so a product that looks wrong for
 its copy points at a vector, not at the drawing.</p>
-<nav><a href="#catalog-tree">Category tree</a><a href="#catalog-dimensions">Dimensions</a><a href="#catalog-weights">Weights</a>{{range .Tree}}<a href="#{{lower .Name}}">{{.Name}}</a>{{end}}</nav>
+<nav><a href="#catalog-tree">Category tree</a><a href="#catalog-dimensions">Dimensions</a><a href="#all-products">All Products</a>{{range .Departments}}<a href="#{{.ID}}">{{.Name}}</a>{{range .Categories}}<a href="#{{lower .Name}}">{{.Name}}</a>{{end}}{{end}}</nav>
 
 <h2 id="catalog-tree">Category tree</h2>
-<p class="note">Two departments, each with its categories. The GA4 category path carries the whole branch; in fashion
-occasion and length sit below the category, home pieces stop at it. Categories are where products are offered, not a
-signal about the shopper: what the shopper opens, views and buys is.</p>
+<p class="note">All Products at the top, two departments below it, each with its categories. The GA4 category path
+carries the whole branch; in fashion occasion and length sit below the category, home pieces stop at it. Categories are
+where products are offered, not a signal about the shopper: what the shopper opens, views and buys is.</p>
 <div class="scroll">
 <table class="data">
-  <thead><tr><th>department</th><th>category</th><th>products</th><th>GA4 path, e.g.</th></tr></thead>
+  <thead><tr><th>listing</th><th>products</th><th>GA4 path, e.g.</th></tr></thead>
   <tbody>
-  {{range .Tree}}<tr><td>{{.Department}}</td><td>{{.Name}}</td><td>{{len .Items}}</td><td><code>{{.Path}}</code></td></tr>{{end}}
+  <tr><td><a href="#all-products">All Products</a></td><td>{{.Count}}</td><td class="muted">every product</td></tr>
+  {{range .Departments}}
+  <tr><td>&nbsp;&nbsp;<a href="#{{.ID}}">{{.Name}}</a></td><td>{{.Count}}</td><td><code>{{.Name}}</code></td></tr>
+  {{range .Categories}}<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#{{lower .Name}}">{{.Name}}</a></td><td>{{len .Items}}</td><td><code>{{.Path}}</code></td></tr>{{end}}
+  {{end}}
   </tbody>
 </table>
 </div>
@@ -27,21 +31,26 @@ the shop learns from clothes reaches it only through those.</p>
   <div class="card"><h3>home only</h3><p class="meta">{{range $i, $d := .Dimensions.Home}}{{if $i}} · {{end}}{{$d}}{{end}}</p></div>
 </div>
 
-<h2 id="catalog-weights">Weights</h2>
-<p class="note">Every product is scored in its own category's weights (<code>catalog.Score</code>): by the shop when it
-ranks, by a persona when it chooses. A dimension a category does not name counts for nothing there; each category's
-weights average 1, so they set emphasis, not scale.</p>
-<div class="grid">
-{{range .Tree}}
-  <div class="card"><h3>{{.Name}}</h3><p class="meta">{{.Department}}</p>{{taste .Weights}}</div>
-{{end}}
-</div>
+<h2 id="all-products">All Products</h2>
+<p class="note">The top of the tree, every product the shop sells. It has no weights of its own: every product in it is
+scored in its own category's weights (<code>catalog.Score</code>). Each category's weights average ×1, so they set
+emphasis, not scale, and a listing of all products ranks a dress against a lamp on one scale.</p>
 
-{{range .Tree}}
+{{range .Departments}}
+<h2 id="{{.ID}}">{{.Name}}</h2>
+<p class="note">{{.Count}} products. The weights below are what the department looks at: the base its categories start
+from. Each category then overrides where it differs, keeps only the dimensions its own products carry, and is scaled to
+average ×1.</p>
+<div class="grid"><div class="card"><h3>{{.Name}}</h3><p class="meta">base weights</p>{{weights .Weights}}</div></div>
+
+{{range .Categories}}
 <h2 id="{{lower .Name}}">{{.Name}}</h2>
-<p class="note">{{len .Items}} products. Each with its facets, copy and attractor: the picture, the description and the
-bars should all say the same thing.</p>
+<p class="note">{{len .Items}} products, scored in the weights shown first: how much each dimension counts for
+a {{lower .Name}} product, by the shop when it ranks and by a persona when it chooses. A dimension not listed counts for
+nothing here. Each product with its facets, copy and attractor: the picture, the description and the bars should all
+say the same thing.</p>
 <div class="grid">
+  <div class="card"><h3>{{.Name}}</h3><p class="meta">weights</p>{{weights .Weights}}</div>
 {{range .Items}}
   <div class="card">
     <img class="product" src="{{img .ImagePath}}" alt="{{.ItemName}}">
@@ -52,5 +61,6 @@ bars should all say the same thing.</p>
   </div>
 {{end}}
 </div>
+{{end}}
 {{end}}
 {{end}}

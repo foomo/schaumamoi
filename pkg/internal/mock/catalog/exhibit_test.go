@@ -16,11 +16,20 @@ type (
 	// category is one category of the tree, with its products and the weights they are
 	// scored with.
 	category struct {
-		Department string
+		Name    string
+		Path    string
+		Weights personalization.Vector
+		Items   []catalog.Item
+	}
+
+	// department is a department of the tree: the base weights its categories start
+	// from, and its categories.
+	department struct {
 		Name       string
-		Path       string
+		ID         string
+		Count      int
 		Weights    personalization.Vector
-		Items      []catalog.Item
+		Categories []category
 	}
 
 	// dimensions are the taste dimensions sorted by which department speaks them.
@@ -29,13 +38,14 @@ type (
 	}
 )
 
-// TestExhibit writes the catalog exhibit: the category tree, the dimensions each department
-// speaks, the weights every category scores with, and every product with its facets,
-// copy and attractor. It also writes the product images every page shows.
+// TestExhibit writes the catalog exhibit: the whole category tree from All Products down,
+// the dimensions each department speaks, the weights each department and category scores
+// with, and every product with its facets, copy and attractor. It also writes the product
+// images every page shows.
 func TestExhibit(t *testing.T) {
 	t.Parallel()
 
-	var tree []category
+	var departments []department
 
 	for _, name := range categories {
 		var items []catalog.Item
@@ -47,12 +57,19 @@ func TestExhibit(t *testing.T) {
 		}
 
 		require.NotEmpty(t, items, name)
-		tree = append(tree, category{
-			Department: catalog.Parent(name),
-			Name:       name,
-			Path:       path(items[0]),
-			Weights:    catalog.CategoryWeights(name),
-			Items:      items,
+
+		parent := catalog.Parent(name)
+		if len(departments) == 0 || departments[len(departments)-1].Name != parent {
+			departments = append(departments, department{Name: parent, ID: slug(parent), Weights: catalog.DepartmentWeights(parent)})
+		}
+
+		d := &departments[len(departments)-1]
+		d.Count += len(items)
+		d.Categories = append(d.Categories, category{
+			Name:    name,
+			Path:    path(items[0]),
+			Weights: catalog.CategoryWeights(name),
+			Items:   items,
 		})
 	}
 
@@ -61,9 +78,9 @@ func TestExhibit(t *testing.T) {
 	}
 
 	require.NoError(t, docs.Exhibit("catalog", map[string]any{
-		"Tree":       tree,
-		"Dimensions": spoken(),
-		"Count":      len(catalog.All()),
+		"Departments": departments,
+		"Dimensions":  spoken(),
+		"Count":       len(catalog.All()),
 	}, nil))
 
 	t.Logf("wrote %s", filepath.Join(docs.Dir(), docs.FragmentDir, "catalog.md"))
@@ -119,4 +136,10 @@ func path(item catalog.Item) string {
 	}
 
 	return strings.Join(levels, " > ")
+}
+
+// slug is a heading id for a name: lower case, words joined by dashes, as the shop's list
+// ids are (Women's Fashion is womens-fashion).
+func slug(name string) string {
+	return strings.Join(strings.Fields(strings.ToLower(strings.ReplaceAll(name, "'", ""))), "-")
 }
